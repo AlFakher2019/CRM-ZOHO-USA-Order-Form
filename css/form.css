@@ -1,0 +1,2466 @@
+/* $Id: $ */
+@charset "UTF-8";
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,caption, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+body {
+	background-attachment: fixed;
+	color: #444444;
+	font: 75%/1.3 Arial, Helvetica, sans-serif;
+	
+}
+
+/* Container */
+
+
+
+/* Header */
+.zf-tempHeadBdr {
+    list-style: none;
+}
+
+.zf-tempHeadContBdr {
+    padding: 48px 48px 32px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.zf-frmTitle {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1A1A1A;
+    letter-spacing: -0.02em;
+    margin: 0;
+    font-style: normal;
+    text-align: center;
+}
+
+.zf-frmTitle em {
+    font-style: normal;
+}
+
+.zf-frmDesc {
+    font-size: 16px;
+    color: #666666;
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* Form Content */
+.zf-subContWrap {
+    padding: 0;
+}
+
+.zf-subContWrap > ul {
+    list-style: none;
+}
+
+/* Regular Form Fields (Flavor, Email, etc) */
+.zf-tempFrmWrapper {
+    
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.zf-labelName {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin-bottom: 15px;
+    letter-spacing: -0.01em;
+}
+
+/* Input Fields */
+.zf-tempContDiv span {
+    display: block;
+}
+
+.zf-tempContDiv input[type="text"],
+.zf-tempContDiv textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #1A1A1A;
+    background: #FFFFFF;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.zf-tempContDiv input[type="text"]:hover {
+    border-color: #CCCCCC;
+}
+
+.zf-tempContDiv input[type="text"]:focus {
+    border-color: #000000;
+    background: #FAFAFA;
+}
+
+/* Select Dropdown */
+.zf-mSelect select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #1A1A1A;
+    background: #FFFFFF;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 10px;
+    outline: none;
+    min-height: 200px;
+    font-family: inherit;
+}
+
+.zf-mSelect select option {
+    padding: 12px;
+    font-size: 15px;
+}
+
+/* ==== TABLE HEADER ==== */
+.zf-tableHeader {
+    display: grid;
+    grid-template-columns: 60px 280px 1fr 1fr 1fr;
+    background: #E8E8E8;
+    border: 1px solid #D0D0D0;
+    padding: 0 48px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A1A1A;
+}
+
+.zf-tableHeader > div {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.zf-tableHeader > div:first-child {
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+.zf-tableHeader > div:nth-child(2) {
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+.zf-tableHeader > div:last-child {
+    border-right: none;
+}
+
+/* ==== TABLE ROWS (Grid Wrappers) ==== */
+.zfgrid_Wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    border-left: 1px solid #E5E5E5;
+    border-right: 1px solid #E5E5E5;
+    border-bottom: 1px solid #E5E5E5;
+    counter-increment: table-row;
+}
+
+.zfgrid_Wrapper:first-of-type {
+    border-top: 1px solid #E5E5E5;
+}
+
+/* Hide original grid label */
+.zfgridLabelCont {
+    display: none !important;
+}
+
+/* Table Row Structure */
+.zfthreeColumn {
+    display: grid !important;
+    grid-template-columns: 60px 280px 1fr 1fr 1fr !important;
+    align-items: center;
+    padding: 0 48px !important;
+    min-height: 70px;
+    gap: 0 !important;
+}
+
+/* Row Number Column */
+.zfthreeColumn::before {
+    content: counter(table-row);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #666666;
+    grid-column: 1;
+    grid-row: 1;
+    border-right: 1px solid #D0D0D0;
+    /* Make the divider a continuous full-height line (not "dash-like" segments) */
+    align-self: stretch;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Type/Name Column */
+.zfNameCol {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Name on left, icon on right */
+    padding: 20px;
+    padding-left: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1A1A1A;
+    grid-column: 2;
+    grid-row: 1;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Info Icon */
+.zf-infoIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #999;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #666;
+    cursor: help;
+    font-style: normal;
+    font-family: serif;
+    flex-shrink: 0;
+}
+
+.zf-infoIcon:hover {
+    background-color: #F5F5F5;
+}
+
+/* Input Columns */
+.zfCol {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 8px !important;
+    flex: none !important;
+    box-sizing: border-box;
+}
+
+.zfCol input[type="text"] {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+    text-align: center;
+    border: 1.5px solid #E0E0E0 !important;
+    background: #FFFFFF !important;
+    box-sizing: border-box !important;
+    height: 45px;
+}
+
+.zfCol input[type="text"]:hover {
+    border-color: #CCCCCC !important;
+}
+
+.zfCol input[type="text"]:focus {
+    border-color: #000000 !important;
+    background: #FAFAFA !important;
+}
+
+/* Reset counter before table starts */
+.zf-subContWrap {
+    counter-reset: table-row;
+}
+
+/* Alternating row colors (optional) */
+.zfgrid_Wrapper:nth-child(even) .zfthreeColumn {
+    background: #FFFFFF;
+}
+
+/* Submit Button */
+.zf-fmFooter {
+    
+    text-align: center;
+    background: #FFFFFF;
+    list-style: none;
+}
+
+.zf-submitColor {
+    display: inline-block;
+    padding: 16px 48px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    background: #000000;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+    font-family: inherit;
+}
+
+.zf-submitColor:hover {
+    background: #1A1A1A;
+    transform: translateY(-1px);
+    
+}
+
+.zf-submitColor:active {
+    transform: translateY(0);
+}
+
+/* Error Message */
+.zf-errorMessage {
+    display: none !important;
+    color: #DC2626;
+    font-size: 13px;
+    margin-top: 6px;
+    text-align: left;
+}
+
+/* Clear Fix */
+.zf-clearBoth {
+    clear: both;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .zfthreeColumn {
+        grid-template-columns: 50px 220px 1fr 1fr 1fr !important;
+    }
+    
+    .zf-tableHeader {
+        grid-template-columns: 50px 220px 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .zf-tempHeadContBdr,
+    .zf-tempFrmWrapper,
+    .zf-fmFooter {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    
+    .zfthreeColumn {
+        grid-template-columns: 45px 140px 1fr 1fr 1fr !important;
+        padding: 0 24px !important;
+    }
+    
+    .zf-tableHeader {
+        grid-template-columns: 45px 140px 1fr 1fr 1fr;
+        padding: 0 24px;
+        font-size: 13px;
+    }
+
+    .zf-frmTitle {
+        font-size: 28px;
+    }
+    
+    .zfCol input[type="text"] {
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .zf-backgroundBg {
+        padding: 20px 12px;
+    }
+
+    .zf-templateWrapper {
+        border-radius: 12px;
+    }
+
+    .zf-tempHeadContBdr,
+    .zf-tempFrmWrapper,
+    .zf-fmFooter {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .zf-frmTitle {
+        font-size: 24px;
+    }
+
+    .zf-submitColor {
+        width: 100%;
+        padding: 14px 32px;
+    }
+    
+    .zfthreeColumn {
+        grid-template-columns: 40px 100px 1fr 1fr 1fr !important;
+        padding: 0 16px !important;
+        font-size: 13px;
+    }
+    
+    .zf-tableHeader {
+        grid-template-columns: 40px 100px 1fr 1fr 1fr;
+        padding: 0 16px;
+        font-size: 12px;
+    }
+    
+    .zf-tableHeader > div {
+        padding: 12px 10px;
+    }
+    
+    .zfthreeColumn::before {
+        padding: 15px 10px;
+    }
+    
+    .zfCol {
+        padding: 15px 10px !important;
+    }
+    
+    .zfCol input[type="text"] {
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* Hidden */
+input[type="hidden"] {
+    display: none;
+}
+
+/* =========================================================
+   Custom table spacing tweaks (form fields only)
+   - Taller input fields
+   - Slightly narrower inputs
+   - Less horizontal spacing between columns/fields
+   ========================================================= */
+
+/* Reduce outer table padding a bit (desktop) */
+.zf-tableHeader {
+    padding-left: 40px;
+    /* Pull the weight columns closer to the right edge */
+    padding-right: 16px;
+}
+
+.zfthreeColumn {
+    padding-left: 40px !important;
+    /* Pull the weight columns closer to the right edge */
+    padding-right: 16px !important;
+}
+
+/* Tighten spacing inside each input cell */
+.zfgrid_Wrapper .zfCol {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    /* Move weight fields to the right inside their cells */
+    justify-content: flex-end !important;
+}
+
+/* Make inputs taller + a bit narrower */
+.zfgrid_Wrapper .zfCol input[type="text"] {
+    height: 52px !important;
+    /* half size (narrower) */
+    width: 70px !important;
+    max-width: 70px !important;
+}
+
+/* Move the weight HEADINGS to the right too (50/250/1kg) */
+.zf-tableHeader > div:nth-child(n + 3) {
+    justify-content: flex-end;
+    padding-right: 16px;
+}
+
+/* Keep mobile paddings as-is (match your current responsive breakpoints) */
+@media (max-width: 768px) {
+    .zf-tableHeader {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    .zfthreeColumn {
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .zf-tableHeader {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .zfthreeColumn {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+    .zfgrid_Wrapper .zfCol {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+    .zfgrid_Wrapper .zfCol input[type="text"] {
+        width: 60px !important;
+        max-width: 60px !important;
+    }
+}
+
+/* Form Structure */
+ul {
+    list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+/* Focus Visible */
+*:focus-visible {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+}
+
+button:focus-visible {
+    outline-color: #FFFFFF;
+}
+
+/* Pink circle for selected item (from image) */
+/* This would require JS to toggle a class, but I'll add the style just in case */
+.zf-selected-row .zf-infoIcon {
+    background: #ff00cc;
+    color: white;
+    border-color: #ff00cc;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+   
+}
+	
+.zf-tempContDiv input[type="radio"] {
+	-webkit-appearance: none;
+	border: 1.2px solid #47476b;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+}
+.zf-tempContDiv input[type="radio"] ~ label {
+	cursor: pointer;
+}
+.zf-tempContDiv input[type="checkbox"] {
+	-webkit-appearance: none;
+	border-radius: 3px;
+    border: 1.2px solid #47476b;
+    transition: 0.5s ease all;
+	position: relative;
+	width: 20px;
+	height: 20px;
+}
+.zf-tempContDiv input[type="checkbox"] ~ label {
+	cursor: pointer;
+}
+.zf-tempContDiv .zf-termsAccept input[type="checkbox"] ~ label {
+	cursor: default;
+}
+.zf-tempContDiv input[type="radio"]:before {
+	content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: 3px;
+    margin-left: 3px;
+    box-sizing: border-box;
+}
+.zf-tempContDiv input[type="checkbox"]:before {
+	content: '';
+	display: block;
+	width: 60%;
+	height: 60%;
+	margin: 19% auto;
+}
+.zf-tempContDiv input[type="radio"]:checked:before {
+	background: rgba(46, 183, 159,1);
+}
+.zf-tempContDiv input[type="radio"]:checked {
+	border: 1.2px solid rgba(46, 183, 159,1);
+	
+	outline: none;
+}
+
+.zf-tempContDiv input[type="checkbox"]:checked {
+	border: 1.2px solid rgba(46, 183, 159,1);
+
+	outline: none;
+}
+.zf-tempContDiv input[type="checkbox"]:checked:before {
+	content: " ";
+    display: inline-block;
+    transform: rotate(45deg);
+    height: 10px;
+    width: 4px;
+    
+    position: absolute;
+    top: -2px;
+    left: 6px;
+}
+.zf-sideBySide .zf-tempContDiv span {
+	margin: 0 4% 16px 0;
+	padding:0;
+	width:auto;
+	float: left;
+	display:block;
+}
+.zf-sideBySide .zf-tempContDiv span input[type="checkbox"] {
+	display: block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	margin-top:1px;
+	float:left;
+	margin-left: 2px;
+}
+.zf-sideBySide .zf-tempContDiv span input[type="radio"] {
+	display: block;
+	width: 20px;
+	height: 20px;
+	margin-top: 1px;
+	padding: 0;
+	float:left;
+	margin-left: 1px;
+}
+.zf-sideBySide .zf-tempContDiv span label {
+	line-height: 21px;
+    display: block;
+    padding: 0 0 0 32px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #47476b;
+}
+.zf-oneColumns .zf-tempContDiv span {
+	margin:0 0 16px 0;
+	padding:0;
+	width:100%;
+	display:block;
+	clear: both;
+}
+.zf-oneColumns .zf-multiAttType label ~ input[type="text"],
+.zf-twoColumns .zf-multiAttType label ~ input[type="text"],
+.zf-threeColumns .zf-multiAttType label ~ input[type="text"],
+.zf-sideBySide .zf-multiAttType label ~ input[type="text"] {
+	margin-top: 15px;
+	width: 100%;
+}
+.zf-oneColumns .zf-tempContDiv span:last-child { margin-bottom:0;}
+.zf-oneColumns .zf-tempContDiv span input[type="checkbox"] {
+	display: block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	margin:0;
+	padding: 0;
+	margin-top:1px;
+	float:left;
+	margin-left: 2px;
+}
+.zf-oneColumns .zf-tempContDiv span input[type="radio"] {
+	display: block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	margin-top:1px;
+	padding: 0;
+	float:left;
+	margin-left: 1px;
+}
+.zf-oneColumns .zf-tempContDiv span label {
+	line-height: 21px;
+    display: block;
+    margin: 0 0 0 32px;
+    padding: 0;
+    font-size: 15px;
+    color: #47476b;
+}
+.zf-twoColumns .zf-tempContDiv span {
+	margin: 0 4% 16px 0;
+	width: 48%;
+	float: left;
+	display:block;
+}
+.zf-twoColumns .zf-tempContDiv span:nth-child(even) {
+	margin-right: 0;
+}
+.zf-twoColumns .zf-tempContDiv span input[type="checkbox"] {
+	display: block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	margin: 0;
+	padding: 0;
+	margin-top:1px;
+	float:left;
+	margin-left: 2px;
+}
+.zf-twoColumns .zf-tempContDiv span input[type="radio"] {
+	display: block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	margin-top: 1px;
+	padding: 0;
+	float:left;
+	margin-left: 1px;
+}
+.zf-twoColumns .zf-tempContDiv span label {
+	line-height: 21px;
+    display: block;
+    margin: 0 0 0 32px;
+    padding: 0;
+    font-size: 15px;
+    color: #47476b;
+}
+.zf-threeColumns .zf-tempContDiv span {
+	margin: 0 4% 15px 0;
+    width: 30.6%;
+    float: left;
+    display: block;
+}
+.zf-threeColumns .zf-tempContDiv span:nth-child(3n) {
+	margin-right: 0;
+}
+.zf-threeColumns .zf-tempContDiv span input[type="checkbox"] {
+	display:block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	margin-top:1px;
+	float:left;
+	margin-left: 2px;
+}
+.zf-threeColumns .zf-tempContDiv span input[type="radio"] {
+	display:block;
+	min-width: 20px;
+	width: 20px;
+	height: 20px;
+	margin-top:1px;
+	padding: 0;
+	float:left;
+	margin-left: 1px;
+}
+.zf-threeColumns .zf-tempContDiv span label {
+	line-height: 21px;
+    display: block;
+    margin: 0 0 0 32px;
+    padding: 0;
+    font-size: 15px;
+    color: #47476b;
+}
+
+.zf-mSelect select { 
+	font-size: 15px;
+    border: 1px solid rgba(184, 187, 211, 1);
+    overflow: auto;
+    border-radius: 4px;
+    color: #47476b;
+    outline: none;
+    box-sizing: border-box;
+    height: 101px;
+}	
+.zf-mSelect select option {
+	padding: 8px 10px;
+    box-sizing: border-box;
+}
+
+.zf-fmFooter {
+	margin:0;
+	padding:10px 25px 40px 25px;
+	text-align:center;
+}
+
+.zf-fmFooter .zf-submitColor{ 
+	font-size: 16px;
+    padding: 13px 38px;
+}
+
+.zf-submitColor {
+	color: #fff;
+    border: 1px solid transparent;
+    background: rgba(46, 183, 159, 1);
+    border-radius: 150px;
+    min-width: 100px;
+    transition: transform .25s cubic-bezier(0.33, 0.04, 0.63, 0.93), -webkit-transform .25s cubic-bezier(0.33, 0.04, 0.63, 0.93), -o-transform .25s cubic-bezier(0.33, 0.04, 0.63, 0.93);
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    cursor: pointer;
+	}
+	
+.zf-submitColor:hover{
+	-webkit-transform: scale3d(1.03, 1.03, 1) translate3d(0, 0, 0) perspective(500px);
+    transform: scale3d(1.03, 1.03, 1) translate3d(0, 0, 0) perspective(500px);
+	}	   	
+
+/****************Field Small/Medium/Large Starts Here****************/
+
+.zf-small .zf-tempContDiv input[type="text"], .zf-small .zf-tempContDiv textarea, .zf-small .zf-mSelect select, .zf-small .zf-tempContDiv .zf-sliderCont, .zf-small .zf-tempContDiv .zf-pdfTextArea, .zf-small .zf-signContainer{
+	width:50%;
+	}
+.zf-medium .zf-tempContDiv input[type="text"], .zf-medium .zf-tempContDiv textarea, .zf-medium .zf-mSelect select, .zf-medium .zf-tempContDiv .zf-sliderCont, .zf-medium .zf-tempContDiv .zf-pdfTextArea, .zf-medium .zf-signContainer{
+	width:75%;
+	}
+.zf-large .zf-tempContDiv input[type="text"], .zf-large .zf-tempContDiv textarea, .zf-large .zf-mSelect select, .zf-large .zf-tempContDiv .zf-sliderCont, .zf-large .zf-tempContDiv .zf-pdfTextArea, .zf-large .zf-signContainer{
+	width:100%;
+	}
+.signContainer canvas{
+	width:100%;
+}
+.zf-small .zf-tempContDiv .zf-form-sBox{
+	width:50%;
+	}
+.zf-medium .zf-tempContDiv .zf-form-sBox{
+	width:75%;
+	}
+.zf-large .zf-tempContDiv .zf-form-sBox{
+	width:100%;
+	}
+.zf-name .zf-tempContDiv .zf-form-sBox{
+	width:100%;
+	padding: 8px 10px 10px 4px;
+}
+.zf-namesmall .zf-nameWrapper{ width: 50%;}
+.zf-namesmall .zf-tempContDiv span {
+    width: 49%;
+    margin-left: 2%;
+}
+.zf-namesmall .zf-oneType .zf-salutationWrapper span{width:63%; }
+.zf-namesmall .zf-oneType .zf-salutationWrapper .zf-salutation{ width: 33%;}
+.zf-namesmall .zf-twoType .zf-salutationWrapper span{width:34%;margin-left:3%;}
+.zf-namesmall .zf-twoType .zf-salutationWrapper .zf-salutation{ width:26%;}
+.zf-namesmall .zf-threeType .zf-nameWrapper span{width:32%; margin-left:2%;}
+.zf-namesmall .zf-threeType .zf-salutationWrapper span{ 
+	width: 25%;
+    float: left;
+    margin-left: 2%;
+	margin-bottom: 0;
+}
+.zf-namesmall .zf-threeType .zf-salutationWrapper .zf-salutation{ width:19%;}
+.zf-namesmall .zf-tempContDiv span:first-child{ margin-left:0;}
+
+.zf-leftAlign .zf-namesmall .zf-threeType .zf-salutationWrapper span, 
+.zf-rightAlign .zf-namesmall	.zf-threeType .zf-salutationWrapper span
+{     
+	float: left;
+    margin-left: 2%;
+    width: 25%;}
+.zf-leftAlign .zf-namesmall .zf-threeType .zf-salutationWrapper .zf-salutation, 
+.zf-rightAlign .zf-namesmall .zf-threeType .zf-salutationWrapper .zf-salutation{ width: 19%; }
+.zf-namemedium .zf-nameWrapper{ width: 75%;}
+.zf-namemedium .zf-tempContDiv span{width:49%; margin-left:2%;}  
+.zf-namemedium .zf-oneType .zf-salutationWrapper span{width:73%; }
+.zf-namemedium .zf-oneType .zf-salutationWrapper .zf-salutation{ width: 25%;}
+.zf-namemedium .zf-twoType .zf-salutationWrapper span{width:38%;margin-left:2%;}
+.zf-namemedium .zf-twoType .zf-salutationWrapper .zf-salutation{ width:20%;}
+.zf-namemedium .zf-threeType .zf-nameWrapper span{width:32%; margin-left:2%;}
+.zf-namemedium .zf-threeType .zf-salutationWrapper span{width:25%;margin-left:2%;}
+.zf-namemedium .zf-threeType .zf-salutationWrapper .zf-salutation{ width:19%;}
+.zf-namemedium .zf-tempContDiv span:first-child{ margin-left:0;}
+.zf-namelarge .zf-tempContDiv span{width:23.5%; margin-left:2%; margin-right: 0; margin-bottom: 0;}
+.zf-namelarge .zf-twoType .zf-nameWrapper span{width:49%; margin-left:2%;}
+.zf-namelarge .zf-threeType .zf-nameWrapper span{width:32%; margin-left:2%;}
+.zf-namelarge .zf-twoType .zf-salutationWrapper span{width:40%; margin-left:2%;}
+.zf-namelarge .zf-twoType .zf-salutationWrapper .zf-salutation{ width: 16%;}
+.zf-namelarge .zf-threeType .zf-salutationWrapper span{width:26%; margin-left:2%;}
+.zf-namelarge .zf-threeType .zf-salutationWrapper .zf-salutation{ width: 19.8%;}
+.zf-namelarge .zf-oneType .zf-salutationWrapper span{width:73%; margin-left:2%;}
+.zf-namelarge .zf-oneType .zf-salutationWrapper .zf-salutation{ width:25%;}
+.zf-namelarge .zf-tempContDiv span:first-child { margin-left:0 !important;}
+.zf-csmall .zf-tempContDiv input[type="text"] {
+	width:100%;
+}
+.zf-cmedium .zf-tempContDiv input[type="text"] {
+	width:100%;
+}
+.zf-clarge	 .zf-tempContDiv input[type="text"] {
+	width:100%;
+} 	
+.zf-nsmall .zf-tempContDiv input[type="text"] {	
+	width:50%;	
+	}
+.zf-nmedium .zf-tempContDiv input[type="text"] {
+	width:75%;
+	}
+.zf-nlarge .zf-tempContDiv input[type="text"] {
+	width:100%;
+	}
+
+.zf-signSmall .zf-tempContDiv .zf-signContainer .zf-signArea {	
+	width:49%;
+	}
+.zf-signMedium .zf-tempContDiv .zf-signContainer .zf-signArea {
+	width:60%;
+	}
+.zf-signLarge .zf-tempContDiv .zf-signContainer .zf-signArea {	
+	width:74%;
+	}	
+
+.zf-addrsmall .zf-tempContDiv .zf-addrCont{ 
+	width:50%;
+	}
+.zf-addrmedium .zf-tempContDiv .zf-addrCont{ 
+	width:75%;
+	}
+.zf-addrlarge .zf-tempContDiv .zf-addrCont{ 
+	width:100%;
+	}	
+	
+.zf-leftAlign .zf-currency .zf-tempContDiv input[type="text"],
+.zf-rightAlign .zf-currency .zf-tempContDiv input[type="text"] {
+	float: left;
+}
+.zf-leftAlign .zf-currency.zf-clarge .zf-tempContDiv input[type="text"],
+.zf-rightAlign .zf-currency.zf-clarge .zf-tempContDiv input[type="text"] {
+	float: left;
+}
+.zf-leftAlign .zf-currency.zf-clarge .zf-tempContDiv input[type="text"] ~ span,
+.zf-rightAlign .zf-currency.zf-clarge .zf-tempContDiv input[type="text"] ~ span {
+	margin-top: 9px;
+}	
+/****************Field Small/Medium/Large Ends Here****************/	
+
+.zf-topAlign .zf-tempFrmWrapper .zf-labelName {
+	padding-bottom: 10px;
+	display:block;
+}
+
+.zf-topAlign .zf-threeColumns .zf-labelName, .zf-topAlign .zf-twoColumns .zf-labelName, .zf-topAlign .zf-oneColumns .zf-labelName, .zf-topAlign .zf-sideBySide .zf-labelName{ padding-bottom:8px;}
+
+.zf-leftAlign {
+	display:block;
+}
+.zf-leftAlign .zf-tempFrmWrapper .zf-labelName {
+	float: left;
+    width: 30%;
+    line-height: 20px;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+.zf-leftAlign .zf-tempFrmWrapper .zf-tempContDiv {
+	float: right;
+    width: 70%;
+}
+.zf-leftAlign .zf-slider .zf-tempContDiv{ margin-top:6px;}
+.zf-leftAlign .zf-decesion .zf-tempContDiv, .zf-rightAlign .zf-decesion .zf-tempContDiv{ margin-left:0 !important;}
+.zf-rightAlign {
+	display:block;
+}
+.zf-rightAlign .zf-tempFrmWrapper .zf-labelName {
+	float: left;
+    width: 30%;
+    line-height: 20px;
+    text-align: right;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+.zf-rightAlign .zf-tempFrmWrapper .zf-tempContDiv {
+	float: right;
+    width: 70%;
+}
+.zf-matrixTable{ font-size:13px; overflow-x: auto;padding-bottom: 15px !important;}
+.zf-matrixTable table th, .zf-matrixTable table td{padding:10px;}
+.zf-matrixTable thead th, .zf-matrixTable table td{ text-align:center;}
+.zf-matrixTable table td input[type="radio"], .zf-matrixTable table td input[type="checkbox"]{ display:inline-block;}
+.zf-matrixTable tbody th{     
+	font-weight: normal;
+    font-size: 16px;
+    text-align: left;
+    padding: 12px 10px;
+    color: #252c3e;
+    width: 218px;
+    box-sizing: border-box;
+}
+.zf-matrixTable thead th {     word-break: normal;
+    font-weight: normal;
+    font-size: 16px;
+    padding: 12px 10px;
+    color: #252c3e;
+    text-align: center;}
+
+/****************Form Top Align Starts Here****************/	
+
+.zf-termsContainer{ margin:0; padding:0;}
+.zf-termsContainer .zf-termsMsg {
+	border: 1px solid #252c3e;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 12px 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    min-height: 70px;
+    font-size: 13px;
+}
+.zf-termsContainer .zf-termScrollRemove { border: 1px solid #252c3e;
+    overflow-y: auto;
+    padding: 12px 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    min-height: 70px;
+    font-size: 13px;}
+.zf-termsAccept{ 
+	margin-top: 0 !important;
+}
+.zf-termsAccept input[type="checkbox"]{ margin-top:0 !important; float:left;}
+.zf-termsAccept label{ 
+	margin-left: 30px;
+    font-size: 15px;
+    float: none;
+    display: block;
+    color: #252c3e;}
+.zf-termsWrapper .zf-tempContDiv{ margin-left:0 !important;}
+.zf-termsWrapper .zf-labelName{ width:100% !important; text-align:left !important; padding-bottom:8px !important;}
+.zf-medium .zf-phwrapper {
+    width: 75%;
+}
+.zf-phwrapper.zf-phNumber span {
+	width: 100% !important;
+}
+.zf-phwrapper span:first-child {
+    margin-left: 0;
+    width: 22%;
+}
+.zf-phwrapper label {
+	display: block;
+    color: #252c3e;
+    font-size: 13px;
+    padding-top: 8px;
+    opacity: 0.8;
+}
+.zf-medium .zf-phonefld input[type="text"], .zf-small .zf-phonefld input[type="text"] {
+    width: 100%;
+}
+.zf-small .zf-phwrapper {
+    width: 50%;
+}
+.zf-tempFrmWrapper.zf-phone span {
+	width: 30%;
+	margin: inherit;
+}
+.zf-tempFrmWrapper .zfPhoneUSA span {
+    width: 22.3%;
+    position: relative;
+}
+.zf-tempFrmWrapper.zf-phone span input[type="text"] {
+	width: 100%;
+}
+.zfMultiColGrid .zf-tempFrmWrapper.zf-phone .zf-symbols {
+    display: none;
+}
+.zf-tempFrmWrapper.zf-phone .zfPhoneUSA {
+	display: flex;
+}
+.zfMultiColGrid .zf-tempFrmWrapper.zf-phone .zfPhoneUSA span,
+.zfoneColumn .zf-tempFrmWrapper.zf-phone .zfPhoneUSA span {
+	width: 30%;
+	flex: 1 1 auto;
+	margin-left: 8px;
+}
+.zf-tempFrmWrapper.zf-phone .zfPhoneUSA span:first-of-type {
+	margin-left: 0;
+}
+.zf-phwrapper span {
+    float: left;
+    width: 76%;
+    margin-left: 2%;
+}
+.zf-descFld a { 
+	text-decoration:underline;
+	color: #252c3e;
+}
+.zf-descFld em{ font-style:italic;}
+.zf-descFld b{ font-weight:bold;}
+.zf-descFld i{ font-style: italic;}
+.zf-descFld u{ text-decoration:underline;}
+.zf-descFld ul{ margin:auto;}
+.zf-descFld ul{ list-style:disc;}
+.zf-descFld ol{ list-style:decimal;}
+.zf-descFld ul, .zf-descFld ol{margin: 10px 0;
+    padding-left: 20px;}
+
+.zf-descFld  ol.code {
+    list-style-position: outside;
+    list-style-type: decimal;
+    padding: 0 48px;
+}
+.zf-descFld  ol.code li {
+    background-color: #F5F5F5;
+    border-left: 2px solid #CCCCCC;
+    margin: 1px 0;
+    padding: 2px;
+}
+.zf-descFld  blockquote.zquote {
+    border-left: 3px solid #EFEFEF;
+    padding-left: 35px;
+}
+.zf-descFld  blockquote.zquote span.txt {
+    -moz-user-focus: ignore;
+    -moz-user-input: disabled;
+    -moz-user-select: none;
+    color: #058BC2;
+    float: left;
+    font: bold 50px Arial,Helvetica,sans-serif;
+    margin: -10px 0 0 -30px;
+}
+.zf-descFld  blockquote.block_quote {
+    background: url("../images/newQuote.gif") no-repeat scroll 12px 10px rgba(0, 0, 0, 0);
+    border-left: 3px solid #EFEFEF;
+    font: 13px/20px georgia,Arial,verdana,Helvetica,sans-serif;
+    margin: 15px 3px 15px 15px;
+    padding: 10px 10px 10px 40px;
+}
+.zf-descFld  body {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 13px;
+    margin: 8px;
+}
+.note .noteCont{ overflow:hidden;}
+.note .zf-descFld{
+	overflow:hidden;
+	font-size: 13px;
+}
+
+.zf-descFld img {
+	width: auto;
+}
+/* New Css */
+.zf-date .zf-tempContDiv input[type="text"]{
+	width: 340px;
+}
+.zf-leftAlign .zf-date .zf-tempContDiv input[type="text"],
+.zf-rightAlign .zf-date .zf-tempContDiv input[type="text"] {
+	width: 238px;
+}
+.zf-leftAlign .zf-date.zf-time .zf-tempContDiv input[type="text"],
+.zf-rightAlign .zf-date.zf-time .zf-tempContDiv input[type="text"] {
+width: 223px;
+}
+.zf-decesion .zf-tempContDiv input[type="checkbox"] {
+	margin-top: 0;
+}
+.zf-tempFrmWrapper.zf-decesion .zf-labelName {
+	margin-left: 28px !important;
+}
+.zf-leftAlign .zf-tempFrmWrapper .zf-matrixTable,
+.zf-rightAlign .zf-tempFrmWrapper .zf-matrixTable {
+	width: 100%;
+	clear: both;
+	float: none;
+	padding-top: 10px;
+}
+.zf-leftAlign .zf-tempFrmWrapper.zf-termsandCond .zf-tempContDiv,
+.zf-rightAlign .zf-tempFrmWrapper.zf-termsandCond .zf-tempContDiv {
+	float: none;
+    width: 100%;
+    clear: both;
+    padding-top: 10px;
+}
+.zf-leftAlign .zf-tempFrmWrapper.zf-termsandCond .zf-labelName,
+.zf-rightAlign .zf-tempFrmWrapper.zf-termsandCond .zf-labelName {
+	width: 100%;
+	float: none;
+	text-align: left;
+	display: block;
+}
+
+.zf-leftAlign .zf-namesmall .zf-threeType .zf-salutationWrapper span:first-of-type, 
+.zf-rightAlign .zf-namesmall .zf-threeType .zf-salutationWrapper span:first-of-type {
+	margin-left: 0;
+}
+.zf-rightAlign .zf-tempFrmWrapper.zf-matrixTable .zf-labelName {
+	text-align: left;
+}
+.zfAddressTwoCol {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0 16px;
+}
+
+.zf-address .zf-tempContDiv .zfAddressTwoCol .zf-addOne {
+	width: 47%;
+}
+.zf-addrCont .zfAddressTwoCol ~ .zfAddressTwoCol span.zf-addtwo:last-of-type {
+    padding-bottom: 0;
+}
+.zf-csmall.zf-currency .zf-tempContDiv > div {
+	width: 50%;
+	display: inline-flex;
+}
+.zf-cmedium.zf-currency .zf-tempContDiv > div {
+	width: 75%;
+	display: inline-flex;
+}
+.zf-clarge.zf-currency .zf-tempContDiv > div {
+	width: 100%;
+	display: inline-flex;
+}
+.zf-nameWrapper.zf-salutationWrapper {
+    display: flex;
+}
+.zf-leftAlign .zf-tempFrmWrapper .zf-termsandCond {
+	float: none;
+	width: 100%;
+}
+.zf-tempContDiv span input[type="checkbox"]:focus {
+	
+   
+}
+.zf-multiAttType.fullColWrap,
+.zf-twoColumns .zf-tempContDiv .zf-multiAttType.fullColWrap,
+.zf-threeColumns .zf-tempContDiv .zf-multiAttType.fullColWrap,
+.zf-sideBySide .zf-tempContDiv .zf-multiAttType.fullColWrap {
+	width: 100%;
+}
+.zf-address.zf-tempContDiv .zf-form-sBox,
+.zf-address.zf-tempContDiv input[type="text"] {
+	width: 100%;
+}
+.address_row_3, .address_row_4 {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0 16px;
+}
+.address_row_3 span.zf-addresCols,
+.address_row_4 span.zf-addresCols {
+	    width: 47%;
+		flex: 1 1 auto;
+}
+.address_row_1 .zf-addresCols,
+.address_row_2 .zf-addresCols,
+.address_row_3 .zf-addresCols,
+.address_row_4 .zf-addresCols  {
+	width: 100%;
+}
+.zf-tempFrmWrapper.gridName .zf-twoType .zf-nameWrapper span {
+	width: 100%;
+	margin-left: 0;
+	margin-bottom: 15px;
+}
+.zf-tempFrmWrapper.gridName .zf-threeType .zf-salutationWrapper .zf-salutation {
+	width: 100%;
+	margin-left: 0;
+}
+.zf-tempFrmWrapper.gridName .zf-threeType .zf-salutationWrapper span {
+	width: 100%;
+	margin-left: 0;
+	margin-bottom: 15px;
+}
+.zf-tempFrmWrapper.gridName  .zf-nameWrapper.zf-salutationWrapper {
+	display: block;
+}
+.zf-templateWrapper .zf-note table td {
+	word-break: break-all;
+}
+.zf-leftAlign .zf-tempFrmWrapper.zf-matrixTable .zf-labelName {
+	width: 100%;
+}
+
+/* Grid Related Css Start Here */
+.zfgrid_Wrapper {
+	padding: 0 40px 0 40px;
+	margin: 0;
+	box-sizing: border-box;
+}
+.zfgridLabelCont {
+	padding: 12px 0;
+}
+.zfgridLabelCont label {
+	font-size: 22px;
+	color: #252c3e;
+}
+.zfgridLabelCont span {
+	font-size: 14px;
+	color: #465474;
+	padding-top: 8px;
+	display: block;
+}
+.zftwoColumn,
+.zfthreeColumn {
+	display: flex;
+  	flex-wrap: nowrap;
+	gap: 32px;
+}
+.zfoneColumn .zfCol{
+	max-width: 100%;
+}
+.zftwoColumn .zfCol {
+	flex: 1 1;
+  	overflow-x: hidden;
+	max-width: 50%;
+}
+.zfthreeColumn .zfCol {
+	flex: 1 1;
+  	overflow-x: hidden;
+	max-width: 33%;
+}
+.zfgrid_Wrapper .zf-tempFrmWrapper {
+	padding-left: 0;
+  	padding-right: 0;
+}
+.zfMultiColGrid .zf-medium .zf-tempContDiv input[type="text"], .zfMultiColGrid .zf-medium .zf-tempContDiv textarea, .zfMultiColGrid .zf-medium .zf-mSelect select, .zfMultiColGrid .zf-medium .zf-tempContDiv .zf-sliderCont, .zfMultiColGrid .zf-medium .zf-tempContDiv .zf-pdfTextArea, 
+.zfMultiColGrid .zf-medium .zf-signContainer {
+	width: 100%;
+  }
+
+.zfMultiColGrid .zf-small .zf-tempContDiv input[type="text"], .zfMultiColGrid .zf-small .zf-tempContDiv textarea, .zfMultiColGrid .zf-small .zf-mSelect select, .zfMultiColGrid .zf-small .zf-tempContDiv .zf-sliderCont, .zfMultiColGrid .zf-small .zf-tempContDiv .zf-pdfTextArea, 
+.zfMultiColGrid .zf-small .zf-signContainer {
+	width: 100%;
+}
+.zfMultiColGrid .zf-medium .zf-phwrapper {
+	width: 100%;
+}
+.zfMultiColGrid .zf-small .zf-phwrapper {
+	width: 100%;
+}
+.zfMultiColGrid .zf-tempFrmWrapper.zf-phone span,
+.zfoneColumn .zf-tempFrmWrapper.zf-phone span{
+	width: 30.6%;
+}
+.zfoneColumn .zf-tempFrmWrapper.zf-phone span.zf-symbols {
+    display: none;
+}
+.zfMultiColGrid .zf-phone .zf-tempContDiv .zf-symbols {
+	margin: 9px 1%;
+  	width: 2%;
+}
+.zfMultiColGrid .zf-cmedium.zf-currency .zf-tempContDiv > div {
+	width: 100%;
+}
+.zfMultiColGrid .zf-csmall.zf-currency .zf-tempContDiv > div {
+	width: 100%;
+}
+.zfMultiColGrid .zf-medium .zf-tempContDiv .zf-form-sBox,.zfMultiColGrid .zf-small .zf-tempContDiv .zf-form-sBox {
+	width: 100%;
+}
+.zfMultiColGrid .zf-date .zf-tempContDiv input[type="text"],
+.zfMultiColGrid .zf-date.zf-time .zf-tempContDiv input[type="text"] {
+	width: 100%;
+}
+.zfMultiColGrid .zf-tempContDiv input[type="file"] {
+	width: 100%;
+}
+.zfMultiColGrid .zf-namemedium .zf-nameWrapper,.zfMultiColGrid .zf-namesmall .zf-nameWrapper {
+	width: 100%;
+  }
+.zfMultiColGrid .zf-addrmedium .zf-tempContDiv .zf-addrCont,.zfMultiColGrid .zf-addrsmall .zf-tempContDiv .zf-addrCont {
+	width: 100%;
+}
+
+.zftwoColumn .address_row_3, .zftwoColumn .address_row_4, .zfthreeColumn .address_row_3, .zfthreeColumn .address_row_4 {
+	flex-wrap: nowrap;
+	gap: 0 8px;
+}
+.zftwoColumn .gridAddress .address_row_3, .zftwoColumn .gridAddress .address_row_4, .zfthreeColumn .gridAddress .address_row_3, .zfthreeColumn .gridAddress .address_row_4 {
+	flex-wrap: wrap;
+	width: 100%;
+}
+.gridAddress .address_row_3 .zf-addresCols, .gridAddress .address_row_4 .zf-addresCols {
+	width: 100%;
+}
+.zfgrid_Wrapper .zf-time .zf-tempContDiv .zf-symbols {
+	display: none;
+}
+.zfMultiColGrid  .zf-time .zf-tempContDiv span {
+	width: 32%;
+	margin-right: 2%;
+}
+.zfMultiColGrid  .zf-time .zf-tempContDiv span:last-of-type {
+	margin-right: 0;
+}
+.zfMultiColGrid .zf-time .zf-tempContDiv .zf-form-sBox {
+	min-width: auto;
+	width: 100%;
+}
+.zfMultiColGrid .zf-date.zf-time .zf-tempContDiv .zf-subDate {
+	width: 25%;
+}
+.zfMultiColGrid .zf-date.zf-time .zf-tempContDiv span {
+	width: 23%;
+}
+.zfgrid_Wrapper .zf-oneColumns .zf-tempContDiv span label,.zfgrid_Wrapper .zf-twoColumns .zf-tempContDiv span label,.zfgrid_Wrapper .zf-threeColumns .zf-tempContDiv span label,.zfgrid_Wrapper .zf-sideBySide .zf-tempContDiv span label {
+	word-break: break-all;
+}
+.zf-leftAlign .zfMultiColGrid .zf-tempFrmWrapper .zf-labelName,
+.zf-rightAlign .zfMultiColGrid .zf-tempFrmWrapper .zf-labelName {
+	float: none;
+	display: block;
+	width: 100%;
+	padding-bottom: 10px;
+	text-align: left;
+}
+.zf-leftAlign .zfMultiColGrid .zf-tempFrmWrapper .zf-tempContDiv,
+.zf-rightAlign .zfMultiColGrid .zf-tempFrmWrapper .zf-tempContDiv {
+	float: none;
+	width: 100%;
+}
+.zfInstrucTop .zf-instruction {
+	padding: 0px 0px 10px 0px;
+}
+.zfInstrucTop .zf-decesion .zf-instruction {
+	padding: 10px 0px 0px 0px;
+}
+.zfInstrucTop.zf-topAlign .zf-tempFrmWrapper .zf-labelName {
+    padding-bottom: 6px;
+    display: block;
+}
+.zfoneColumn .zf-time .zf-tempContDiv {
+	width: 285px;
+}
+.zf-leftAlign .zfoneColumn .zf-time .zf-tempContDiv,
+.zf-rightAlign .zfoneColumn .zf-time .zf-tempContDiv,
+.zf-leftAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv,
+.zf-rightAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv {
+	width: 70%;
+}
+.zfoneColumn .zf-time .zf-tempContDiv span {
+	width: 25%;
+  	margin-right: 14px;
+}
+.zf-leftAlign .zfoneColumn .zf-time .zf-tempContDiv span,
+.zf-rightAlign .zfoneColumn .zf-time .zf-tempContDiv span {
+	width: 72px;
+}
+.zfoneColumn .zf-time.zf-date .zf-tempContDiv {
+	width: 100%;
+}
+.zfoneColumn .zf-time.zf-date .zf-tempContDiv span {
+	width: 72px;
+  	margin-right: 14px;
+}
+.zfoneColumn .zf-time.zf-date .zf-tempContDiv .zf-subDate {
+	width: 340px;
+}
+.zf-leftAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv .zf-subDate,
+.zf-rightAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv .zf-subDate {
+	width: 223px;
+	
+}
+.zf-leftAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv span,
+.zf-rightAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv span {
+	margin-right: 12px;
+}
+.zf-leftAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv span:last-of-type,
+.zf-rightAlign .zfoneColumn .zf-time.zf-date .zf-tempContDiv span:last-of-type {
+	margin-right: 0;
+}
+
+/* Grid Related Css Ends Here */
+
+/* ------------------ Divider Field Css Start here -------------------- */
+
+.zf-divider {
+    border-top-color:#b8bbd3 !important;
+    margin: 0 auto;
+}
+
+.zf-small .zf-divider{
+    width:50%;
+}
+.zf-medium .zf-divider{
+    width:75%;
+}
+.zf-large .zf-divider{
+    width:100%;
+}
+
+.zf-divider.line-One{
+	border-top:1px ;
+}
+.zf-divider.line-Two{
+	border-top:2px;
+}
+.zf-divider.line-Three{
+	border-top:3px;
+}
+.zf-divider.line-Four{
+	border-top:4px;
+}
+.zf-divider.line-Five{
+	border-top:5px;
+}
+.zf-divider.line-Six{
+	border-top:6px;
+}
+.zf-divider.line-Seven{
+	border-top:7px;
+}
+.zf-divider.line-Eight{
+	border-top:8px;
+}
+.zf-divider.line-Nine{
+	border-top:9px;
+}
+.zf-divider.line-Ten{
+	border-top: 10px;
+}
+
+.zf-divider.solidType{
+	border-top-style: solid;
+}
+.zf-divider.dashedType{
+	border-top-style: dashed;
+}
+.zf-divider.dottedType{
+	border-top-style: dotted;
+}
+.zf-divider.doubleType{
+	border-top-style: double;
+}
+
+.layout3 .dividerContainer{
+	background: transparent;
+    box-shadow: none;
+	border: none;
+	padding: 12px 0;
+}
+
+/* ------------------ Divider Field Css Ends here -------------------- */
+
+/* New Css */
+/* Reset */
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+   
+    color: #1A1A1A;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Container */
+
+
+.zf-templateWidth {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.zf-templateWrapper {
+    background: #FFFFFF;
+    border-radius: 16px;
+    overflow: hidden;
+   
+}
+
+/* Header */
+.zf-tempHeadBdr {
+    list-style: none;
+}
+
+.zf-tempHeadContBdr {
+    padding: 48px 48px 32px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.zf-frmTitle {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1A1A1A;
+    letter-spacing: -0.02em;
+    margin: 0;
+    font-style: normal;
+}
+
+.zf-frmTitle em {
+    font-style: normal;
+}
+
+.zf-frmDesc {
+    font-size: 16px;
+    color: #666666;
+    margin-top: 8px;
+}
+
+/* Form Content */
+.zf-subContWrap {
+    padding: 0;
+}
+
+.zf-subContWrap > ul {
+    list-style: none;
+}
+
+/* Regular Form Fields (Flavor, Email, etc) */
+.zf-tempFrmWrapper {
+   
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.zf-labelName {
+    display: block;
+    font-size: 25px;
+    font-weight: 600;
+    color: #1A1A1A;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    letter-spacing: -0.01em;
+}
+
+/* Input Fields */
+.zf-tempContDiv span {
+    display: block;
+}
+
+.zf-tempContDiv input[type="text"],
+.zf-tempContDiv textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #1A1A1A;
+    background: #FFFFFF;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.zf-tempContDiv input[type="text"]:hover {
+    border-color: #CCCCCC;
+}
+
+.zf-tempContDiv input[type="text"]:focus {
+    border-color: #000000;
+    background: #FAFAFA;
+}
+
+/* Select Dropdown */
+.zf-mSelect select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #1A1A1A;
+    background: #FFFFFF;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 10px;
+    outline: none;
+    min-height: 200px;
+    font-family: inherit;
+}
+
+.zf-mSelect select option {
+    padding: 12px;
+    font-size: 15px;
+}
+
+/* ==== TABLE HEADER ==== */
+.zf-tableHeader {
+    display: grid;
+    grid-template-columns: 60px 220px 1fr 1fr 1fr;
+    background: #E8E8E8;
+    border: 1px solid #D0D0D0;
+    padding: 0 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A1A1A;
+}
+
+.zf-tableHeader > div {
+    padding: 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.zf-tableHeader > div:first-child {
+    justify-content: flex-start;
+    padding-left: 12px;
+}
+
+.zf-tableHeader > div:nth-child(2) {
+    justify-content: flex-start;
+    padding-left: 12px;
+}
+
+.zf-tableHeader > div:last-child {
+    border-right: none;
+}
+
+/* ==== TABLE ROWS (Grid Wrappers) ==== */
+.zfgrid_Wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    border-left: 1px solid #E5E5E5;
+    border-right: 1px solid #E5E5E5;
+    border-bottom: 1px solid #E5E5E5;
+    counter-increment: table-row;
+}
+
+.zfgrid_Wrapper:first-of-type {
+    border-top: 1px solid #E5E5E5;
+}
+
+/* Hide original grid label */
+.zfgridLabelCont {
+    display: none !important;
+}
+
+/* Table Row Structure */
+.zfthreeColumn {
+    display: grid !important;
+    grid-template-columns: 60px 220px 1fr 1fr 1fr !important;
+    align-items: center;
+    padding: 0 24px !important;
+    min-height: 70px;
+    gap: 0 !important;
+}
+
+/* Row Number Column */
+.zfthreeColumn::before {
+    content: counter(table-row);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #666666;
+    grid-column: 1;
+    grid-row: 1;
+    border-right: 1px solid #D0D0D0;
+    /* Make the divider a continuous full-height line (not "dash-like" segments) */
+    align-self: stretch;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Type/Name Column */
+.zfthreeColumn::after {
+    content: attr(data-name);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    padding-left: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1A1A1A;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+/* Input Columns */
+.zfCol {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 20px !important;
+    flex: none !important;
+}
+
+.zfMultiColGrid .zf-tempFrmWrapper {
+    padding: 0 !important;
+    border: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.zfMultiColGrid .zf-labelName {
+    display: none !important;
+}
+
+.zfMultiColGrid .zf-tempContDiv {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.zfMultiColGrid .zf-tempContDiv span {
+    width: 100% !important;
+    max-width: none !important;
+    display: block;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.zfMultiColGrid .zf-tempContDiv input[type="text"] {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+    text-align: center;
+    border: 1.5px solid #E0E0E0 !important;
+    background: #FFFFFF !important;
+    box-sizing: border-box !important;
+}
+
+.zfMultiColGrid .zf-tempContDiv input[type="text"]:hover {
+    border-color: #CCCCCC !important;
+}
+
+.zfMultiColGrid .zf-tempContDiv input[type="text"]:focus {
+    border-color: #000000 !important;
+    background: #FAFAFA !important;
+}
+
+/* Reset counter before table starts */
+.zf-subContWrap {
+    counter-reset: table-row;
+}
+
+/* Alternating row colors (optional) */
+.zfgrid_Wrapper:nth-child(even) .zfthreeColumn {
+    background: #FFFFFF;
+}
+
+/* Submit Button */
+.zf-fmFooter {
+   
+    text-align: center;
+    background: #FFFFFF;
+    list-style: none;
+}
+
+.zf-submitColor {
+    display: inline-block;
+    padding: 20px 48px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF;
+    background: #AB2328;
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: -0.01em;
+    font-family: inherit;
+}
+
+.zf-submitColor:hover {
+    background: #1A1A1A;
+    transform: translateY(-1px);
+    
+}
+
+.zf-submitColor:active {
+    transform: translateY(0);
+}
+
+/* Error Message */
+.zf-errorMessage {
+    display: none !important;
+    color: #DC2626;
+    font-size: 13px;
+    margin-top: 6px;
+    text-align: left;
+}
+
+/* Clear Fix */
+.zf-clearBoth {
+    clear: both;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .zfthreeColumn {
+        grid-template-columns: 50px 220px 1fr 1fr 1fr !important;
+    }
+    
+    .zf-tableHeader {
+        grid-template-columns: 50px 220px 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .zf-tempHeadContBdr,
+    .zf-tempFrmWrapper,
+    .zf-fmFooter {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    
+    .zfthreeColumn {
+        grid-template-columns: 45px 140px 1fr 1fr 1fr !important;
+        padding: 0 24px !important;
+    }
+    
+    .zf-tableHeader {
+        grid-template-columns: 45px 140px 1fr 1fr 1fr;
+        padding: 0 24px;
+        font-size: 13px;
+    }
+
+    .zf-frmTitle {
+        font-size: 28px;
+    }
+    
+    .zfMultiColGrid .zf-tempContDiv input[type="text"] {
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .zf-backgroundBg {
+        padding: 20px 12px;
+    }
+
+    .zf-templateWrapper {
+        border-radius: 12px;
+    }
+
+    .zf-tempHeadContBdr,
+    .zf-tempFrmWrapper,
+    .zf-fmFooter {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .zf-frmTitle {
+        font-size: 24px;
+    }
+
+    .zf-submitColor {
+        width: 100%;
+        padding: 14px 32px;
+    }
+    
+    .zfthreeColumn {
+        grid-template-columns: 40px 100px 1fr 1fr 1fr !important;
+        padding: 0 16px !important;
+        font-size: 13px;
+    }
+    
+    .zf-tableHeader {
+        grid-template-columns: 40px 100px 1fr 1fr 1fr;
+        padding: 0 16px;
+        font-size: 12px;
+    }
+    
+    .zf-tableHeader > div {
+        padding: 12px 10px;
+    }
+    
+    .zfthreeColumn::before,
+    .zfthreeColumn::after {
+        padding: 15px 10px;
+    }
+    
+    .zfCol {
+        padding: 15px 10px !important;
+    }
+    
+    .zfMultiColGrid .zf-tempContDiv input[type="text"] {
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* Hidden */
+input[type="hidden"] {
+    display: none;
+}
+
+/* Form Structure */
+ul {
+    list-style: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+/* Focus Visible */
+*:focus-visible {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+}
+
+button:focus-visible {
+    outline-color: #FFFFFF;
+}
+
+/* Override any conflicting size rules */
+.zf-large .zf-tempContDiv input[type="text"],
+.zf-large .zf-tempContDiv textarea,
+.zf-large .zf-mSelect select {
+    width: 100%;
+}
+
+.zf-topAlign .zf-tempFrmWrapper .zf-labelName {
+    padding-bottom: 0;
+    display: block;
+}
+
+/* FORCE REMOVE ALL MAX-WIDTH RESTRICTIONS ON GRID INPUTS */
+.zfgrid_Wrapper input[type="text"] {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+.zfgrid_Wrapper .zfCol {
+    max-width: none !important;
+}
+
+.zfgrid_Wrapper .zf-tempContDiv {
+    max-width: none !important;
+}
+
+.zfgrid_Wrapper span {
+    max-width: none !important;
+}
+
+/* =========================================================
+   FINAL overrides for weight columns (order table)
+   - Push fields to the far right
+   - Make fields narrower
+   ========================================================= */
+
+/* Only affect the multi-column order grids */
+.zfMultiColGrid .zfthreeColumn .zfCol {
+    justify-content: flex-end !important;
+    padding-left: 4px !important;
+    padding-right: 12px !important; /* More padding on right to move fields back left */
+}
+
+.zfMultiColGrid .zfthreeColumn .zfCol input[type="text"] {
+    width: 40px !important;
+    max-width: 40px !important;
+    text-align: center;
+}
+
+/* Shrink the weight columns themselves and push them to the right
+   (Type column flexes to take the extra space) */
+.zf-tableHeader {
+    grid-template-columns: 60px 1fr 110px 110px 110px !important;
+    gap: 0 !important; /* Remove gap between columns */
+}
+
+.zfthreeColumn {
+    grid-template-columns: 60px 1fr 110px 110px 110px !important;
+    gap: 0 !important; /* Remove gap between columns */
+}
+
+/* Prevent weight headers from wrapping - keep them single line */
+.zf-tableHeader > div:nth-child(n + 3) {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 13px !important; /* Slightly smaller to fit better */
+    padding-left: 8px !important; /* Reduce left padding to decrease gap from Type */
+    padding-right: 12px !important; /* Match field padding */
+}
+
+/* Reduce padding on Type column to decrease gap */
+.zf-tableHeader > div:nth-child(2) {
+    padding-right: 8px !important;
+}
+
+.zfNameCol {
+    padding-right: 8px !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+/* Info icon styling for flavors */
+.flavor-info-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.flavor-info-icon:hover path {
+    stroke: #000;
+    stroke-width: 1.6;
+}
+
+.flavor-info-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Tooltip */
+.flavor-tooltip-active {
+    background-color: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 10000;
+    white-space: normal;
+    max-width: 150px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Summary Section */
+.summary-section {
+    padding: 0;
+    margin-top: 32px;
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    border: 1px solid #E0E0E0;
+}
+
+.summary-table tr {
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.summary-table tr:last-child {
+    border-bottom: none;
+}
+
+.summary-table td {
+    padding: 16px 24px;
+    text-align: center;
+}
+
+.summary-table .label-col {
+    background-color: #EEEEEE;
+    font-weight: 600;
+    text-align: left;
+    width: 40%;
+}
+
+.summary-table .value-col {
+    width: 20%;
+    font-size: 16px;
+    background-color: #FFFFFF;
+}
+
+.total-summary {
+    background-color: transparent;
+    border: none;
+    padding: 16px 24px;
+    margin: 30px 0;
+    display: block;
+    text-align: right;
+}
+
+.total-summary div {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 4px 0;
+}
+
+.total-label {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.submit-section {
+    list-style: none;
+    padding: 0 0 48px 0;
+    text-align: right;
+}
+
+.submit-section .zf-fmFooter {
+    display: inline-block;
+    
+}
+
+/* Mobile Responsive - Mobile View */
+@media (max-width: 768px) {
+    /* Keep row numbers visible */
+    .zf-tableHeader{
+        display: none;
+    }
+    .zfthreeColumn::after{
+        display: none;
+    }
+    .zfthreeColumn::before {
+        display: flex !important;
+        padding: 12px 16px !important;
+        border-right: none;
+        height: auto;
+        align-self: flex-start;
+    }
+    
+    /* Change to flex column layout */
+    .zfthreeColumn {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: flex-start;
+        padding: 5px !important;
+        min-height: auto;
+        
+        gap: 0 !important;
+        border-top: 1px solid #E0E0E0;
+        border-right: 2px solid #E0E0E0;
+        border-left: 2px solid #E0E0E0;
+    }
+    
+    /* Flavor name row */
+    .zfNameCol {
+        display: flex !important;
+        align-items: center !important;
+        padding: 12px 16px !important;
+        margin-bottom: 0 !important;
+        font-size: 15px;
+        font-weight: 500;
+        color: #1A1A1A;
+        width: calc(100% - 60px) !important;
+        flex-basis: calc(100% - 60px) !important;
+        order: 1;
+    }
+    
+    /* Container for horizontal input columns */
+    .zfCol {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 33.33% !important;
+        padding: 12px 8px !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        box-sizing: border-box;
+        order: 2;
+        flex-basis: 33.33% !important;
+    }
+    
+    /* Add labels above inputs */
+    .zfCol::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        color: #666666;
+        margin-bottom: 6px;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .zfCol input[type="text"] {
+        width: 100% !important;
+        padding: 10px 6px !important;
+        font-size: 12px !important;
+        box-sizing: border-box;
+        border: 1px solid #CCCCCC !important;
+        border-radius: 2px;
+    }
+    
+    /* Adjust form wrapper for mobile */
+    .zf-tempFrmWrapper {
+        padding: 0 !important;
+        border-bottom: none !important;
+    }
+    
+    .zf-tempContDiv {
+        width: 100% !important;
+    }
+    
+    .zf-tempContDiv span {
+        display: block !important;
+    }
+    
+    .zf-clearBoth {
+        display: none !important;
+    }
+    
+    .zf-errorMessage {
+        display: none !important;
+    }
+    
+    /* Summary table mobile */
+    .summary-section {
+      
+        margin-top: 16px;
+    }
+    
+    .summary-table {
+        border: 1px solid #E0E0E0;
+    }
+    
+    .summary-table tr {
+        display: block;
+        border-bottom: 1px solid #E0E0E0;
+        padding: 12px 0;
+    }
+    
+    .summary-table tr:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-table td {
+        display: block;
+        padding: 8px 12px;
+        text-align: left;
+        width: 100%;
+    }
+    
+    .summary-table .label-col {
+        background-color: transparent;
+        padding: 8px 12px;
+    }
+    
+    .summary-table .value-col {
+        background-color: transparent;
+        text-align: right;
+    }
+    
+    /* Total summary mobile */
+    .total-summary {
+        padding: 12px 16px;
+        margin: 16px 0;
+    }
+    
+    .total-summary div {
+        font-size: 14px;
+        text-align: left;
+        margin-bottom: 4px;
+    }
+    
+    .total-label {
+        font-size: 14px;
+    }
+    
+    /* Submit section mobile */
+    .submit-section {
+        padding: 0 16px 24px 16px;
+        text-align: center;
+    }
+    
+    .submit-section .zf-fmFooter {
+        display: block;
+        margin-right: 0;
+    }
+    
+    .zf-submitColor {
+        width: 100%;
+    }
+}
+
+
+/* ============================================
+   MOBILE: MAKE SUMMARY TABLE HORIZONTAL
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* Summary section adjustments */
+    .summary-section {
+       
+        margin-top: 16px;
+    }
+    
+    .summary-table {
+        border: 1px solid #E0E0E0;
+    }
+    
+    /* Make each row (Master Cases / Pallets) horizontal */
+    .summary-table tr {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        border-bottom: 1px solid #E0E0E0;
+        padding: 0 !important;
+    }
+    
+    .summary-table tr:last-child {
+        border-bottom: none;
+    }
+    
+    /* Label column - full width on top */
+    .summary-table .label-col {
+        display: block !important;
+        width: 100% !important;
+        
+        padding: 12px 16px !important;
+        text-align: left !important;
+        font-weight: 600;
+        font-size: 15px;
+        border-bottom: 1px solid #E0E0E0;
+    }
+    
+    /* Value columns - 3 equal columns below the label */
+    .summary-table .value-col {
+        display: block !important;
+        width: 33.33% !important;
+        flex: 1 1 33.33% !important;
+        padding: 16px 8px !important;
+        text-align: center !important;
+        background-color: #FFFFFF !important;
+        font-size: 15px;
+        border-right: 1px solid #E0E0E0;
+        box-sizing: border-box;
+    }
+    
+    .summary-table .value-col:last-child {
+        border-right: none;
+    }
+    
+    /* Total summary section */
+    .total-summary {
+        padding: 16px !important;
+        margin: 16px 0 !important;
+        text-align: left !important;
+        background-color: #F9F9F9;
+        border: 1px solid #E0E0E0;
+        border-radius: 8px;
+    }
+    
+    .total-summary div {
+        font-size: 15px !important;
+        text-align: left !important;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .total-summary div:last-child {
+        margin-bottom: 0;
+    }
+    
+    .total-label {
+        font-size: 16px !important;
+        font-weight: 600;
+    }
+    
+    /* Submit section */
+    .submit-section {
+        padding: 0 16px 24px 16px !important;
+        text-align: center !important;
+    }
+    
+    .submit-section .zf-fmFooter {
+        display: block !important;
+        margin-right: 0 !important;
+        padding: 16px 0 !important;
+    }
+    
+    .zf-submitColor {
+        width: 100% !important;
+        padding: 14px 32px !important;
+    }
+}
