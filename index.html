@@ -3619,36 +3619,47 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Hidden fields for Zoho submission -->
+                        <input type="hidden" name="SingleLine167" id="hidden_mc_50" value="">
+                        <input type="hidden" name="SingleLine168" id="hidden_mc_250" value="">
+                        <input type="hidden" name="SingleLine169" id="hidden_mc_1kg" value="">
+                        <input type="hidden" name="SingleLine170" id="hidden_pallet_50" value="">
+                        <input type="hidden" name="SingleLine171" id="hidden_pallet_250" value="">
+                        <input type="hidden" name="SingleLine172" id="hidden_pallet_1kg" value="">
+                        <input type="hidden" name="SingleLine165" id="hidden_grand_mc" value="">
+                        <input type="hidden" name="SingleLine166" id="hidden_grand_pallets" value="">
+
                         <div class="summary-section">
                             <table class="summary-table">
                                 <tr>
                                     <td class="label-col">Master Cases (MC)</td>
-                                    <td class="value-col" name="Number" id="totalMC_50">0</td>
-                                    <td class="value-col" name="Number1" id="totalMC_250">0</td>
-                                    <td class="value-col" name="Number2" id="totalMC_1kg">0</td>
+                                    <td class="value-col" id="totalMC_50">0</td>
+                                    <td class="value-col" id="totalMC_250">0</td>
+                                    <td class="value-col" id="totalMC_1kg">0</td>
                                 </tr>
                                 <tr>
                                     <td class="label-col">Pallets</td>
-                                    <td class="value-col" name="Number3" id="pallet_50">0</td>
-                                    <td class="value-col" name="Number4" id="pallet_250">0</td>
-                                    <td class="value-col" name="Number5" id="pallet_1kg">0</td>
+                                    <td class="value-col" id="pallet_50">0</td>
+                                    <td class="value-col" id="pallet_250">0</td>
+                                    <td class="value-col" id="pallet_1kg">0</td>
                                 </tr>
                             </table>
 
                             <div class="total-summary">
                                 <div><span class="total-label">Total Master Cases:</span><span
-                                     name="SingleLine165"  id="grandTotalMC">0</span></div>
+                                        id="grandTotalMC">0</span></div>
                                 <div><span class="total-label">Total Pallets:</span><span
-                                      name="SingleLine166"  id="grandTotalPallets">0.00</span></div>
+                                        id="grandTotalPallets">0.00</span></div>
                             </div>
                         </div>
                     </ul>
                 </div>
                 <ul class="submit-section">
                     <li class="zf-fmFooter"><button class="zf-submitColor">Submit Order</button>
-                         <p id="customFormError" style="display:none;color:#d32f2f;font-size:14px;margin-top:10px;">
-                Please fill at least one field
-            </p>
+                        <p id="customFormError" style="display:none;color:#d32f2f;font-size:14px;margin-top:10px;">
+                            Please fill at least one field
+                        </p>
                     </li>
                 </ul>
             </div>
@@ -3662,7 +3673,7 @@
         var zf_DateRegex = new RegExp(dateAndMonthRegexFormateArray[0]);
         var zf_MonthYearRegex = new RegExp(dateAndMonthRegexFormateArray[1]);
         var zf_MandArray = [];
-        var zf_FieldArray = ["SingleLine166","MultipleChoice", "Email", "Number8", "Number7", "Number9", "Number6", "Number10", "Number11", "Number12", "Number13", "Number14", "Number15", "Number16", "Number17", "Number18", "Number19", "Number20", "MultipleChoice1", "Decimal", "Decimal1", "Number23", "Decimal2", "Decimal3", "Number26", "Decimal4", "Decimal5", "Number29", "Decimal6", "Decimal7", "Number32", "Decimal8", "Decimal9", "Number35", "MultipleChoice2", "SingleLine30", "SingleLine31", "SingleLine32", "SingleLine36", "SingleLine37", "SingleLine38", "SingleLine33", "SingleLine34", "SingleLine35", "SingleLine39", "SingleLine40", "SingleLine41", "SingleLine", "SingleLine1", "SingleLine2", "SingleLine3", "SingleLine4", "SingleLine5", "SingleLine6", "SingleLine7", "SingleLine8", "SingleLine9", "SingleLine10", "SingleLine11", "SingleLine12", "SingleLine13", "SingleLine14", "SingleLine15", "SingleLine16", "SingleLine17", "SingleLine18", "SingleLine19", "SingleLine20", "SingleLine21", "SingleLine22", "SingleLine23", "SingleLine24", "SingleLine25", "SingleLine26", "SingleLine27", "SingleLine28", "SingleLine29", "SingleLine42", "SingleLine43", "SingleLine44", "SingleLine45", "SingleLine46", "SingleLine47", "SingleLine48", "SingleLine49", "SingleLine50", "SingleLine51", "SingleLine52", "SingleLine53", "SingleLine54", "SingleLine55", "SingleLine56", "SingleLine57", "SingleLine58", "SingleLine59", "SingleLine60", "SingleLine61", "SingleLine62", "SingleLine63", "SingleLine64", "SingleLine65", "SingleLine66", "SingleLine67", "SingleLine68", "SingleLine69", "SingleLine70", "SingleLine71", "SingleLine72", "SingleLine73", "SingleLine74", "SingleLine75", "SingleLine76", "SingleLine77", "SingleLine78", "SingleLine79", "SingleLine80", "SingleLine81", "SingleLine82", "SingleLine83", "SingleLine84", "SingleLine85", "SingleLine86", "SingleLine87", "SingleLine88", "SingleLine89", "SingleLine90", "SingleLine91", "SingleLine92", "SingleLine93", "SingleLine94", "SingleLine95", "SingleLine96", "SingleLine97", "SingleLine98", "SingleLine99", "SingleLine100", "SingleLine101", "SingleLine102", "SingleLine103", "SingleLine104", "SingleLine105", "SingleLine106", "SingleLine107", "SingleLine108", "SingleLine109", "SingleLine110", "SingleLine111", "SingleLine112", "SingleLine113", "SingleLine114", "SingleLine115", "SingleLine116", "SingleLine117", "SingleLine118", "SingleLine119", "SingleLine120", "SingleLine121", "SingleLine122", "SingleLine123", "SingleLine124", "SingleLine125", "SingleLine126", "SingleLine127", "SingleLine128", "SingleLine129", "SingleLine130", "SingleLine131", "SingleLine132", "SingleLine133", "SingleLine134", "SingleLine135", "SingleLine136", "SingleLine137", "SingleLine138", "SingleLine139", "SingleLine140", "SingleLine141", "SingleLine142", "SingleLine143", "SingleLine144", "SingleLine145", "SingleLine146", "SingleLine147", "SingleLine148", "SingleLine149", "SingleLine150", "SingleLine151", "SingleLine152", "SingleLine153", "SingleLine154", "SingleLine155", "SingleLine156", "SingleLine157", "SingleLine158", "SingleLine159", "SingleLine160", "SingleLine161", "SingleLine162", "SingleLine163", "SingleLine164", "Number", "Number1", "Number2", "Number3", "Number4", "Number5"];
+        var zf_FieldArray = ["SingleLine172","SingleLine171","SingleLine170","SingleLine169","SingleLine168", "SingleLine167", "SingleLine166", "SingleLine165", "MultipleChoice", "Email", "Number8", "Number7", "Number9", "Number6", "Number10", "Number11", "Number12", "Number13", "Number14", "Number15", "Number16", "Number17", "Number18", "Number19", "Number20", "MultipleChoice1", "Decimal", "Decimal1", "Number23", "Decimal2", "Decimal3", "Number26", "Decimal4", "Decimal5", "Number29", "Decimal6", "Decimal7", "Number32", "Decimal8", "Decimal9", "Number35", "MultipleChoice2", "SingleLine30", "SingleLine31", "SingleLine32", "SingleLine36", "SingleLine37", "SingleLine38", "SingleLine33", "SingleLine34", "SingleLine35", "SingleLine39", "SingleLine40", "SingleLine41", "SingleLine", "SingleLine1", "SingleLine2", "SingleLine3", "SingleLine4", "SingleLine5", "SingleLine6", "SingleLine7", "SingleLine8", "SingleLine9", "SingleLine10", "SingleLine11", "SingleLine12", "SingleLine13", "SingleLine14", "SingleLine15", "SingleLine16", "SingleLine17", "SingleLine18", "SingleLine19", "SingleLine20", "SingleLine21", "SingleLine22", "SingleLine23", "SingleLine24", "SingleLine25", "SingleLine26", "SingleLine27", "SingleLine28", "SingleLine29", "SingleLine42", "SingleLine43", "SingleLine44", "SingleLine45", "SingleLine46", "SingleLine47", "SingleLine48", "SingleLine49", "SingleLine50", "SingleLine51", "SingleLine52", "SingleLine53", "SingleLine54", "SingleLine55", "SingleLine56", "SingleLine57", "SingleLine58", "SingleLine59", "SingleLine60", "SingleLine61", "SingleLine62", "SingleLine63", "SingleLine64", "SingleLine65", "SingleLine66", "SingleLine67", "SingleLine68", "SingleLine69", "SingleLine70", "SingleLine71", "SingleLine72", "SingleLine73", "SingleLine74", "SingleLine75", "SingleLine76", "SingleLine77", "SingleLine78", "SingleLine79", "SingleLine80", "SingleLine81", "SingleLine82", "SingleLine83", "SingleLine84", "SingleLine85", "SingleLine86", "SingleLine87", "SingleLine88", "SingleLine89", "SingleLine90", "SingleLine91", "SingleLine92", "SingleLine93", "SingleLine94", "SingleLine95", "SingleLine96", "SingleLine97", "SingleLine98", "SingleLine99", "SingleLine100", "SingleLine101", "SingleLine102", "SingleLine103", "SingleLine104", "SingleLine105", "SingleLine106", "SingleLine107", "SingleLine108", "SingleLine109", "SingleLine110", "SingleLine111", "SingleLine112", "SingleLine113", "SingleLine114", "SingleLine115", "SingleLine116", "SingleLine117", "SingleLine118", "SingleLine119", "SingleLine120", "SingleLine121", "SingleLine122", "SingleLine123", "SingleLine124", "SingleLine125", "SingleLine126", "SingleLine127", "SingleLine128", "SingleLine129", "SingleLine130", "SingleLine131", "SingleLine132", "SingleLine133", "SingleLine134", "SingleLine135", "SingleLine136", "SingleLine137", "SingleLine138", "SingleLine139", "SingleLine140", "SingleLine141", "SingleLine142", "SingleLine143", "SingleLine144", "SingleLine145", "SingleLine146", "SingleLine147", "SingleLine148", "SingleLine149", "SingleLine150", "SingleLine151", "SingleLine152", "SingleLine153", "SingleLine154", "SingleLine155", "SingleLine156", "SingleLine157", "SingleLine158", "SingleLine159", "SingleLine160", "SingleLine161", "SingleLine162", "SingleLine163", "SingleLine164", "Number", "Number1", "Number2", "Number3", "Number4", "Number5"];
         var isSalesIQIntegrationEnabled = false;
         var salesIQFieldsArray = [];</script>
 
@@ -3705,14 +3716,18 @@
     <script>
         (function () {
 
+            const errorEl = document.getElementById('customFormError');
+
+            function getNumber(val) {
+                const n = parseFloat(val);
+                return isNaN(n) ? 0 : n;
+            }
+
             function hasAtLeastOneValue() {
                 let filled = false;
 
-                document.querySelectorAll(
-                    '.zfgrid_Wrapper input[type="text"]'
-                ).forEach(input => {
-
-                    // skip hidden inputs
+                document.querySelectorAll('.zfgrid_Wrapper input[type="text"]').forEach(input => {
+                    // Skip hidden inputs
                     if (input.offsetParent === null) return;
 
                     if (getNumber(input.value) > 0) {
@@ -3723,107 +3738,102 @@
                 return filled;
             }
 
-
-            
+           
             document.addEventListener("input", function (e) {
-                if (e.target.tagName === "INPUT") {
-                    updateTotals();
-                    errorEl.style.display = "none";
+                if (e.target.tagName === "INPUT" && e.target.closest('.zfgrid_Wrapper')) {
+                    if (errorEl) errorEl.style.display = "none";
                 }
             });
 
-            
-
+            // Override Zoho's validation
             const originalSubmit = window.zf_ValidateAndSubmit;
 
             window.zf_ValidateAndSubmit = function () {
                 if (!hasAtLeastOneValue()) {
-                    errorEl.style.display = "block";
-                    errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                    return false;
+                    if (errorEl) {
+                        errorEl.style.display = "block";
+                        errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                    return false; 
                 }
-                errorEl.style.display = "none";
-                return originalSubmit();
+
+                if (errorEl) errorEl.style.display = "none";
+                return originalSubmit(); // Continue with Zoho's validation
             };
 
         })();
     </script>
-   <script>
-(function () {
-  
-  const DIVISORS = {
-    1: 160, 
-    2: 130,  
-    3: 170   
-  };
+    <script>
+        (function () {
+            const DIVISORS = {
+                1: 160,  // 50g
+                2: 130,  // 250g
+                3: 170   // 1kg
+            };
 
-  // Helper to parse number safely
-  function getNumber(val) {
-    const n = parseFloat(val);
-    return isNaN(n) ? 0 : n;
-  }
+            function getNumber(val) {
+                const n = parseFloat(val);
+                return isNaN(n) ? 0 : n;
+            }
 
-  //  calculation function
-  function updateTotals() {
-    // Tracking totals for each column (50g, 250g, 1kg)
-    let mc = { 1: 0, 2: 0, 3: 0 };
+            function updateTotals() {
+                let mc = { 1: 0, 2: 0, 3: 0 };
 
-    // Looping through all product rows
-    document.querySelectorAll(".zfthreeColumn.zfMultiColGrid").forEach(row => {
-      // Getting all three columns in this row
-      row.querySelectorAll(".zfCol").forEach((col, index) => {
-        const input = col.querySelector("input[type='text']");
-        if (!input) return;
-        
-        // Skiping hidden inputs
-        if (input.offsetParent === null) return;
+                document.querySelectorAll(".zfthreeColumn.zfMultiColGrid").forEach(row => {
+                    row.querySelectorAll(".zfCol").forEach((col, index) => {
+                        const input = col.querySelector("input[type='text']");
+                        if (!input) return;
+                        if (input.offsetParent === null) return;
 
-        // Add to appropriate column total (index 0=50g, 1=250g, 2=1kg)
-        if (mc[index + 1] !== undefined) {
-          mc[index + 1] += getNumber(input.value);
-        }
-      });
-    });
+                        if (mc[index + 1] !== undefined) {
+                            mc[index + 1] += getNumber(input.value);
+                        }
+                    });
+                });
 
-    // Update Master Cases
-    document.getElementById("totalMC_50").textContent  = mc[1];
-    document.getElementById("totalMC_250").textContent = mc[2];
-    document.getElementById("totalMC_1kg").textContent = mc[3];
+                const pallets = {
+                    1: (mc[1] / DIVISORS[1]),
+                    2: (mc[2] / DIVISORS[2]),
+                    3: (mc[3] / DIVISORS[3])
+                };
 
-    // Calculate and updatew Pallets
-    const pallets = {
-      1: (mc[1] / DIVISORS[1]),
-      2: (mc[2] / DIVISORS[2]),
-      3: (mc[3] / DIVISORS[3])
-    };
+                const grandTotalMC = mc[1] + mc[2] + mc[3];
+                const grandTotalPallets = pallets[1] + pallets[2] + pallets[3];
 
-    document.getElementById("pallet_50").textContent  = pallets[1].toFixed(2);
-    document.getElementById("pallet_250").textContent = pallets[2].toFixed(2);
-    document.getElementById("pallet_1kg").textContent = pallets[3].toFixed(2);
+                // visible display
+                document.getElementById("totalMC_50").textContent = mc[1];
+                document.getElementById("totalMC_250").textContent = mc[2];
+                document.getElementById("totalMC_1kg").textContent = mc[3];
+                document.getElementById("pallet_50").textContent = pallets[1].toFixed(2);
+                document.getElementById("pallet_250").textContent = pallets[2].toFixed(2);
+                document.getElementById("pallet_1kg").textContent = pallets[3].toFixed(2);
+                document.getElementById("grandTotalMC").textContent = grandTotalMC;
+                document.getElementById("grandTotalPallets").textContent = grandTotalPallets.toFixed(2);
 
-    // Updating totals
-    const grandTotalMC = mc[1] + mc[2] + mc[3];
-    const grandTotalPallets = pallets[1] + pallets[2] + pallets[3];
+                //HIDDEN FIELDS FOR ZOHO SUBMISSION
+                
+                document.getElementById("hidden_mc_50").value = mc[1] > 0 ? mc[1] : "";
+                document.getElementById("hidden_mc_250").value = mc[2] > 0 ? mc[2] : "";
+                document.getElementById("hidden_mc_1kg").value = mc[3] > 0 ? mc[3] : "";
+                document.getElementById("hidden_pallet_50").value = pallets[1] > 0 ? pallets[1].toFixed(2) : "";
+                document.getElementById("hidden_pallet_250").value = pallets[2] > 0 ? pallets[2].toFixed(2) : "";
+                document.getElementById("hidden_pallet_1kg").value = pallets[3] > 0 ? pallets[3].toFixed(2) : "";
+                document.getElementById("hidden_grand_mc").value = grandTotalMC > 0 ? grandTotalMC : "";
+                document.getElementById("hidden_grand_pallets").value = grandTotalPallets > 0 ? grandTotalPallets.toFixed(2) : "";
+            }
+            function bindInputs() {
+                document.querySelectorAll(".zfgrid_Wrapper input[type='text']").forEach(input => {
+                    input.addEventListener("input", updateTotals);
+                    input.addEventListener("change", updateTotals);
+                });
+            }
 
-    document.getElementById("grandTotalMC").textContent = grandTotalMC;
-    document.getElementById("grandTotalPallets").textContent = grandTotalPallets.toFixed(2);
-  }
+            document.addEventListener("DOMContentLoaded", function () {
+                bindInputs();
+                updateTotals();
+            });
 
-  // Attached listeners to all inputs
-  function bindInputs() {
-    document.querySelectorAll(".zfgrid_Wrapper input[type='text']").forEach(input => {
-      input.addEventListener("input", updateTotals);
-      input.addEventListener("change", updateTotals);
-    });
-  }
-
-  // Initialize on page load
-  document.addEventListener("DOMContentLoaded", function () {
-    bindInputs();
-    updateTotals(); 
-  });
-
-})();
-</script>
+        })();
+    </script>
 
 </body>
