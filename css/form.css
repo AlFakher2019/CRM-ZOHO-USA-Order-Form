@@ -2466,7 +2466,7 @@ button:focus-visible {
         padding: 14px 32px !important;
     }
     body {
-    overflow: hidden;
+    overflow:scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
@@ -2475,7 +2475,7 @@ body::-webkit-scrollbar {
 }
 }
 body {
-    overflow: hidden;
+    overflow: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
