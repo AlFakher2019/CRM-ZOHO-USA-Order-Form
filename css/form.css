@@ -2466,19 +2466,19 @@ button:focus-visible {
         padding: 14px 32px !important;
     }
     body {
-    overflow:scroll;
+    overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
 body::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;  /* Chrome, Safari, Opera */
 }
 }
 body {
-    overflow: scroll;
+    overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
 body::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;  /* Chrome, Safari, Opera */
 }
