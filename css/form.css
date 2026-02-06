@@ -9,6 +9,13 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     font-family: 'Poppins', sans-serif;
 }
 
+/* Strong mobile override at end to ensure trailing dot appears */
+@media (max-width: 480px) {
+    .zfthreeColumn::before {
+        content: counter(table-row) "." !important;
+    }
+}
+
 body {
 	background-attachment: fixed;
 	color: #444444;
@@ -507,6 +514,11 @@ input[type="hidden"] {
         width: 60px !important;
         max-width: 60px !important;
     }
+
+    /* Append a dot to the row number on small/mobile screens */
+    .zfthreeColumn::before {
+        content: counter(table-row) ".";
+    }
 }
 
 /* Form Structure */
@@ -781,8 +793,8 @@ button:focus-visible {
 }
 
 .zf-fmFooter {
-	margin:0;
-	padding:10px 25px 40px 25px;
+	margin-top:20px;
+	
 	text-align:center;
 }
 
@@ -2148,6 +2160,7 @@ button:focus-visible {
 .summary-table td {
     padding: 16px 24px;
     text-align: center;
+    
 }
 
 .summary-table .label-col {
@@ -2158,7 +2171,7 @@ button:focus-visible {
 }
 
 .summary-table .value-col {
-    width: 20%;
+    width: 7%;
     font-size: 16px;
     background-color: #FFFFFF;
 }
@@ -2166,8 +2179,8 @@ button:focus-visible {
 .total-summary {
     background-color: transparent;
     border: none;
-    padding: 16px 24px;
-    margin: 30px 0;
+   
+    margin-top: 30px;
     display: block;
     text-align: right;
 }
@@ -2205,8 +2218,9 @@ button:focus-visible {
     }
     .zfthreeColumn::before {
         display: flex !important;
-        padding: 12px 16px !important;
+        padding: 12px 0px !important;
         border-right: none;
+        color: #1A1A1A;
         height: auto;
         align-self: flex-start;
     }
@@ -2220,16 +2234,14 @@ button:focus-visible {
         min-height: auto;
         
         gap: 0 !important;
-        border-top: 1px solid #E0E0E0;
-        border-right: 2px solid #E0E0E0;
-        border-left: 2px solid #E0E0E0;
+        
     }
     
     /* Flavor name row */
     .zfNameCol {
         display: flex !important;
         align-items: center !important;
-        padding: 12px 16px !important;
+        padding: 12px 5px !important;
         margin-bottom: 0 !important;
         font-size: 15px;
         font-weight: 500;
@@ -2482,3 +2494,6 @@ body {
 body::-webkit-scrollbar {
     display: none;  /* Chrome, Safari, Opera */
 }
+
+
+/* ad */
