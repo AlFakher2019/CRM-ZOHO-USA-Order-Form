@@ -404,4 +404,174 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Flavor: ' + flavorName);
         });
     });
+
+	// Enforce numeric-only input for fields with checktype="c2"
+	const numericInputs = document.querySelectorAll('input[checktype="c2"]');
+	numericInputs.forEach(input => {
+		// ensure mobile numeric keyboard
+		input.setAttribute('inputmode', 'numeric');
+		input.setAttribute('pattern', '[0-9]*');
+
+		// sanitize any non-digit characters on input
+		const sanitize = () => { input.value = (input.value || '').replace(/\D+/g, ''); };
+		input.addEventListener('input', sanitize);
+
+		// handle paste: allow only digits
+		input.addEventListener('paste', function(e) {
+			e.preventDefault();
+			const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
+			const digits = paste.replace(/\D+/g, '');
+			if (typeof document.execCommand === 'function') {
+				document.execCommand('insertText', false, digits);
+			} else {
+				// fallback
+				const start = input.selectionStart || 0;
+				const end = input.selectionEnd || 0;
+				input.value = input.value.slice(0, start) + digits + input.value.slice(end);
+				input.setSelectionRange(start + digits.length, start + digits.length);
+			}
+		});
+
+		// Enforce decimal (numeric + dot) input for fields with checktype="c3"
+		const decimalInputs = document.querySelectorAll('input[checktype="c3"]');
+		decimalInputs.forEach(input => {
+			input.setAttribute('inputmode', 'decimal');
+			input.setAttribute('pattern', '[0-9]*\.?[0-9]*');
+
+			const sanitizeDecimal = () => {
+				let v = input.value || '';
+				// remove invalid chars, keep digits and dots
+				v = v.replace(/[^0-9.]/g, '');
+				// allow only one dot
+				const parts = v.split('.');
+				if (parts.length > 2) {
+					v = parts.shift() + '.' + parts.join('');
+				}
+				input.value = v;
+			};
+
+			input.addEventListener('input', sanitizeDecimal);
+
+			input.addEventListener('paste', function(e) {
+				e.preventDefault();
+				const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
+				let digits = paste.replace(/[^0-9.]/g, '');
+				const parts = digits.split('.');
+				if (parts.length > 2) {
+					digits = parts.shift() + '.' + parts.join('');
+				}
+				if (typeof document.execCommand === 'function') {
+					document.execCommand('insertText', false, digits);
+				} else {
+					const start = input.selectionStart || 0;
+					const end = input.selectionEnd || 0;
+					input.value = input.value.slice(0, start) + digits + input.value.slice(end);
+					input.setSelectionRange(start + digits.length, start + digits.length);
+				}
+			});
+
+			input.addEventListener('keydown', function(e) {
+				const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+				if (allowed.indexOf(e.key) !== -1) return;
+				if (/^[0-9]$/.test(e.key)) return;
+				if (e.key === '.') {
+					// allow dot only if not already present
+					if (input.value.indexOf('.') === -1) return;
+				}
+				e.preventDefault();
+			});
+
+			input.addEventListener('blur', function() {
+				if (input.value && !/^\d+(\.\d+)?$/.test(input.value)) {
+					input.value = '';
+				}
+			});
+		});
+
+		// block non-numeric key presses (allow navigation and editing keys)
+		input.addEventListener('keydown', function(e) {
+			const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+			if (allowed.indexOf(e.key) !== -1) return;
+			if (/^[0-9]$/.test(e.key)) return;
+			e.preventDefault();
+		});
+
+		// on blur, clear value if it contains anything other than digits
+		input.addEventListener('blur', function() {
+			if (input.value && !/^\d+$/.test(input.value)) {
+				input.value = '';
+			}
+		});
+
+		// mark as enforced so we don't re-bind handlers
+		input.dataset.enforced = 'true';
+	});
+
+	// Ensure all inputs inside table columns behave the same (some use different checktype)
+	const gridInputs = document.querySelectorAll('.zfgrid_Wrapper .zfCol input[type="text"]');
+	gridInputs.forEach(input => {
+		if (input.dataset.enforced === 'true') return;
+		const ct = input.getAttribute('checktype');
+		if (ct === 'c3') {
+			// decimal enforcement
+			input.setAttribute('inputmode', 'decimal');
+			input.setAttribute('pattern', '[0-9]*\\.?[0-9]*');
+			const sanitizeDecimal = () => {
+				let v = input.value || '';
+				v = v.replace(/[^0-9.]/g, '');
+				const parts = v.split('.');
+				if (parts.length > 2) { v = parts.shift() + '.' + parts.join(''); }
+				input.value = v;
+			};
+			input.addEventListener('input', sanitizeDecimal);
+			input.addEventListener('paste', function(e){
+				e.preventDefault();
+				const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
+				let digits = paste.replace(/[^0-9.]/g, '');
+				const parts = digits.split('.');
+				if (parts.length > 2) { digits = parts.shift() + '.' + parts.join(''); }
+				if (typeof document.execCommand === 'function') {
+					document.execCommand('insertText', false, digits);
+				} else {
+					const start = input.selectionStart || 0; const end = input.selectionEnd || 0;
+					input.value = input.value.slice(0,start) + digits + input.value.slice(end);
+					input.setSelectionRange(start + digits.length, start + digits.length);
+				}
+			});
+			input.addEventListener('keydown', function(e){
+				const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+				if (allowed.indexOf(e.key) !== -1) return;
+				if (/^[0-9]$/.test(e.key)) return;
+				if (e.key === '.') { if (input.value.indexOf('.') === -1) return; }
+				e.preventDefault();
+			});
+			input.addEventListener('blur', function(){ if (input.value && !/^\d+(\.\d+)?$/.test(input.value)) { input.value = ''; } });
+		} else {
+			// integer enforcement
+			input.setAttribute('inputmode', 'numeric');
+			input.setAttribute('pattern', '[0-9]*');
+			const sanitize = () => { input.value = (input.value || '').replace(/\D+/g, ''); };
+			input.addEventListener('input', sanitize);
+			input.addEventListener('paste', function(e){
+				e.preventDefault();
+				const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
+				const digits = paste.replace(/\D+/g, '');
+				if (typeof document.execCommand === 'function') {
+					document.execCommand('insertText', false, digits);
+				} else {
+					const start = input.selectionStart || 0; const end = input.selectionEnd || 0;
+					input.value = input.value.slice(0,start) + digits + input.value.slice(end);
+					input.setSelectionRange(start + digits.length, start + digits.length);
+				}
+			});
+			input.addEventListener('keydown', function(e){
+				const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End'];
+				if (allowed.indexOf(e.key) !== -1) return;
+				if (/^[0-9]$/.test(e.key)) return;
+				e.preventDefault();
+			});
+			input.addEventListener('blur', function(){ if (input.value && !/^\d+$/.test(input.value)) { input.value = ''; } });
+		}
+		input.dataset.enforced = 'true';
+	});
 });
