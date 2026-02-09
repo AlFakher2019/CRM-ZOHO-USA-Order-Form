@@ -389,7 +389,7 @@ body {
     }
 
     .zf-templateWrapper {
-        border-radius: 12px;
+        border-radius: 0;
     }
 
     .zf-tempHeadContBdr,
@@ -481,7 +481,7 @@ input[type="hidden"] {
 
 /* Move the weight HEADINGS to the right too (50/250/1kg) */
 .zf-tableHeader > div:nth-child(n + 3) {
-    justify-content: flex-end;
+    
     padding-right: 16px;
 }
 
@@ -1573,9 +1573,9 @@ body {
 
 .zf-templateWrapper {
     background: #FFFFFF;
-    border-radius: 16px;
+    border-radius: 0;
+margin-top: 10px;
     overflow: hidden;
-   
 }
 
 /* Header */
@@ -1931,6 +1931,12 @@ body {
         font-size: 14px !important;
         padding: 10px 12px !important;
     }
+        .zfthreeColumn::before {
+        content: counter(table-row) "." !important;
+    }
+    .zf-backgroundBg {
+        padding: 20px 12px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1939,7 +1945,7 @@ body {
     }
 
     .zf-templateWrapper {
-        border-radius: 12px;
+        border-radius: 0;
     }
 
     .zf-tempHeadContBdr,
