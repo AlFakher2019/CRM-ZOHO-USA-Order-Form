@@ -465,49 +465,42 @@ input[type="hidden"] {
     display: none;
 }
 
-/* =========================================================
-   Custom table spacing tweaks (form fields only)
-   - Taller input fields
-   - Slightly narrower inputs
-   - Less horizontal spacing between columns/fields
-   ========================================================= */
 
-/* Reduce outer table padding a bit (desktop) */
 .zf-tableHeader {
     padding-left: 40px;
-    /* Pull the weight columns closer to the right edge */
+   
     padding-right: 16px;
 }
 
 .zfthreeColumn {
     padding-left: 40px !important;
-    /* Pull the weight columns closer to the right edge */
+    
     padding-right: 16px !important;
 }
 
-/* Tighten spacing inside each input cell */
+
 .zfgrid_Wrapper .zfCol {
     padding-left: 8px !important;
     padding-right: 8px !important;
-    /* Move weight fields to the right inside their cells */
+   
     justify-content: flex-end !important;
 }
 
-/* Make inputs taller + a bit narrower */
+
 .zfgrid_Wrapper .zfCol input[type="text"] {
     height: 52px !important;
-    /* half size (narrower) */
+    
     width: 70px !important;
     max-width: 70px !important;
 }
 
-/* Move the weight HEADINGS to the right too (50/250/1kg) */
+
 .zf-tableHeader > div:nth-child(n + 3) {
     
     padding-right: 16px;
 }
 
-/* Keep mobile paddings as-is (match your current responsive breakpoints) */
+
 @media (max-width: 768px) {
     .zf-tableHeader {
         padding-left: 24px;
@@ -537,7 +530,7 @@ input[type="hidden"] {
         max-width: 60px !important;
     }
 
-    /* Append a dot to the row number on small/mobile screens */
+    
     .zfthreeColumn::before {
         content: counter(table-row) ".";
     }
@@ -2505,15 +2498,8 @@ button:focus-visible {
         width: 100% !important;
         padding: 14px 32px !important;
     }
-    body {
-    overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
 }
-body::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera */
-}
-}
+
 body {
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
@@ -2523,5 +2509,30 @@ body::-webkit-scrollbar {
     display: none;  /* Chrome, Safari, Opera */
 }
 
-
 /* ad */
+
+/* Force document no-scroll and make .zf-templateWrapper the scrollable area */
+html, body {
+    height: 100%;
+    overflow: hidden; /* prevent the iframe document scrollbar */
+}
+
+.zf-templateWrapper {
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.zf-templateWrapper.hide-scrollbar {
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.zf-templateWrapper.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+
+@media all {
+    html, body { height: 100%; overflow: hidden; }
+}
