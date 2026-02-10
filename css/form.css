@@ -2094,7 +2094,7 @@ button:focus-visible {
 }
 
 .zfthreeColumn {
-    grid-template-columns: 60px 1fr 110px 110px 110px !important;
+    grid-template-columns: 60px 1fr 120px 120px 120px !important;
     gap: 0 !important; /* Remove gap between columns */
 }
 
@@ -2230,7 +2230,11 @@ button:focus-visible {
 
 /* Mobile Responsive - Mobile View */
 @media (max-width: 768px) {
-    /* Keep row numbers visible */
+
+  .summary-header-label {
+    display: none !important;
+  }
+
     .zf-tableHeader{
         display: none;
     }
@@ -2367,13 +2371,13 @@ button:focus-visible {
     
     /* Total summary mobile */
     .total-summary {
-        padding: 12px 16px;
+        
         margin: 16px 0;
     }
     
     .total-summary div {
         font-size: 14px;
-        text-align: left;
+        text-align: right;
         margin-bottom: 4px;
     }
     
@@ -2403,6 +2407,7 @@ button:focus-visible {
    ============================================ */
 
 @media (max-width: 768px) {
+
     /* Summary section adjustments */
     .summary-section {
        
@@ -2456,15 +2461,13 @@ button:focus-visible {
     
     /* Total summary section */
     .total-summary {
-        padding: 16px !important;
-        margin: 16px 0 !important;
-        text-align: left !important;
-        background-color: #F9F9F9;
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
+        
+        margin: 30px 0 !important;
+        float: right !important;
+       
     }
     
-    .total-summary div {
+    /* .total-summary div {
         font-size: 15px !important;
         text-align: left !important;
         margin-bottom: 8px;
@@ -2475,7 +2478,7 @@ button:focus-visible {
     
     .total-summary div:last-child {
         margin-bottom: 0;
-    }
+    } */
     
     .total-label {
         font-size: 16px !important;
@@ -2484,7 +2487,7 @@ button:focus-visible {
     
     /* Submit section */
     .submit-section {
-        padding: 0 16px 24px 16px !important;
+        padding: 0 0px 24px 0px !important;
         text-align: center !important;
     }
     
@@ -2511,10 +2514,10 @@ body::-webkit-scrollbar {
 
 /* ad */
 
-/* Force document no-scroll and make .zf-templateWrapper the scrollable area */
+
 html, body {
     height: 100%;
-    overflow: hidden; /* prevent the iframe document scrollbar */
+    overflow: hidden; 
 }
 
 .zf-templateWrapper {
@@ -2535,4 +2538,54 @@ html, body {
 
 @media all {
     html, body { height: 100%; overflow: hidden; }
+}
+/* MINIMAL CSS - Only for placing labels above summary values */
+
+.summary-headers {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 1fr;
+    padding: 5px 15px;
+    text-align: center;
+}
+
+.summary-header-label {
+    /* empty space */
+}
+
+.summary-header-col {
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+/* COPY EXACT TABLE STRUCTURE FOR HEADERS */
+
+.summary-headers {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    display: table;
+    table-layout: auto; /* Same as your table */
+}
+
+.summary-headers > div {
+    display: table-cell;
+    padding: 16px 24px; /* EXACT same padding as .summary-table td */
+    text-align: center;
+}
+
+.summary-header-label {
+    
+    text-align: left;
+    width: 40%; /* EXACT same as .label-col */
+}
+
+.summary-header-col {
+    width: 7%; /* EXACT same as .value-col */
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #FFFFFF;
+}
+
+.summary-header-col:nth-child(3) {
+    width: 4% !important; /* EXACT same as your inline style on totalMC_250 */
 }
