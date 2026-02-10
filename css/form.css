@@ -399,6 +399,28 @@ body {
         padding-right: 16px;
     }
 
+    /* Hide scrollbar but keep scrolling functional for wrapper */
+    .hide-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        background: transparent;
+    }
+
+
+/* Also provide the hide-scrollbar rules for non-mobile viewports */
+.hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+}
     .zf-frmTitle {
         font-size: 24px;
     }
