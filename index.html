@@ -3658,42 +3658,7 @@
         var isSalesIQIntegrationEnabled = false;
         var salesIQFieldsArray = [];</script>
 
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            const icons = document.querySelectorAll('.flavor-info-icon');
-
-            icons.forEach(icon => {
-                const flavorName = icon.getAttribute('data-flavor');
-
-                icon.addEventListener('mouseenter', function () {
-
-                    const existing = document.querySelector('.flavor-tooltip-active');
-                    if (existing) existing.remove();
-
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'flavor-tooltip-active';
-                    tooltip.innerHTML = flavorName + '<br>Details';
-
-                    document.body.appendChild(tooltip);
-
-
-                    const iconRect = icon.getBoundingClientRect();
-                    tooltip.style.position = 'fixed';
-                    tooltip.style.left = (iconRect.right + 10) + 'px';
-                    tooltip.style.top = (iconRect.top - 5) + 'px';
-
-                    icon.currentTooltip = tooltip;
-                });
-
-                icon.addEventListener('mouseleave', function () {
-                    if (icon.currentTooltip) {
-                        icon.currentTooltip.remove();
-                        icon.currentTooltip = null;
-                    }
-                });
-            });
-        });
-    </script>
+   
     <script>
         (function () {
 
@@ -3816,5 +3781,242 @@
 
         })();
     </script>
+    <!-- for three digits only restrictions -->
+     <script>
+(function() {
+    function limitToThreeDigits(input) {
+        // Remove any non-digit characters
+        let value = input.value.replace(/\D/g, '');
+        
+        // Limit to 3 digits
+        if (value.length > 3) {
+            value = value.slice(0, 3);
+        }
+        
+        input.value = value;
+    }
+
+    function attachThreeDigitLimit() {
+        // Target all input fields in the order form grid
+        document.querySelectorAll('.zfgrid_Wrapper input[type="text"]').forEach(input => {
+            // Add input event listener
+            input.addEventListener('input', function() {
+                limitToThreeDigits(this);
+            });
+            
+            // Add paste event listener
+            input.addEventListener('paste', function(e) {
+                setTimeout(() => {
+                    limitToThreeDigits(this);
+                }, 0);
+            });
+        });
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachThreeDigitLimit);
+    } else {
+        attachThreeDigitLimit();
+    }
+})();
+</script>
+<script type="text/javascript">
+(function() {
+    let tooltip = null;
+    let currentIcon = null;
+    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // Flavor descriptions mapping
+    const flavorDescriptions = {
+        'Cloud 92': 'Cloud 92 whisks you straight into the tropics. A blend of exotic fruits hits the palate upfront.',
+        'Midnight Blues': 'A mysterious blend of dark berries with a cool mint finish.',
+        'Dogg\'s Delight': 'Rich tobacco notes with hints of vanilla and caramel.',
+        'Money Honey': 'Sweet honeydew melon mixed with fresh mint leaves.',
+        'Tha G\'z Mix': 'A bold mix of grape and berry with an icy cool exhale.',
+        'Blueberry Caviar': 'Juicy blueberries with a smooth, creamy undertone.',
+        'Citrus Zen': 'Refreshing citrus blend with a calming herbal touch.',
+        'Lemon Icy': 'Zesty lemon with an arctic ice menthol kick.',
+        'Purple Sunset': 'Mixed berries with a tropical sunset finish.',
+        'Sandia': 'Authentic watermelon flavor, sweet and refreshing.',
+        'Apple': 'Crisp red apple flavor, fresh and sweet.',
+        'Apricot': 'Sweet apricot with a smooth, mellow finish.',
+        'Banana': 'Creamy banana flavor, naturally sweet.',
+        'Berry': 'Mixed berry medley with a tart finish.',
+        'Blueberry': 'Fresh blueberry flavor, sweet and tangy.',
+        'Blueberry with mint': 'Blueberry sweetness with a cool mint breeze.',
+        'Bubble gum': 'Classic pink bubble gum flavor.',
+        'Cappuccino': 'Rich coffee with creamy milk foam.',
+        'Cherry': 'Sweet cherry flavor with a hint of tartness.',
+        'Cherry with mint': 'Cherry sweetness paired with refreshing mint.',
+        'Cinnamon': 'Warm cinnamon spice, bold and aromatic.',
+        'Citrus with mint': 'Tangy citrus fruits with cooling mint.',
+        'Cocktail': 'Tropical fruit cocktail blend.',
+        'Coconut': 'Creamy coconut flavor, smooth and tropical.',
+        'Diamond dust': 'A mysterious blend with sparkling notes.',
+        'Dream scape': 'Dreamy mix of exotic fruits and florals.',
+        'Fresh...!': 'Ultra-fresh mint, cool and invigorating.',
+        'Grapefruit': 'Tangy grapefruit, citrusy and refreshing.',
+        'Grapefruit with mint': 'Grapefruit tang with a minty cool finish.',
+        'Grape': 'Sweet purple grape flavor.',
+        'Grape with berry': 'Grape and mixed berries combination.',
+        'Grape with mint': 'Grape sweetness with refreshing mint.',
+        'Grenadine': 'Sweet pomegranate flavor.',
+        'Guava': 'Tropical guava, sweet and exotic.',
+        'Gum': 'Classic chewing gum flavor.',
+        'Gum with cinnamon': 'Spicy cinnamon gum blend.',
+        'Gum with mint': 'Fresh mint chewing gum.',
+        'Harvest moon': 'Autumn fruit medley.',
+        'Kiwi': 'Tangy kiwi fruit flavor.',
+        'Lemon': 'Fresh lemon, tart and zesty.',
+        'Lemon with mint': 'Lemon citrus with cool mint.',
+        'Magic love': 'Magical blend of sweet fruits.',
+        'Mango': 'Tropical mango, sweet and juicy.',
+        'Melon': 'Fresh honeydew melon flavor.',
+        'Mint': 'Pure mint, cool and refreshing.',
+        'Mint with cream': 'Creamy mint flavor.',
+        'Mojito': 'Lime, mint, and a hint of rum essence.',
+        'Orange': 'Fresh orange, sweet and citrusy.',
+        'Orange with cream': 'Creamsicle-style orange cream.',
+        'Orange with mint': 'Orange citrus with mint freshness.',
+        'Peach': 'Sweet peach flavor, smooth and juicy.',
+        'Pineapple': 'Tropical pineapple, sweet and tangy.',
+        'Plum': 'Rich plum flavor with depth.',
+        'Rose': 'Delicate rose flower essence.',
+        'Strawberry': 'Sweet strawberry, fresh and fruity.',
+        'Strawberry with cream': 'Strawberries and cream dessert.',
+        'Two apple': 'Double apple flavor, traditional and sweet.',
+        'Two apple with mint': 'Double apple with refreshing mint.',
+        'Vanilla': 'Smooth vanilla, creamy and sweet.',
+        'Watermelon': 'Juicy watermelon, refreshing and sweet.',
+        'Watermelon with mint': 'Watermelon with a minty cool finish.',
+        'Two apple bahrani': 'Bahraini-style double apple.',
+        'California Citrus Breeze': 'West coast citrus blend.',
+        'Florida Orange creamsicle': 'Orange and vanilla cream blend.',
+        'Georgia peach pie': 'Sweet peach pie flavor.'
+    };
+
+    function createTooltip() {
+        tooltip = document.createElement('div');
+        tooltip.className = 'flavor-tooltip';
+        document.body.appendChild(tooltip);
+        return tooltip;
+    }
+
+    function getFlavorDescription(flavorName) {
+        return flavorDescriptions[flavorName] || 'Premium quality flavor blend.';
+    }
+
+    function showTooltip(icon, flavorName) {
+        if (!tooltip) {
+            tooltip = createTooltip();
+        }
+
+        const description = getFlavorDescription(flavorName);
+        tooltip.textContent = description;
+        
+        // Get icon position
+        const iconRect = icon.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        
+        // Make tooltip visible to measure it
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.display = 'block';
+        
+        // Get tooltip dimensions
+        const tooltipWidth = tooltip.offsetWidth;
+        const tooltipHeight = tooltip.offsetHeight;
+        
+        // Calculate position (above the icon, slightly to the left to align with arrow)
+        let left = iconRect.left + scrollLeft - 10;
+        let top = iconRect.top + scrollTop - tooltipHeight - 10;
+        
+        // Check boundaries
+        if (left < 5) {
+            left = 5;
+        }
+        
+        if (left + tooltipWidth > window.innerWidth - 5) {
+            left = window.innerWidth - tooltipWidth - 5;
+        }
+        
+        // Apply position
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+        tooltip.style.visibility = '';
+        
+        // Show tooltip
+        requestAnimationFrame(() => {
+            tooltip.classList.add('show');
+        });
+    }
+
+    function hideTooltip() {
+        if (tooltip) {
+            tooltip.classList.remove('show');
+        }
+        currentIcon = null;
+    }
+
+    function handleIconClick(e) {
+        e.stopPropagation();
+        const icon = e.currentTarget;
+        const nameCol = icon.closest('.zfNameCol');
+        const flavorName = nameCol ? nameCol.firstChild.textContent.trim() : 'Flavor Info';
+        
+        if (currentIcon === icon && tooltip && tooltip.classList.contains('show')) {
+            hideTooltip();
+        } else {
+            hideTooltip();
+            currentIcon = icon;
+            showTooltip(icon, flavorName);
+        }
+    }
+
+    function handleIconHover(e) {
+        const icon = e.currentTarget;
+        const nameCol = icon.closest('.zfNameCol');
+        const flavorName = nameCol ? nameCol.firstChild.textContent.trim() : 'Flavor Info';
+        currentIcon = icon;
+        showTooltip(icon, flavorName);
+    }
+
+    function handleScroll() {
+        if (isMobile && tooltip && tooltip.classList.contains('show')) {
+            hideTooltip();
+        }
+    }
+
+    function handleDocumentClick(e) {
+        if (isMobile && tooltip && tooltip.classList.contains('show')) {
+            if (!e.target.closest('.flavor-info-icon')) {
+                hideTooltip();
+            }
+        }
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        const icons = document.querySelectorAll('.flavor-info-icon');
+        
+        console.log('Found ' + icons.length + ' flavor icons'); // Debug log
+        
+        icons.forEach(icon => {
+            if (isMobile) {
+                icon.addEventListener('click', handleIconClick);
+            } else {
+                icon.addEventListener('mouseenter', handleIconHover);
+                icon.addEventListener('mouseleave', hideTooltip);
+            }
+        });
+
+        if (isMobile) {
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            document.addEventListener('click', handleDocumentClick);
+        }
+    });
+})();
+</script>
 
 </body>

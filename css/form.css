@@ -2105,7 +2105,7 @@ button:focus-visible {
     text-overflow: ellipsis !important;
     font-size: 13px !important; /* Slightly smaller to fit better */
     padding-left: 8px !important; /* Reduce left padding to decrease gap from Type */
-    padding-right: 12px !important; /* Match field padding */
+    padding-right: 40px !important; /* Match field padding */
 }
 
 /* Reduce padding on Type column to decrease gap */
@@ -2214,7 +2214,7 @@ button:focus-visible {
 
 .total-label {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .submit-section {
@@ -2569,7 +2569,7 @@ html, body {
 
 .summary-headers > div {
     display: table-cell;
-    padding: 16px 24px; /* EXACT same padding as .summary-table td */
+    padding: 5px 24px; /* EXACT same padding as .summary-table td */
     text-align: center;
 }
 
@@ -2581,11 +2581,58 @@ html, body {
 
 .summary-header-col {
     width: 7%; /* EXACT same as .value-col */
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     background-color: #FFFFFF;
 }
 
 .summary-header-col:nth-child(3) {
     width: 4% !important; /* EXACT same as your inline style on totalMC_250 */
+}
+/* Tooltip Styles - Positioned ABOVE the icon */
+.flavor-tooltip {
+    position: absolute;
+    background-color: #2d3748;
+    color: #ffffff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    max-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.flavor-tooltip.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Bottom-left arrow pointing DOWN to the icon */
+.flavor-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #2d3748;
+}
+
+/* Icon styles */
+.flavor-info-icon {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.flavor-info-icon:hover {
+    opacity: 0.7;
 }
