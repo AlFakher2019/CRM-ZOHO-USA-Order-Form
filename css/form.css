@@ -15,6 +15,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
         content: counter(table-row) "." !important;
   
 }
+}
 
 body {
 	background-attachment: fixed;
@@ -2535,34 +2536,7 @@ body::-webkit-scrollbar {
 
 
 
-/* ad */
 
-
-/* html, body {
-    height: 100%;
-    overflow: hidden; 
-}
-
-.zf-templateWrapper {
-    height: 100vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.zf-templateWrapper.hide-scrollbar {
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-}
-.zf-templateWrapper.hide-scrollbar::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-    background: transparent;
-}
-
-@media all {
-    html, body { height: 100%; overflow: hidden; }
-} */
-/* MINIMAL CSS - Only for placing labels above summary values */
 
 .summary-headers {
     display: grid;
