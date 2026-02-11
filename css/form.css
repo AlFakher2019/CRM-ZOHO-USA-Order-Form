@@ -13,15 +13,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 @media (max-width: 480px) {
     .zfthreeColumn::before {
         content: counter(table-row) "." !important;
-    }
-    body {
-    overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-body::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera */
-}
+  
 }
 
 body {
@@ -2519,14 +2511,29 @@ body::-webkit-scrollbar {
     }
 }
 
+
+/* Hide scrollbar but keep scrolling */
+html {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
+
 body::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera */
+    display: none;
 }
+
+
 
 /* ad */
 
