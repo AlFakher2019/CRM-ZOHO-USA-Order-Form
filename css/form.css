@@ -1591,7 +1591,7 @@ body {
     background: #FFFFFF;
     border-radius: 0;
 margin-top: 10px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Header */
@@ -2589,7 +2589,7 @@ body::-webkit-scrollbar {
 /* Tooltip Styles - Positioned ABOVE the icon */
 .flavor-tooltip {
     position: absolute;
-    background-color: #2d3748;
+    background-color: black;
     color: #ffffff;
     padding: 10px 14px;
     border-radius: 6px;
@@ -2621,7 +2621,7 @@ body::-webkit-scrollbar {
     height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 6px solid #2d3748;
+    border-top: 6px solid #000000;
 }
 
 /* Icon styles */
@@ -2633,4 +2633,41 @@ body::-webkit-scrollbar {
 .flavor-info-icon:hover {
     opacity: 0.7;
 }
+/* Make the form scrollable container */
+.zf-templateWrapper {
+    background: #FFFFFF;
+    border-radius: 0;
+    margin-top: 10px;
+    overflow: visible;
+    position: relative;
+}
+
+/* Sticky header for Al-Fakher section */
+#alfakher-header {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #E8E8E8 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Ensure all parents allow sticky */
+.zf-subContWrap,
+.zf-templateWidth,
+body {
+    overflow: visible !important;
+}
+
+html {
+    overflow-y: scroll !important;
+}
+
+@media (max-width: 768px) {
+    #alfakher-header {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+    }
 }
