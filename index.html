@@ -4019,6 +4019,77 @@
     });
 })();
 </script>
+<script>
+(function() {
+    // Sticky header for iframe
+    const stickyHeader = document.getElementById('alfakher-header');
+    if (!stickyHeader) return;
 
+    let isSticky = false;
+    let headerTop = 0;
+    let headerClone = null;
+
+    function init() {
+        // Get initial position
+        headerTop = stickyHeader.getBoundingClientRect().top + window.pageYOffset;
+    }
+
+    function handleScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop >= headerTop && !isSticky) {
+            // Make sticky
+            isSticky = true;
+            
+            // Create clone to preserve space
+            if (!headerClone) {
+                headerClone = stickyHeader.cloneNode(true);
+                headerClone.style.visibility = 'hidden';
+                headerClone.style.position = 'static';
+                headerClone.removeAttribute('id');
+                stickyHeader.parentNode.insertBefore(headerClone, stickyHeader);
+            }
+            
+            stickyHeader.style.position = 'fixed';
+            stickyHeader.style.top = '0';
+            stickyHeader.style.left = '0';
+            stickyHeader.style.right = '0';
+            stickyHeader.style.zIndex = '1000';
+            stickyHeader.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+            
+        } else if (scrollTop < headerTop && isSticky) {
+            // Remove sticky
+            isSticky = false;
+            
+            stickyHeader.style.position = '';
+            stickyHeader.style.top = '';
+            stickyHeader.style.left = '';
+            stickyHeader.style.right = '';
+            stickyHeader.style.zIndex = '';
+            stickyHeader.style.boxShadow = '';
+            
+            if (headerClone && headerClone.parentNode) {
+                headerClone.parentNode.removeChild(headerClone);
+                headerClone = null;
+            }
+        }
+    }
+
+    // Initialize
+    window.addEventListener('load', function() {
+        setTimeout(init, 100);
+    });
+
+    // Handle scroll
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Handle resize
+    window.addEventListener('resize', function() {
+        if (!isSticky) {
+            init();
+        }
+    });
+})();
+</script>
 
 </body>

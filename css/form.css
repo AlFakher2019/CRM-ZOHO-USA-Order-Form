@@ -2643,8 +2643,8 @@ body::-webkit-scrollbar {
 }
 
 /* Sticky header for Al-Fakher section */
-#alfakher-header {
-    position: -webkit-sticky; /* Safari */
+/* #alfakher-header {
+    position: -webkit-sticky; 
     position: sticky;
     top: 0;
     z-index: 999;
@@ -2652,7 +2652,7 @@ body::-webkit-scrollbar {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* Ensure all parents allow sticky */
+
 .zf-subContWrap,
 .zf-templateWidth,
 body {
@@ -2670,4 +2670,4 @@ html {
         top: 0;
         z-index: 999;
     }
-}
+} */
