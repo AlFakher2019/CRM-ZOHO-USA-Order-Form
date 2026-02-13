@@ -62,7 +62,7 @@
                         </div>
 
 
-                        <div class="zf-tableHeader">
+                        <div class="zf-tableHeader" id="header-herbal">
                             <div>No.</div>
                             <div>Type</div>
                             <div>50 Grams</div>
@@ -368,7 +368,7 @@
                         </div>
 
 
-                        <div class="zf-tableHeader">
+                        <div class="zf-tableHeader" id="header-cookies">
                             <div>No.</div>
                             <div>Type</div>
                             <div>0.1 lb</div>
@@ -4022,83 +4022,104 @@
 
 <script>
 (function() {
-    const stickyHeader = document.getElementById('alfakher-header');
-    if (!stickyHeader) return;
+    // All sticky headers
+    const stickyHeaders = [
+        document.getElementById('header-herbal'),
+        document.getElementById('header-cookies'),
+        document.getElementById('alfakher-header')
+    ].filter(header => header !== null);
 
-    let originalHeader = null;
-    let clonedHeader = null;
-    let isFixed = false;
-    let headerTop = 0;
+    if (stickyHeaders.length === 0) return;
+
+    const headerStates = stickyHeaders.map(header => ({
+        element: header,
+        originalStyles: {},
+        clone: null,
+        isFixed: false,
+        topPosition: 0
+    }));
 
     function init() {
-        // Get the header's position
-        const rect = stickyHeader.getBoundingClientRect();
-        headerTop = rect.top + window.scrollY;
-        
-        // Store original styles
-        originalHeader = {
-            position: stickyHeader.style.position,
-            top: stickyHeader.style.top,
-            left: stickyHeader.style.left,
-            right: stickyHeader.style.right,
-            zIndex: stickyHeader.style.zIndex,
-            width: stickyHeader.style.width
-        };
+        headerStates.forEach(state => {
+            const rect = state.element.getBoundingClientRect();
+            state.topPosition = rect.top + window.scrollY;
+            
+            // Store original styles
+            state.originalStyles = {
+                position: state.element.style.position,
+                top: state.element.style.top,
+                left: state.element.style.left,
+                right: state.element.style.right,
+                zIndex: state.element.style.zIndex,
+                width: state.element.style.width
+            };
+        });
     }
 
-    function makeFixed() {
-        if (isFixed) return;
-        isFixed = true;
+    function makeFixed(state) {
+        if (state.isFixed) return;
+        state.isFixed = true;
 
-        // Create placeholder to prevent layout shift
-        if (!clonedHeader) {
-            clonedHeader = stickyHeader.cloneNode(true);
-            clonedHeader.style.visibility = 'hidden';
-            clonedHeader.style.position = 'static';
-            clonedHeader.removeAttribute('id');
-            stickyHeader.parentNode.insertBefore(clonedHeader, stickyHeader);
+        // Create placeholder
+        if (!state.clone) {
+            state.clone = state.element.cloneNode(true);
+            state.clone.style.visibility = 'hidden';
+            state.clone.style.position = 'static';
+            state.clone.removeAttribute('id');
+            state.element.parentNode.insertBefore(state.clone, state.element);
         }
 
         // Make header fixed
-        const rect = stickyHeader.getBoundingClientRect();
-        stickyHeader.style.position = 'fixed';
-        stickyHeader.style.top = '0';
-        stickyHeader.style.left = rect.left + 'px';
-        stickyHeader.style.right = (window.innerWidth - rect.right) + 'px';
-        stickyHeader.style.zIndex = '1000';
-        stickyHeader.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+        const rect = state.element.getBoundingClientRect();
+        state.element.style.position = 'fixed';
+        state.element.style.top = '0';
+        state.element.style.left = rect.left + 'px';
+        state.element.style.right = (window.innerWidth - rect.right) + 'px';
+        state.element.style.zIndex = '1000';
+        state.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+        state.element.style.transition = 'box-shadow 0.3s ease';
     }
 
-    function removeFixed() {
-        if (!isFixed) return;
-        isFixed = false;
+    function removeFixed(state) {
+        if (!state.isFixed) return;
+        state.isFixed = false;
 
         // Restore original styles
-        stickyHeader.style.position = originalHeader.position;
-        stickyHeader.style.top = originalHeader.top;
-        stickyHeader.style.left = originalHeader.left;
-        stickyHeader.style.right = originalHeader.right;
-        stickyHeader.style.zIndex = originalHeader.zIndex;
-        stickyHeader.style.width = originalHeader.width;
-        stickyHeader.style.boxShadow = '';
+        state.element.style.position = state.originalStyles.position;
+        state.element.style.top = state.originalStyles.top;
+        state.element.style.left = state.originalStyles.left;
+        state.element.style.right = state.originalStyles.right;
+        state.element.style.zIndex = state.originalStyles.zIndex;
+        state.element.style.width = state.originalStyles.width;
+        state.element.style.boxShadow = '';
 
         // Remove placeholder
-        if (clonedHeader && clonedHeader.parentNode) {
-            clonedHeader.parentNode.removeChild(clonedHeader);
-            clonedHeader = null;
+        if (state.clone && state.clone.parentNode) {
+            state.clone.parentNode.removeChild(state.clone);
+            state.clone = null;
         }
     }
 
     function checkScroll() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const rect = stickyHeader.getBoundingClientRect();
-        const shouldBeFixed = scrollTop > headerTop;
 
-        if (shouldBeFixed && !isFixed) {
-            makeFixed();
-        } else if (!shouldBeFixed && isFixed) {
-            removeFixed();
-        }
+        // Find which header should be sticky (the last one that's scrolled past)
+        let activeHeader = null;
+        
+        headerStates.forEach(state => {
+            if (scrollTop >= state.topPosition - 5) {
+                activeHeader = state;
+            }
+        });
+
+        // Update all headers
+        headerStates.forEach(state => {
+            if (state === activeHeader) {
+                makeFixed(state);
+            } else {
+                removeFixed(state);
+            }
+        });
     }
 
     // Initialize
@@ -4119,7 +4140,8 @@
 
     // Recalculate on resize
     window.addEventListener('resize', function() {
-        if (!isFixed) {
+        const anyFixed = headerStates.some(s => s.isFixed);
+        if (!anyFixed) {
             init();
         }
     });
