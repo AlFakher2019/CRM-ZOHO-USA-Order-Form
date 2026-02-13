@@ -4022,114 +4022,93 @@
 
 <script>
 (function() {
-    const headerIds = ['header-herbal', 'header-cookies', 'alfakher-header'];
-    const headers = headerIds.map(id => document.getElementById(id)).filter(h => h !== null);
-    
-    if (headers.length === 0) return;
+    // All sticky headers
+    const stickyHeaders = [
+        { id: 'header-herbal', element: null, observer: null, isSticky: false, placeholder: null },
+        { id: 'header-cookies', element: null, observer: null, isSticky: false, placeholder: null },
+        { id: 'alfakher-header', element: null, observer: null, isSticky: false, placeholder: null }
+    ];
 
-    const headerData = headers.map(h => ({
-        element: h,
-        placeholder: null,
-        isFixed: false,
-        originalWidth: 0,
-        originalLeft: 0,
-        originalPadding: ''
-    }));
-
-    function initHeader(data) {
-        const rect = data.element.getBoundingClientRect();
-        const computed = window.getComputedStyle(data.element);
-        data.originalWidth = rect.width;
-        data.originalLeft = rect.left;
-        data.originalPadding = computed.padding;
-    }
-
-    function makeFixed(data) {
-        if (data.isFixed) return;
-        data.isFixed = true;
-
-        // Create placeholder with exact same height
-        if (!data.placeholder) {
-            data.placeholder = document.createElement('div');
-            data.placeholder.style.height = data.element.offsetHeight + 'px';
-            data.element.parentNode.insertBefore(data.placeholder, data.element);
-        }
-
-        // Store original values
-        const rect = data.element.getBoundingClientRect();
-        
-        // Apply fixed with EXACT measurements
-        data.element.style.cssText += `
-            position: fixed !important;
-            top: 0 !important;
-            left: ${data.originalLeft}px !important;
-            width: ${data.originalWidth}px !important;
-            z-index: 1000 !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-            padding: ${data.originalPadding} !important;
-            box-sizing: border-box !important;
-        `;
-    }
-
-    function removeFixed(data) {
-        if (!data.isFixed) return;
-        data.isFixed = false;
-
-        // Remove all fixed styles
-        data.element.style.position = '';
-        data.element.style.top = '';
-        data.element.style.left = '';
-        data.element.style.width = '';
-        data.element.style.zIndex = '';
-        data.element.style.boxShadow = '';
-
-        // Remove placeholder
-        if (data.placeholder && data.placeholder.parentNode) {
-            data.placeholder.parentNode.removeChild(data.placeholder);
-            data.placeholder = null;
-        }
-    }
-
-    // Initialize all headers
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            headerData.forEach(initHeader);
-            setupObservers();
-        }, 300);
+    // Find all headers
+    stickyHeaders.forEach(header => {
+        header.element = document.getElementById(header.id);
     });
 
-    function setupObservers() {
-        headerData.forEach((data, index) => {
-            // Create sentinel ABOVE the header
-            const sentinel = document.createElement('div');
-            sentinel.style.cssText = 'height: 1px; position: absolute; top: -1px; left: 0; right: 0; pointer-events: none;';
-            data.element.style.position = 'relative';
-            data.element.appendChild(sentinel);
+    // Filter out missing headers
+    const validHeaders = stickyHeaders.filter(h => h.element !== null);
+    if (validHeaders.length === 0) return;
 
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach(entry => {
-                        if (!entry.isIntersecting && entry.boundingClientRect.y < 0) {
-                            // Scrolled past - make fixed
-                            makeFixed(data);
-                        } else if (entry.isIntersecting) {
-                            // Back in view - remove fixed
-                            removeFixed(data);
-                        }
-                    });
-                },
-                { threshold: [0], rootMargin: '0px' }
-            );
+    function makeStickyWithCSS(header) {
+        if (header.isSticky) return;
+        header.isSticky = true;
 
-            observer.observe(sentinel);
-        });
+        // Create sentinel/placeholder
+        if (!header.placeholder) {
+            header.placeholder = document.createElement('div');
+            header.placeholder.style.height = header.element.offsetHeight + 'px';
+            header.element.parentNode.insertBefore(header.placeholder, header.element);
+        }
+
+        // Apply sticky styles
+        header.element.style.position = 'sticky';
+        header.element.style.top = '0';
+        header.element.style.zIndex = '1000';
+        header.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
     }
 
-    // Handle resize
-    window.addEventListener('resize', function() {
-        headerData.forEach(data => {
-            if (!data.isFixed) {
-                initHeader(data);
+    function removeStickyCSS(header) {
+        if (!header.isSticky) return;
+        header.isSticky = false;
+
+        header.element.style.position = '';
+        header.element.style.top = '';
+        header.element.style.zIndex = '';
+        header.element.style.boxShadow = '';
+
+        if (header.placeholder && header.placeholder.parentNode) {
+            header.placeholder.parentNode.removeChild(header.placeholder);
+            header.placeholder = null;
+        }
+    }
+
+    // Create observers for each header
+    validHeaders.forEach((header, index) => {
+        // Create a sentinel element just above each header
+        const sentinel = document.createElement('div');
+        sentinel.style.height = '1px';
+        sentinel.style.visibility = 'hidden';
+        sentinel.setAttribute('data-header-sentinel', header.id);
+        header.element.parentNode.insertBefore(sentinel, header.element);
+
+        // Intersection Observer
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Sentinel is visible - header should NOT be sticky
+                        removeStickyCSS(header);
+                    } else {
+                        // Sentinel is out of view - header should be sticky
+                        makeStickyWithCSS(header);
+                    }
+                });
+            },
+            {
+                threshold: 0,
+                rootMargin: '0px'
+            }
+        );
+
+        observer.observe(sentinel);
+        header.observer = observer;
+        header.sentinel = sentinel;
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        validHeaders.forEach(header => {
+            if (header.observer) {
+                header.observer.disconnect();
             }
         });
     });
