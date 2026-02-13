@@ -2692,13 +2692,3 @@ html {
         box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     }
 } */
-/* Table headers base styling ONLY */
-.zf-tableHeader {
-    background: #E8E8E8 !important;
-}
-
-#header-herbal,
-#header-cookies,
-#alfakher-header {
-    background: #E8E8E8 !important;
-}
