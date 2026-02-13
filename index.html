@@ -4024,130 +4024,94 @@
 (function() {
     // All sticky headers
     const stickyHeaders = [
-        document.getElementById('header-herbal'),
-        document.getElementById('header-cookies'),
-        document.getElementById('alfakher-header')
-    ].filter(header => header !== null);
+        { id: 'header-herbal', element: null, observer: null, isSticky: false, placeholder: null },
+        { id: 'header-cookies', element: null, observer: null, isSticky: false, placeholder: null },
+        { id: 'alfakher-header', element: null, observer: null, isSticky: false, placeholder: null }
+    ];
 
-    if (stickyHeaders.length === 0) return;
-
-    const headerStates = stickyHeaders.map(header => ({
-        element: header,
-        originalStyles: {},
-        clone: null,
-        isFixed: false,
-        topPosition: 0
-    }));
-
-    function init() {
-        headerStates.forEach(state => {
-            const rect = state.element.getBoundingClientRect();
-            state.topPosition = rect.top + window.scrollY;
-            
-            // Store original styles
-            state.originalStyles = {
-                position: state.element.style.position,
-                top: state.element.style.top,
-                left: state.element.style.left,
-                right: state.element.style.right,
-                zIndex: state.element.style.zIndex,
-                width: state.element.style.width
-            };
-        });
-    }
-
-    function makeFixed(state) {
-        if (state.isFixed) return;
-        state.isFixed = true;
-
-        // Create placeholder
-        if (!state.clone) {
-            state.clone = state.element.cloneNode(true);
-            state.clone.style.visibility = 'hidden';
-            state.clone.style.position = 'static';
-            state.clone.removeAttribute('id');
-            state.element.parentNode.insertBefore(state.clone, state.element);
-        }
-
-        // Make header fixed
-        const rect = state.element.getBoundingClientRect();
-        state.element.style.position = 'fixed';
-        state.element.style.top = '0';
-        state.element.style.left = rect.left + 'px';
-        state.element.style.right = (window.innerWidth - rect.right) + 'px';
-        state.element.style.zIndex = '1000';
-        state.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-        state.element.style.transition = 'box-shadow 0.3s ease';
-    }
-
-    function removeFixed(state) {
-        if (!state.isFixed) return;
-        state.isFixed = false;
-
-        // Restore original styles
-        state.element.style.position = state.originalStyles.position;
-        state.element.style.top = state.originalStyles.top;
-        state.element.style.left = state.originalStyles.left;
-        state.element.style.right = state.originalStyles.right;
-        state.element.style.zIndex = state.originalStyles.zIndex;
-        state.element.style.width = state.originalStyles.width;
-        state.element.style.boxShadow = '';
-
-        // Remove placeholder
-        if (state.clone && state.clone.parentNode) {
-            state.clone.parentNode.removeChild(state.clone);
-            state.clone = null;
-        }
-    }
-
-    function checkScroll() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        // Find which header should be sticky (the last one that's scrolled past)
-        let activeHeader = null;
-        
-        headerStates.forEach(state => {
-            if (scrollTop >= state.topPosition - 5) {
-                activeHeader = state;
-            }
-        });
-
-        // Update all headers
-        headerStates.forEach(state => {
-            if (state === activeHeader) {
-                makeFixed(state);
-            } else {
-                removeFixed(state);
-            }
-        });
-    }
-
-    // Initialize
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-
-    // Check on scroll
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        if (scrollTimeout) {
-            window.cancelAnimationFrame(scrollTimeout);
-        }
-        scrollTimeout = window.requestAnimationFrame(checkScroll);
-    }, { passive: true });
-
-    // Recalculate on resize
-    window.addEventListener('resize', function() {
-        const anyFixed = headerStates.some(s => s.isFixed);
-        if (!anyFixed) {
-            init();
-        }
+    // Find all headers
+    stickyHeaders.forEach(header => {
+        header.element = document.getElementById(header.id);
     });
 
-    // Initial check
-    setTimeout(checkScroll, 100);
+    // Filter out missing headers
+    const validHeaders = stickyHeaders.filter(h => h.element !== null);
+    if (validHeaders.length === 0) return;
+
+    function makeStickyWithCSS(header) {
+        if (header.isSticky) return;
+        header.isSticky = true;
+
+        // Create sentinel/placeholder
+        if (!header.placeholder) {
+            header.placeholder = document.createElement('div');
+            header.placeholder.style.height = header.element.offsetHeight + 'px';
+            header.element.parentNode.insertBefore(header.placeholder, header.element);
+        }
+
+        // Apply sticky styles
+        header.element.style.position = 'sticky';
+        header.element.style.top = '0';
+        header.element.style.zIndex = '1000';
+        header.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    }
+
+    function removeStickyCSS(header) {
+        if (!header.isSticky) return;
+        header.isSticky = false;
+
+        header.element.style.position = '';
+        header.element.style.top = '';
+        header.element.style.zIndex = '';
+        header.element.style.boxShadow = '';
+
+        if (header.placeholder && header.placeholder.parentNode) {
+            header.placeholder.parentNode.removeChild(header.placeholder);
+            header.placeholder = null;
+        }
+    }
+
+    // Create observers for each header
+    validHeaders.forEach((header, index) => {
+        // Create a sentinel element just above each header
+        const sentinel = document.createElement('div');
+        sentinel.style.height = '1px';
+        sentinel.style.visibility = 'hidden';
+        sentinel.setAttribute('data-header-sentinel', header.id);
+        header.element.parentNode.insertBefore(sentinel, header.element);
+
+        // Intersection Observer
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Sentinel is visible - header should NOT be sticky
+                        removeStickyCSS(header);
+                    } else {
+                        // Sentinel is out of view - header should be sticky
+                        makeStickyWithCSS(header);
+                    }
+                });
+            },
+            {
+                threshold: 0,
+                rootMargin: '0px'
+            }
+        );
+
+        observer.observe(sentinel);
+        header.observer = observer;
+        header.sentinel = sentinel;
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        validHeaders.forEach(header => {
+            if (header.observer) {
+                header.observer.disconnect();
+            }
+        });
+    });
 })();
 </script>
 </body>

@@ -2692,3 +2692,36 @@ html {
         box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     }
 } */
+/* Table headers - base styling */
+.zf-tableHeader {
+    background: #E8E8E8 !important;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+/* Sticky positioning */
+#header-herbal,
+#header-cookies,
+#alfakher-header {
+    background: #E8E8E8 !important;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/* When sticky is active (enhanced by JS) */
+#header-herbal[style*="position: sticky"],
+#header-cookies[style*="position: sticky"],
+#alfakher-header[style*="position: sticky"] {
+    z-index: 1000 !important;
+}
+
+@media (max-width: 768px) {
+    #header-herbal,
+    #header-cookies,
+    #alfakher-header {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+    }
+}
