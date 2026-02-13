@@ -4022,115 +4022,117 @@
 
 <script>
 (function() {
-    // Get all three headers
-    const headers = [
-        { id: 'header-herbal', element: null, sentinel: null, isFixed: false, placeholder: null, originalTop: 0 },
-        { id: 'header-cookies', element: null, sentinel: null, isFixed: false, placeholder: null, originalTop: 0 },
-        { id: 'alfakher-header', element: null, sentinel: null, isFixed: false, placeholder: null, originalTop: 0 }
-    ];
+    const headerIds = ['header-herbal', 'header-cookies', 'alfakher-header'];
+    const headers = headerIds.map(id => document.getElementById(id)).filter(h => h !== null);
+    
+    if (headers.length === 0) return;
 
-    // Initialize headers
-    headers.forEach(header => {
-        header.element = document.getElementById(header.id);
-    });
+    const headerData = headers.map(h => ({
+        element: h,
+        placeholder: null,
+        isFixed: false,
+        originalWidth: 0,
+        originalLeft: 0,
+        originalPadding: ''
+    }));
 
-    // Remove null headers
-    const validHeaders = headers.filter(h => h.element !== null);
-    if (validHeaders.length === 0) return;
-
-    // Setup sentinels and get positions
-    validHeaders.forEach(header => {
-        // Create sentinel 1px above header
-        header.sentinel = document.createElement('div');
-        header.sentinel.style.height = '1px';
-        header.sentinel.style.position = 'absolute';
-        header.sentinel.style.visibility = 'hidden';
-        header.element.parentNode.insertBefore(header.sentinel, header.element);
-    });
-
-    function makeFixed(header) {
-        if (header.isFixed) return;
-        header.isFixed = true;
-
-        // Create placeholder to prevent layout jump
-        if (!header.placeholder) {
-            header.placeholder = document.createElement('div');
-            const height = header.element.offsetHeight;
-            header.placeholder.style.height = height + 'px';
-            header.placeholder.style.width = '100%';
-            header.element.parentNode.insertBefore(header.placeholder, header.element);
-        }
-
-        // Get current dimensions
-        const rect = header.element.getBoundingClientRect();
-        const computedStyle = window.getComputedStyle(header.element);
-        
-        // Apply fixed positioning
-        header.element.style.position = 'fixed';
-        header.element.style.top = '0';
-        header.element.style.left = '0';
-        header.element.style.right = '0';
-        header.element.style.width = '100%';
-        header.element.style.zIndex = '1000';
-        header.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-        header.element.style.margin = '0';
+    function initHeader(data) {
+        const rect = data.element.getBoundingClientRect();
+        const computed = window.getComputedStyle(data.element);
+        data.originalWidth = rect.width;
+        data.originalLeft = rect.left;
+        data.originalPadding = computed.padding;
     }
 
-    function removeFixed(header) {
-        if (!header.isFixed) return;
-        header.isFixed = false;
+    function makeFixed(data) {
+        if (data.isFixed) return;
+        data.isFixed = true;
 
-        // Remove fixed positioning
-        header.element.style.position = '';
-        header.element.style.top = '';
-        header.element.style.left = '';
-        header.element.style.right = '';
-        header.element.style.width = '';
-        header.element.style.zIndex = '';
-        header.element.style.boxShadow = '';
-        header.element.style.margin = '';
+        // Create placeholder with exact same height
+        if (!data.placeholder) {
+            data.placeholder = document.createElement('div');
+            data.placeholder.style.height = data.element.offsetHeight + 'px';
+            data.element.parentNode.insertBefore(data.placeholder, data.element);
+        }
+
+        // Store original values
+        const rect = data.element.getBoundingClientRect();
+        
+        // Apply fixed with EXACT measurements
+        data.element.style.cssText += `
+            position: fixed !important;
+            top: 0 !important;
+            left: ${data.originalLeft}px !important;
+            width: ${data.originalWidth}px !important;
+            z-index: 1000 !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+            padding: ${data.originalPadding} !important;
+            box-sizing: border-box !important;
+        `;
+    }
+
+    function removeFixed(data) {
+        if (!data.isFixed) return;
+        data.isFixed = false;
+
+        // Remove all fixed styles
+        data.element.style.position = '';
+        data.element.style.top = '';
+        data.element.style.left = '';
+        data.element.style.width = '';
+        data.element.style.zIndex = '';
+        data.element.style.boxShadow = '';
 
         // Remove placeholder
-        if (header.placeholder && header.placeholder.parentNode) {
-            header.placeholder.parentNode.removeChild(header.placeholder);
-            header.placeholder = null;
+        if (data.placeholder && data.placeholder.parentNode) {
+            data.placeholder.parentNode.removeChild(data.placeholder);
+            data.placeholder = null;
         }
     }
 
-    // Use Intersection Observer
-    const observerOptions = {
-        root: null,
-        rootMargin: '-1px 0px 0px 0px',
-        threshold: 0
-    };
-
-    validHeaders.forEach(header => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // When sentinel goes out of view from top, make header fixed
-                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                    makeFixed(header);
-                } else if (entry.isIntersecting) {
-                    removeFixed(header);
-                }
-            });
-        }, observerOptions);
-
-        observer.observe(header.sentinel);
+    // Initialize all headers
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            headerData.forEach(initHeader);
+            setupObservers();
+        }, 300);
     });
 
-    // Handle only one header fixed at a time
-    function ensureOnlyOneFixed() {
-        const fixedHeaders = validHeaders.filter(h => h.isFixed);
-        if (fixedHeaders.length > 1) {
-            // Keep only the last fixed one
-            fixedHeaders.slice(0, -1).forEach(h => removeFixed(h));
-        }
+    function setupObservers() {
+        headerData.forEach((data, index) => {
+            // Create sentinel ABOVE the header
+            const sentinel = document.createElement('div');
+            sentinel.style.cssText = 'height: 1px; position: absolute; top: -1px; left: 0; right: 0; pointer-events: none;';
+            data.element.style.position = 'relative';
+            data.element.appendChild(sentinel);
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting && entry.boundingClientRect.y < 0) {
+                            // Scrolled past - make fixed
+                            makeFixed(data);
+                        } else if (entry.isIntersecting) {
+                            // Back in view - remove fixed
+                            removeFixed(data);
+                        }
+                    });
+                },
+                { threshold: [0], rootMargin: '0px' }
+            );
+
+            observer.observe(sentinel);
+        });
     }
 
-    // Check periodically
-    setInterval(ensureOnlyOneFixed, 100);
-
+    // Handle resize
+    window.addEventListener('resize', function() {
+        headerData.forEach(data => {
+            if (!data.isFixed) {
+                initHeader(data);
+            }
+        });
+    });
 })();
 </script>
 </body>
