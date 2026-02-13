@@ -4020,5 +4020,112 @@
 })();
 </script>
 
+<script>
+(function() {
+    const stickyHeader = document.getElementById('alfakher-header');
+    if (!stickyHeader) return;
 
+    let originalHeader = null;
+    let clonedHeader = null;
+    let isFixed = false;
+    let headerTop = 0;
+
+    function init() {
+        // Get the header's position
+        const rect = stickyHeader.getBoundingClientRect();
+        headerTop = rect.top + window.scrollY;
+        
+        // Store original styles
+        originalHeader = {
+            position: stickyHeader.style.position,
+            top: stickyHeader.style.top,
+            left: stickyHeader.style.left,
+            right: stickyHeader.style.right,
+            zIndex: stickyHeader.style.zIndex,
+            width: stickyHeader.style.width
+        };
+    }
+
+    function makeFixed() {
+        if (isFixed) return;
+        isFixed = true;
+
+        // Create placeholder to prevent layout shift
+        if (!clonedHeader) {
+            clonedHeader = stickyHeader.cloneNode(true);
+            clonedHeader.style.visibility = 'hidden';
+            clonedHeader.style.position = 'static';
+            clonedHeader.removeAttribute('id');
+            stickyHeader.parentNode.insertBefore(clonedHeader, stickyHeader);
+        }
+
+        // Make header fixed
+        const rect = stickyHeader.getBoundingClientRect();
+        stickyHeader.style.position = 'fixed';
+        stickyHeader.style.top = '0';
+        stickyHeader.style.left = rect.left + 'px';
+        stickyHeader.style.right = (window.innerWidth - rect.right) + 'px';
+        stickyHeader.style.zIndex = '1000';
+        stickyHeader.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    }
+
+    function removeFixed() {
+        if (!isFixed) return;
+        isFixed = false;
+
+        // Restore original styles
+        stickyHeader.style.position = originalHeader.position;
+        stickyHeader.style.top = originalHeader.top;
+        stickyHeader.style.left = originalHeader.left;
+        stickyHeader.style.right = originalHeader.right;
+        stickyHeader.style.zIndex = originalHeader.zIndex;
+        stickyHeader.style.width = originalHeader.width;
+        stickyHeader.style.boxShadow = '';
+
+        // Remove placeholder
+        if (clonedHeader && clonedHeader.parentNode) {
+            clonedHeader.parentNode.removeChild(clonedHeader);
+            clonedHeader = null;
+        }
+    }
+
+    function checkScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const rect = stickyHeader.getBoundingClientRect();
+        const shouldBeFixed = scrollTop > headerTop;
+
+        if (shouldBeFixed && !isFixed) {
+            makeFixed();
+        } else if (!shouldBeFixed && isFixed) {
+            removeFixed();
+        }
+    }
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    // Check on scroll
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            window.cancelAnimationFrame(scrollTimeout);
+        }
+        scrollTimeout = window.requestAnimationFrame(checkScroll);
+    }, { passive: true });
+
+    // Recalculate on resize
+    window.addEventListener('resize', function() {
+        if (!isFixed) {
+            init();
+        }
+    });
+
+    // Initial check
+    setTimeout(checkScroll, 100);
+})();
+</script>
 </body>
