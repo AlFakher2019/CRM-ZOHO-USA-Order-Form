@@ -2671,3 +2671,25 @@ html {
         z-index: 999;
     }
 }
+
+/* ===== STICKY HEADER FOR AL-FAKHER CLASSICS - ENFORCED ===== */
+#alfakher-header {
+    position: -webkit-sticky !important; /* Safari support */
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background: #E8E8E8 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+@media (max-width: 768px) {
+    #alfakher-header {
+        position: -webkit-sticky !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        background: #E8E8E8 !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    }
+}
+/* ===== END STICKY HEADER ===== */
