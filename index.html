@@ -4021,54 +4021,145 @@
 </script>
 
 <script>
-// WORKING SOLUTION - MAKES ALL 3 TABLE HEADERS STICKY
-// This will work in BOTH normal view AND iframes
+// FINAL IFRAME STICKY - NO WIDTH ISSUES
+// This preserves the exact original styling
 
 (function() {
     'use strict';
     
-    function setupStickyHeaders() {
-        // Find all 3 table headers
-        const allHeaders = document.querySelectorAll('.zf-tableHeader');
+    let headerData = [];
+    
+    function init() {
+        const headers = Array.from(document.querySelectorAll('.zf-tableHeader'));
         
-        if (allHeaders.length < 3) {
-            console.log('Not enough headers found');
+        if (headers.length === 0) {
+            console.log('No headers found');
             return;
         }
         
-        // Apply sticky to all 3 headers
-        allHeaders.forEach(function(header, index) {
-            // Use CSS sticky for normal view, works better
-            header.style.position = 'sticky';
-            header.style.top = '0';
-            header.style.zIndex = (1000 + index); // Stack them properly
-            header.style.background = '#E8E8E8';
-            header.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-        });
+        console.log('Setting up', headers.length, 'headers');
         
-        // Fix parent overflow issues
+        // Fix overflow
         const wrapper = document.querySelector('.zf-templateWrapper');
-        if (wrapper) {
-            wrapper.style.overflow = 'visible';
-        }
+        if (wrapper) wrapper.style.overflow = 'visible';
         
         const subWrap = document.querySelector('.zf-subContWrap');
-        if (subWrap) {
-            subWrap.style.overflow = 'visible';
-        }
+        if (subWrap) subWrap.style.overflow = 'visible';
         
-        console.log('✓ All 3 headers are now sticky');
+        // Setup each header
+        headers.forEach(function(header, index) {
+            // Store original styles
+            const originalDisplay = header.style.display || window.getComputedStyle(header).display;
+            const originalGrid = header.style.gridTemplateColumns || window.getComputedStyle(header).gridTemplateColumns;
+            
+            // Create placeholder
+            const placeholder = document.createElement('div');
+            placeholder.style.display = 'none';
+            header.parentNode.insertBefore(placeholder, header);
+            
+            headerData.push({
+                element: header,
+                placeholder: placeholder,
+                originalTop: 0,
+                originalDisplay: originalDisplay,
+                originalGrid: originalGrid,
+                isFixed: false
+            });
+        });
+        
+        setTimeout(calculatePositions, 200);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+        
+        console.log('✓ Ready');
     }
     
-    // Run when DOM is ready
+    function calculatePositions() {
+        headerData.forEach(function(data) {
+            if (!data.isFixed) {
+                const rect = data.element.getBoundingClientRect();
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                data.originalTop = rect.top + scrollTop;
+            }
+        });
+        onScroll();
+    }
+    
+    function onScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        headerData.forEach(function(data) {
+            if (scrollTop >= data.originalTop - 1) {
+                if (!data.isFixed) makeFixed(data);
+            } else {
+                if (data.isFixed) makeNormal(data);
+            }
+        });
+    }
+    
+    function makeFixed(data) {
+        const header = data.element;
+        const placeholder = data.placeholder;
+        
+        // Get exact current size
+        const rect = header.getBoundingClientRect();
+        
+        // Show placeholder
+        placeholder.style.display = 'block';
+        placeholder.style.height = rect.height + 'px';
+        placeholder.style.visibility = 'hidden';
+        
+        // Make fixed WITHOUT changing display or grid
+        header.style.position = 'fixed';
+        header.style.top = '0';
+        header.style.left = rect.left + 'px';
+        header.style.width = rect.width + 'px';
+        header.style.zIndex = '9999';
+        header.style.background = '#E8E8E8';
+        header.style.boxShadow = '0 4px 6px rgba(0,0,0,0.15)';
+        
+        data.isFixed = true;
+    }
+    
+    function makeNormal(data) {
+        const header = data.element;
+        const placeholder = data.placeholder;
+        
+        // Hide placeholder
+        placeholder.style.display = 'none';
+        
+        // Remove fixed styles
+        header.style.position = '';
+        header.style.top = '';
+        header.style.left = '';
+        header.style.width = '';
+        header.style.zIndex = '';
+        header.style.boxShadow = '';
+        
+        data.isFixed = false;
+    }
+    
+    function onResize() {
+        // Reset all to normal first
+        headerData.forEach(function(data) {
+            if (data.isFixed) makeNormal(data);
+        });
+        
+        setTimeout(function() {
+            calculatePositions();
+        }, 100);
+    }
+    
+    // Initialize
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupStickyHeaders);
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        setupStickyHeaders();
+        init();
     }
     
-    // Backup execution
-    window.addEventListener('load', setupStickyHeaders);
+    window.addEventListener('load', function() {
+        setTimeout(init, 500);
+    });
     
 })();
 </script>
