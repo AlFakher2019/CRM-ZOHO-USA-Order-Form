@@ -4021,146 +4021,97 @@
 </script>
 
 <script>
-// FINAL IFRAME STICKY - NO WIDTH ISSUES
-// This preserves the exact original styling
-
 (function() {
-    'use strict';
-    
-    let headerData = [];
-    
-    function init() {
-        const headers = Array.from(document.querySelectorAll('.zf-tableHeader'));
-        
-        if (headers.length === 0) {
-            console.log('No headers found');
-            return;
-        }
-        
-        console.log('Setting up', headers.length, 'headers');
-        
-        // Fix overflow
-        const wrapper = document.querySelector('.zf-templateWrapper');
-        if (wrapper) wrapper.style.overflow = 'visible';
-        
-        const subWrap = document.querySelector('.zf-subContWrap');
-        if (subWrap) subWrap.style.overflow = 'visible';
-        
-        // Setup each header
-        headers.forEach(function(header, index) {
-            // Store original styles
-            const originalDisplay = header.style.display || window.getComputedStyle(header).display;
-            const originalGrid = header.style.gridTemplateColumns || window.getComputedStyle(header).gridTemplateColumns;
-            
-            // Create placeholder
-            const placeholder = document.createElement('div');
-            placeholder.style.display = 'none';
-            header.parentNode.insertBefore(placeholder, header);
-            
-            headerData.push({
-                element: header,
-                placeholder: placeholder,
-                originalTop: 0,
-                originalDisplay: originalDisplay,
-                originalGrid: originalGrid,
-                isFixed: false
-            });
-        });
-        
-        setTimeout(calculatePositions, 200);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onResize);
-        
-        console.log('✓ Ready');
-    }
-    
-    function calculatePositions() {
-        headerData.forEach(function(data) {
-            if (!data.isFixed) {
-                const rect = data.element.getBoundingClientRect();
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                data.originalTop = rect.top + scrollTop;
-            }
-        });
-        onScroll();
-    }
-    
-    function onScroll() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        headerData.forEach(function(data) {
-            if (scrollTop >= data.originalTop - 1) {
-                if (!data.isFixed) makeFixed(data);
-            } else {
-                if (data.isFixed) makeNormal(data);
-            }
-        });
-    }
-    
-    function makeFixed(data) {
-        const header = data.element;
-        const placeholder = data.placeholder;
-        
-        // Get exact current size
-        const rect = header.getBoundingClientRect();
-        
-        // Show placeholder
-        placeholder.style.display = 'block';
-        placeholder.style.height = rect.height + 'px';
-        placeholder.style.visibility = 'hidden';
-        
-        // Make fixed WITHOUT changing display or grid
-        header.style.position = 'fixed';
-        header.style.top = '0';
-        header.style.left = rect.left + 'px';
-        header.style.width = rect.width + 'px';
-        header.style.zIndex = '9999';
-        header.style.background = '#E8E8E8';
-        header.style.boxShadow = '0 4px 6px rgba(0,0,0,0.15)';
-        
-        data.isFixed = true;
-    }
-    
-    function makeNormal(data) {
-        const header = data.element;
-        const placeholder = data.placeholder;
-        
-        // Hide placeholder
-        placeholder.style.display = 'none';
-        
-        // Remove fixed styles
-        header.style.position = '';
-        header.style.top = '';
-        header.style.left = '';
-        header.style.width = '';
-        header.style.zIndex = '';
-        header.style.boxShadow = '';
-        
-        data.isFixed = false;
-    }
-    
-    function onResize() {
-        // Reset all to normal first
-        headerData.forEach(function(data) {
-            if (data.isFixed) makeNormal(data);
-        });
-        
-        setTimeout(function() {
-            calculatePositions();
-        }, 100);
-    }
-    
-    // Initialize
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-    
-    window.addEventListener('load', function() {
-        setTimeout(init, 500);
+    // All sticky headers
+    const stickyHeaders = [
+        { id: 'header-herbal', element: null, observer: null, isSticky: false, placeholder: null },
+        { id: 'header-cookies', element: null, observer: null, isSticky: false, placeholder: null },
+        { id: 'alfakher-header', element: null, observer: null, isSticky: false, placeholder: null }
+    ];
+
+    // Find all headers
+    stickyHeaders.forEach(header => {
+        header.element = document.getElementById(header.id);
     });
-    
+
+    // Filter out missing headers
+    const validHeaders = stickyHeaders.filter(h => h.element !== null);
+    if (validHeaders.length === 0) return;
+
+    function makeStickyWithCSS(header) {
+        if (header.isSticky) return;
+        header.isSticky = true;
+
+        // Create sentinel/placeholder
+        if (!header.placeholder) {
+            header.placeholder = document.createElement('div');
+            header.placeholder.style.height = header.element.offsetHeight + 'px';
+            header.element.parentNode.insertBefore(header.placeholder, header.element);
+        }
+
+        // Apply sticky styles
+        header.element.style.position = 'sticky';
+        header.element.style.top = '0';
+        header.element.style.zIndex = '1000';
+        header.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    }
+
+    function removeStickyCSS(header) {
+        if (!header.isSticky) return;
+        header.isSticky = false;
+
+        header.element.style.position = '';
+        header.element.style.top = '';
+        header.element.style.zIndex = '';
+        header.element.style.boxShadow = '';
+
+        if (header.placeholder && header.placeholder.parentNode) {
+            header.placeholder.parentNode.removeChild(header.placeholder);
+            header.placeholder = null;
+        }
+    }
+
+    // Create observers for each header
+    validHeaders.forEach((header, index) => {
+        // Create a sentinel element just above each header
+        const sentinel = document.createElement('div');
+        sentinel.style.height = '1px';
+        sentinel.style.visibility = 'hidden';
+        sentinel.setAttribute('data-header-sentinel', header.id);
+        header.element.parentNode.insertBefore(sentinel, header.element);
+
+        // Intersection Observer
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Sentinel is visible - header should NOT be sticky
+                        removeStickyCSS(header);
+                    } else {
+                        // Sentinel is out of view - header should be sticky
+                        makeStickyWithCSS(header);
+                    }
+                });
+            },
+            {
+                threshold: 0,
+                rootMargin: '0px'
+            }
+        );
+
+        observer.observe(sentinel);
+        header.observer = observer;
+        header.sentinel = sentinel;
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        validHeaders.forEach(header => {
+            if (header.observer) {
+                header.observer.disconnect();
+            }
+        });
+    });
 })();
 </script>
 </body>
