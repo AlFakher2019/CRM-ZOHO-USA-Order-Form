@@ -2090,7 +2090,7 @@ button:focus-visible {
 /* Shrink the weight columns themselves and push them to the right
    (Type column flexes to take the extra space) */
 .zf-tableHeader {
-    grid-template-columns: 60px 1fr 110px 110px 110px !important;
+    grid-template-columns: 60px 1fr 135px 112px 120px !important;
     gap: 0 !important; /* Remove gap between columns */
 }
 
