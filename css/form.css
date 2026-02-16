@@ -1591,7 +1591,7 @@ body {
     background: #FFFFFF;
     border-radius: 0;
 margin-top: 10px;
-    overflow: visible;
+    /* overflow: visible; */
 }
 
 /* Header */
@@ -2638,7 +2638,7 @@ body::-webkit-scrollbar {
     background: #FFFFFF;
     border-radius: 0;
     margin-top: 10px;
-    overflow: visible;
+    /* overflow: visible; */
     position: relative;
 }
 
