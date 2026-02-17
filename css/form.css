@@ -2246,6 +2246,8 @@ button:focus-visible {
         display: flex !important;
         padding: 12px 0px !important;
         border-right: none;
+        font-size: 15px;
+        font-weight: 500;
         color: #1A1A1A;
         height: auto;
         align-self: flex-start;
@@ -2299,7 +2301,7 @@ button:focus-visible {
         color: #666666;
         margin-bottom: 6px;
         width: 100%;
-        text-align: center;
+        text-align: left;
     }
     
     .zfCol input[type="text"] {
