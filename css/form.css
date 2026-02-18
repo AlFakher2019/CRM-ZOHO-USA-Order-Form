@@ -305,20 +305,7 @@ body {
     list-style: none;
 }
 
-.zf-submitColor {
-    display: inline-block;
-    padding: 16px 48px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #FFFFFF;
-    background: #000000;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    letter-spacing: -0.01em;
-    font-family: inherit;
-}
+
 
 .zf-submitColor:hover {
     background: #1A1A1A;
@@ -1644,6 +1631,7 @@ margin-top: 10px;
     font-size: 25px;
     font-weight: 600;
     color: #1A1A1A;
+    font-family: 'DINPro', 'Poppins', sans-serif;
     margin-bottom: 32px;
     margin-top: 32px;
     letter-spacing: -0.01em;
@@ -1881,7 +1869,7 @@ margin-top: 10px;
     border-radius: 22px;
     cursor: pointer;
     transition: all 0.2s ease;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.09em;
     font-family: inherit;
 }
 
@@ -2694,3 +2682,41 @@ html {
         box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     }
 } */
+
+@font-face {
+    font-family: 'DINPro';
+    src: url('../DINPro-Black.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'DINProRE';
+    src: url('../DINPro-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'DINProRE';
+    src: url('../DINPro-Regular.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DINProRE';
+    src: url('../DINPro-Black.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DINProRE';
+    src: url('../DINPro-Black.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
