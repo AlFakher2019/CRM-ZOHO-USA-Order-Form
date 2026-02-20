@@ -47,6 +47,25 @@
                                 <p id="MultipleChoice_error" class="zf-errorMessage" style="display:none;">Invalid value
                                 </p>
                             </div>
+                           
+                            <!-- status field -->
+                             <div class="zf-tempFrmWrapper  zf-large " style="display: none;"><label class="zf-labelName">
+                                Status
+                            </label>
+                            <div class="zf-tempContDiv">
+                                <select class="zf-form-sBox" name="Dropdown" checktype="c1">
+                                    <option selected="true" value="-Select-">-Select-</option>
+                                    <option value="New">New</option>
+                                    <option value="Draft">Draft</option>
+                                </select>
+                                <p id="Dropdown_error" class="zf-errorMessage" style="display:none;">Invalid value</p>
+                            </div>
+                            <div class="zf-clearBoth"></div>
+                        </div>
+
+
+
+
                             <div class="zf-clearBoth"></div>
                         </div>
                         <div class="zf-tempFrmWrapper  zf-large " style="display: none;"><label class="zf-labelName">
@@ -736,7 +755,7 @@
                                     value</p>
                             </div>
                             <div class="zf-clearBoth"></div>
-                        </div>
+                        </div>               
                         <label class="zf-labelName">
                             Al Fakher New Flavours
                         </label>
@@ -3685,12 +3704,15 @@
                     </ul>
                 </div>
                 <ul class="submit-section">
-                    <li class="zf-fmFooter"><button class="zf-submitColor">SUBMIT ORDER</button>
-                        <p id="customFormError" style="display:none;color:#d32f2f;font-size:14px;margin-top:10px;">
-                            Please fill at least one field
-                        </p>
-                    </li>
-                </ul>
+    <li class="zf-fmFooter" style="display:flex; justify-content:flex-end; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button type="button" class="zf-submitColor" onclick="submitWithStatus('Draft')">SAVE FOR LATER</button>
+        <button type="button" class="zf-submitColor" onclick="submitWithStatus('New')">SUBMIT ORDER</button>
+        <p id="customFormError" style="display:none;color:#d32f2f;font-size:14px;margin-top:10px;width:100%;text-align:right;">
+            Please fill at least one field
+        </p>
+    </li>
+</ul>
+                
             </div>
 
         </form>
@@ -4158,4 +4180,44 @@
             });
         })();
     </script>
+    <script type="text/javascript">
+    function submitWithStatus(statusValue) {
+        // "At least one field filled" validation
+        var fields = document.getElementById('form').querySelectorAll('input[type="text"], select, textarea');
+        var atLeastOneFilled = false;
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            // Skip the Status dropdown and hidden fields
+            if (field.name === 'Dropdown' || field.name === 'zf_referrer_name' || field.name === 'zf_redirect_url' || field.name === 'zc_gad') continue;
+            if (field.value && field.value.trim() !== '' && field.value !== '-Select-') {
+                atLeastOneFilled = true;
+                break;
+            }
+        }
+
+        var errorMsg = document.getElementById('customFormError');
+        if (!atLeastOneFilled) {
+            errorMsg.style.display = 'block';
+            return;
+        } else {
+            errorMsg.style.display = 'none';
+        }
+
+        // Set the Status dropdown
+        var statusDropdown = document.querySelector('select[name="Dropdown"]');
+        if (statusDropdown) {
+            statusDropdown.value = statusValue;
+        }
+
+        // Run Zoho validation and submit
+        if (typeof zf_ValidateAndSubmit === 'function') {
+            var isValid = zf_ValidateAndSubmit();
+            if (isValid) {
+                document.getElementById('form').submit();
+            }
+        } else {
+            document.getElementById('form').submit();
+        }
+    }
+</script>
 </body>
