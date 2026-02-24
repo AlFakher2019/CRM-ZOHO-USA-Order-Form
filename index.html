@@ -4089,19 +4089,14 @@
       
 <script>
 /*
- * STICKY HEADER FIX v5
+ * STICKY HEADER FIX v6
  *
- * CONFIRMED FROM DEBUG:
- *   - postMessage IS working
- *   - effectiveScroll = parentScrollY - iframeTop  is correct
- *
- * NEW APPROACH: No placeholder divs (they cause layout shifts).
- * Instead:
- *   - Leave headers in normal flow (position:static) always
- *   - Use CSS transform:translateY() to visually move them to the viewport top
- *   - translateY = effectiveScroll - headerNaturalTop
- *   - This moves the header visually without affecting layout at all
- *   - When not in section, translateY = 0 (back to normal)
+ * BUGS FIXED vs v5:
+ * 1. naturalTop was being measured AFTER transforms were applied on re-init,
+ *    giving wrong values. Now we reset ALL transforms first, then measure.
+ * 2. Trigger was only working scroll-up because naturalTop drift meant
+ *    `scroll >= naturalTop` was only true going back up.
+ * 3. sectionStop for last header set to document height (not Infinity).
  */
 (function () {
     'use strict';
@@ -4139,35 +4134,40 @@
         return top;
     }
 
-    function init() {
-        /* Reset any previous transforms */
-        headers.forEach(function (h) {
-            h.el.style.transform = '';
-            h.el.style.zIndex    = '';
-            h.el.style.boxShadow = '';
-            h.el.style.position  = '';
-        });
-        headers = [];
+    function clearTransform(el) {
+        el.style.transform = '';
+        el.style.zIndex    = '';
+        el.style.boxShadow = '';
+        el.style.position  = '';
+        el.style.willChange = '';
+    }
 
+    function init() {
         var all = Array.prototype.slice.call(
             document.querySelectorAll('.zf-tableHeader')
         );
 
-        all.forEach(function (el, i) {
-            /* Natural top = where it sits in the document normally */
-            var naturalTop  = getAbsoluteTop(el);
-            var nextEl      = all[i + 1] || null;
-            /* Stop sticking when the next header reaches the top */
-            var sectionStop = nextEl
-                ? getAbsoluteTop(nextEl) - el.offsetHeight
-                : Infinity;
+        /* Step 1: reset ALL transforms so measurements are clean */
+        all.forEach(function (el) { clearTransform(el); });
 
-            headers.push({
-                el:          el,
-                naturalTop:  naturalTop,
-                sectionStop: sectionStop,
-                height:      el.offsetHeight
-            });
+        /* Step 2: force reflow so browser applies the resets */
+        void document.body.offsetHeight;
+
+        /* Step 3: measure natural positions */
+        headers = all.map(function (el, i) {
+            return {
+                el:         el,
+                naturalTop: getAbsoluteTop(el),
+                height:     el.offsetHeight
+            };
+        });
+
+        /* Step 4: set sectionStop = next header's naturalTop */
+        headers.forEach(function (h, i) {
+            var next = headers[i + 1];
+            h.sectionStop = next
+                ? next.naturalTop - h.height
+                : document.documentElement.scrollHeight;
         });
 
         initialized = true;
@@ -4177,29 +4177,20 @@
     function tick() {
         if (!initialized) return;
 
-        /* How far the visible viewport top is from the iframe document top */
         var scroll = Math.max(0, parentScrollY - iframeTopOnPage);
 
         headers.forEach(function (h) {
             var inSection = scroll >= h.naturalTop && scroll < h.sectionStop;
 
             if (inSection) {
-                /*
-                 * We want the header to appear at the top of the viewport.
-                 * Its natural position is h.naturalTop.
-                 * The viewport top (in iframe coords) is `scroll`.
-                 * So we need to shift it by: scroll - h.naturalTop
-                 */
                 var shift = scroll - h.naturalTop;
+                h.el.style.position  = 'relative';
                 h.el.style.transform = 'translateY(' + shift + 'px)';
                 h.el.style.zIndex    = '999';
                 h.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
-                h.el.style.position  = 'relative'; /* needed for z-index to work */
+                h.el.style.willChange = 'transform';
             } else {
-                h.el.style.transform = '';
-                h.el.style.zIndex    = '';
-                h.el.style.boxShadow = '';
-                h.el.style.position  = '';
+                clearTransform(h.el);
             }
         });
     }
