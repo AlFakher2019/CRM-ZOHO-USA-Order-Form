@@ -4089,28 +4089,19 @@
       
 <script>
 /*
- * STICKY HEADER FIX v4
+ * STICKY HEADER FIX v5
  *
- * ROOT CAUSE (why v1/v2/v3 all failed):
+ * CONFIRMED FROM DEBUG:
+ *   - postMessage IS working
+ *   - effectiveScroll = parentScrollY - iframeTop  is correct
  *
- *   The iframe is 6850px tall. position:fixed inside an iframe is relative
- *   to the IFRAME's viewport, which is the full 6850px box — NOT the visible
- *   portion of the screen. So `fixed; top:0` pins the header to the top of
- *   the 6850px box. As the parent scrolls down, that point moves off-screen.
- *
- * THE CORRECT APPROACH:
- *
- *   Use position:absolute (not fixed). Then set:
- *     top = effectiveScroll + 'px'
- *
- *   where effectiveScroll = parentScrollY - iframeTopOnPage
- *
- *   This makes the header's absolute position track exactly where the
- *   visible viewport top is within the iframe document — creating the
- *   illusion of a sticky header.
- *
- * STANDALONE (non-iframe):
- *   Use CSS position:sticky — no JS needed.
+ * NEW APPROACH: No placeholder divs (they cause layout shifts).
+ * Instead:
+ *   - Leave headers in normal flow (position:static) always
+ *   - Use CSS transform:translateY() to visually move them to the viewport top
+ *   - translateY = effectiveScroll - headerNaturalTop
+ *   - This moves the header visually without affecting layout at all
+ *   - When not in section, translateY = 0 (back to normal)
  */
 (function () {
     'use strict';
@@ -4118,7 +4109,7 @@
     var isIframe = false;
     try { isIframe = (window.self !== window.top); } catch (e) { isIframe = true; }
 
-    /* ── STANDALONE: CSS sticky is sufficient ── */
+    /* ── STANDALONE: CSS sticky ── */
     if (!isIframe) {
         function applySticky() {
             document.querySelectorAll('.zf-tableHeader').forEach(function (h) {
@@ -4139,7 +4130,7 @@
 
     var parentScrollY   = 0;
     var iframeTopOnPage = 0;
-    var states          = [];
+    var headers         = [];
     var initialized     = false;
 
     function getAbsoluteTop(el) {
@@ -4148,48 +4139,34 @@
         return top;
     }
 
-    function resetStyle(el) {
-        el.style.position  = '';
-        el.style.top       = '';
-        el.style.left      = '';
-        el.style.width     = '';
-        el.style.zIndex    = '';
-        el.style.boxShadow = '';
-    }
-
     function init() {
-        states.forEach(function (s) {
-            release(s);
-            if (s.ph && s.ph.parentNode) s.ph.parentNode.removeChild(s.ph);
+        /* Reset any previous transforms */
+        headers.forEach(function (h) {
+            h.el.style.transform = '';
+            h.el.style.zIndex    = '';
+            h.el.style.boxShadow = '';
+            h.el.style.position  = '';
         });
-        states = [];
+        headers = [];
 
         var all = Array.prototype.slice.call(
             document.querySelectorAll('.zf-tableHeader')
         );
 
         all.forEach(function (el, i) {
-            resetStyle(el);
-
-            /* Placeholder preserves layout space */
-            var ph       = document.createElement('div');
-            ph.style.cssText = 'visibility:hidden;margin:0;padding:0;height:'
-                             + el.offsetHeight + 'px;';
-            el.parentNode.insertBefore(ph, el);
-
-            var sectionTop  = getAbsoluteTop(ph);
+            /* Natural top = where it sits in the document normally */
+            var naturalTop  = getAbsoluteTop(el);
             var nextEl      = all[i + 1] || null;
+            /* Stop sticking when the next header reaches the top */
             var sectionStop = nextEl
                 ? getAbsoluteTop(nextEl) - el.offsetHeight
                 : Infinity;
 
-            states.push({
+            headers.push({
                 el:          el,
-                ph:          ph,
-                height:      el.offsetHeight,
-                sectionTop:  sectionTop,
+                naturalTop:  naturalTop,
                 sectionStop: sectionStop,
-                isFixed:     false
+                height:      el.offsetHeight
             });
         });
 
@@ -4197,53 +4174,32 @@
         tick();
     }
 
-    function effectiveScroll() {
-        return Math.max(0, parentScrollY - iframeTopOnPage);
-    }
-
-    function fix(s, scrollInIframe) {
-        s.isFixed = true;
-        var r = s.ph.getBoundingClientRect();
-
-        /*
-         * KEY INSIGHT: use position:absolute, not fixed.
-         * top = scrollInIframe places the header exactly where the
-         * visible viewport top is within the iframe's coordinate space.
-         */
-        s.el.style.position  = 'absolute';
-        s.el.style.top       = scrollInIframe + 'px';
-        s.el.style.left      = (s.ph.getBoundingClientRect().left
-                                + window.pageXOffset) + 'px';
-        s.el.style.width     = r.width + 'px';
-        s.el.style.zIndex    = '999';
-        s.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
-    }
-
-    function release(s) {
-        if (!s || !s.isFixed) return;
-        s.isFixed = false;
-        resetStyle(s.el);
-    }
-
     function tick() {
         if (!initialized) return;
-        var scroll = effectiveScroll();
 
-        states.forEach(function (s) {
-            var inSection = scroll >= s.sectionTop && scroll < s.sectionStop;
+        /* How far the visible viewport top is from the iframe document top */
+        var scroll = Math.max(0, parentScrollY - iframeTopOnPage);
+
+        headers.forEach(function (h) {
+            var inSection = scroll >= h.naturalTop && scroll < h.sectionStop;
 
             if (inSection) {
-                /* Always update top even if already fixed, so it tracks scroll */
-                s.isFixed = true;
-                var r = s.ph.getBoundingClientRect();
-                s.el.style.position  = 'absolute';
-                s.el.style.top       = scroll + 'px';
-                s.el.style.left      = (r.left + window.pageXOffset) + 'px';
-                s.el.style.width     = r.width + 'px';
-                s.el.style.zIndex    = '999';
-                s.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
+                /*
+                 * We want the header to appear at the top of the viewport.
+                 * Its natural position is h.naturalTop.
+                 * The viewport top (in iframe coords) is `scroll`.
+                 * So we need to shift it by: scroll - h.naturalTop
+                 */
+                var shift = scroll - h.naturalTop;
+                h.el.style.transform = 'translateY(' + shift + 'px)';
+                h.el.style.zIndex    = '999';
+                h.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
+                h.el.style.position  = 'relative'; /* needed for z-index to work */
             } else {
-                release(s);
+                h.el.style.transform = '';
+                h.el.style.zIndex    = '';
+                h.el.style.boxShadow = '';
+                h.el.style.position  = '';
             }
         });
     }
