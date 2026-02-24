@@ -4089,14 +4089,8 @@
       
 <script>
 /*
- * STICKY HEADER FIX v6
- *
- * BUGS FIXED vs v5:
- * 1. naturalTop was being measured AFTER transforms were applied on re-init,
- *    giving wrong values. Now we reset ALL transforms first, then measure.
- * 2. Trigger was only working scroll-up because naturalTop drift meant
- *    `scroll >= naturalTop` was only true going back up.
- * 3. sectionStop for last header set to document height (not Infinity).
+ * STICKY HEADER DIAGNOSTIC - paste into index.html temporarily
+ * Open browser console to see the values
  */
 (function () {
     'use strict';
@@ -4104,29 +4098,23 @@
     var isIframe = false;
     try { isIframe = (window.self !== window.top); } catch (e) { isIframe = true; }
 
-    /* ── STANDALONE: CSS sticky ── */
     if (!isIframe) {
-        function applySticky() {
-            document.querySelectorAll('.zf-tableHeader').forEach(function (h) {
-                h.style.position = 'sticky';
-                h.style.top      = '0';
-                h.style.zIndex   = '99';
-            });
-        }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', applySticky);
-        } else {
-            applySticky();
-        }
+        console.log('[sticky] STANDALONE mode - using CSS sticky');
+        document.querySelectorAll('.zf-tableHeader').forEach(function (h) {
+            h.style.position = 'sticky';
+            h.style.top = '0';
+            h.style.zIndex = '99';
+        });
         return;
     }
 
-    /* ── IFRAME MODE ── */
+    console.log('[sticky] IFRAME mode detected');
 
     var parentScrollY   = 0;
     var iframeTopOnPage = 0;
     var headers         = [];
     var initialized     = false;
+    var logThrottle     = 0;
 
     function getAbsoluteTop(el) {
         var top = 0;
@@ -4135,10 +4123,10 @@
     }
 
     function clearTransform(el) {
-        el.style.transform = '';
-        el.style.zIndex    = '';
-        el.style.boxShadow = '';
-        el.style.position  = '';
+        el.style.transform  = '';
+        el.style.zIndex     = '';
+        el.style.boxShadow  = '';
+        el.style.position   = '';
         el.style.willChange = '';
     }
 
@@ -4147,27 +4135,27 @@
             document.querySelectorAll('.zf-tableHeader')
         );
 
-        /* Step 1: reset ALL transforms so measurements are clean */
-        all.forEach(function (el) { clearTransform(el); });
+        console.log('[sticky] Found ' + all.length + ' headers:', all.map(function(h){ return h.id; }));
 
-        /* Step 2: force reflow so browser applies the resets */
+        all.forEach(function (el) { clearTransform(el); });
         void document.body.offsetHeight;
 
-        /* Step 3: measure natural positions */
         headers = all.map(function (el, i) {
+            var nt = getAbsoluteTop(el);
+            console.log('[sticky] Header ' + i + ' id="' + el.id + '" naturalTop=' + nt + ' height=' + el.offsetHeight);
             return {
                 el:         el,
-                naturalTop: getAbsoluteTop(el),
+                naturalTop: nt,
                 height:     el.offsetHeight
             };
         });
 
-        /* Step 4: set sectionStop = next header's naturalTop */
         headers.forEach(function (h, i) {
             var next = headers[i + 1];
             h.sectionStop = next
                 ? next.naturalTop - h.height
                 : document.documentElement.scrollHeight;
+            console.log('[sticky] Header ' + i + ' sectionStop=' + h.sectionStop);
         });
 
         initialized = true;
@@ -4179,15 +4167,30 @@
 
         var scroll = Math.max(0, parentScrollY - iframeTopOnPage);
 
+        /* Log every ~30 ticks to avoid spam */
+        logThrottle++;
+        if (logThrottle % 30 === 0) {
+            console.log('[sticky] tick | parentScrollY=' + parentScrollY 
+                + ' iframeTop=' + iframeTopOnPage 
+                + ' effectiveScroll=' + scroll);
+            headers.forEach(function(h, i) {
+                var inSection = scroll >= h.naturalTop && scroll < h.sectionStop;
+                console.log('  header ' + i + ': naturalTop=' + h.naturalTop 
+                    + ' sectionStop=' + h.sectionStop 
+                    + ' inSection=' + inSection
+                    + ' currentTransform=' + h.el.style.transform);
+            });
+        }
+
         headers.forEach(function (h) {
             var inSection = scroll >= h.naturalTop && scroll < h.sectionStop;
 
             if (inSection) {
                 var shift = scroll - h.naturalTop;
-                h.el.style.position  = 'relative';
-                h.el.style.transform = 'translateY(' + shift + 'px)';
-                h.el.style.zIndex    = '999';
-                h.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
+                h.el.style.position   = 'relative';
+                h.el.style.transform  = 'translateY(' + shift + 'px)';
+                h.el.style.zIndex     = '999';
+                h.el.style.boxShadow  = '0 2px 8px rgba(0,0,0,0.18)';
                 h.el.style.willChange = 'transform';
             } else {
                 clearTransform(h.el);
