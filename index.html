@@ -4086,100 +4086,161 @@
         })();
     </script>
 
-    <script>
-        (function () {
-            // All sticky headers
-            const stickyHeaders = [
-                { id: 'header-herbal', element: null, observer: null, isSticky: false, placeholder: null },
-                { id: 'header-cookies', element: null, observer: null, isSticky: false, placeholder: null },
-                { id: 'alfakher-header', element: null, observer: null, isSticky: false, placeholder: null }
-            ];
+        ============================================================ -->
+<script>
+(function () {
+    'use strict';
 
-            // Find all headers
-            stickyHeaders.forEach(header => {
-                header.element = document.getElementById(header.id);
-            });
+    var HEADER_IDS  = ['header-cookies', 'header-herbal', 'alfakher-header'];
+    var STOP_MAP    = {
+        'header-cookies' : 'header-herbal',
+        'header-herbal'  : 'alfakher-header',
+        'alfakher-header': null
+    };
 
-            // Filter out missing headers
-            const validHeaders = stickyHeaders.filter(h => h.element !== null);
-            if (validHeaders.length === 0) return;
+    var scrollY        = 0;
+    var iframeOffsetY  = 0;
+    var isInsideIframe = false;
+    var headerStates   = [];
 
-            function makeStickyWithCSS(header) {
-                if (header.isSticky) return;
-                header.isSticky = true;
+    try { isInsideIframe = window.self !== window.top; } catch(e) { isInsideIframe = true; }
 
-                // Create sentinel/placeholder
-                if (!header.placeholder) {
-                    header.placeholder = document.createElement('div');
-                    header.placeholder.style.height = header.element.offsetHeight + 'px';
-                    header.element.parentNode.insertBefore(header.placeholder, header.element);
+    /* ── Build state for every header element ── */
+    function init() {
+        headerStates = [];
+
+        HEADER_IDS.forEach(function(id) {
+            /* querySelectorAll handles duplicate IDs (alfakher-header appears twice) */
+            var els = document.querySelectorAll('#' + id);
+            els.forEach(function(el) {
+                if (el._stickyDone) return;
+                el._stickyDone = true;
+
+                var rect        = el.getBoundingClientRect();
+                var originalTop = rect.top + window.scrollY;
+                var height      = rect.height;
+
+                /* Placeholder keeps layout intact while header is fixed */
+                var ph = document.createElement('div');
+                ph.style.cssText = 'height:' + height + 'px;visibility:hidden;display:none;';
+                el.parentNode.insertBefore(ph, el);
+
+                /* Find where stickiness should end */
+                var stopY = Infinity;
+                var stopId = STOP_MAP[id];
+                if (stopId) {
+                    var stopEl = document.getElementById(stopId);
+                    if (stopEl) {
+                        stopY = stopEl.getBoundingClientRect().top + window.scrollY - height;
+                    }
                 }
 
-                // Apply sticky styles
-                header.element.style.position = 'sticky';
-                header.element.style.top = '0';
-                header.element.style.zIndex = '1000';
-                header.element.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-            }
-
-            function removeStickyCSS(header) {
-                if (!header.isSticky) return;
-                header.isSticky = false;
-
-                header.element.style.position = '';
-                header.element.style.top = '';
-                header.element.style.zIndex = '';
-                header.element.style.boxShadow = '';
-
-                if (header.placeholder && header.placeholder.parentNode) {
-                    header.placeholder.parentNode.removeChild(header.placeholder);
-                    header.placeholder = null;
-                }
-            }
-
-            // Create observers for each header
-            validHeaders.forEach((header, index) => {
-                // Create a sentinel element just above each header
-                const sentinel = document.createElement('div');
-                sentinel.style.height = '1px';
-                sentinel.style.visibility = 'hidden';
-                sentinel.setAttribute('data-header-sentinel', header.id);
-                header.element.parentNode.insertBefore(sentinel, header.element);
-
-                // Intersection Observer
-                const observer = new IntersectionObserver(
-                    (entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                // Sentinel is visible - header should NOT be sticky
-                                removeStickyCSS(header);
-                            } else {
-                                // Sentinel is out of view - header should be sticky
-                                makeStickyWithCSS(header);
-                            }
-                        });
-                    },
-                    {
-                        threshold: 0,
-                        rootMargin: '0px'
-                    }
-                );
-
-                observer.observe(sentinel);
-                header.observer = observer;
-                header.sentinel = sentinel;
-            });
-
-            // Cleanup on page unload
-            window.addEventListener('beforeunload', () => {
-                validHeaders.forEach(header => {
-                    if (header.observer) {
-                        header.observer.disconnect();
-                    }
+                headerStates.push({
+                    el: el, ph: ph,
+                    originalTop: originalTop,
+                    stopY: stopY,
+                    height: height,
+                    isFixed: false
                 });
             });
-        })();
-    </script>
+        });
+
+        tick();
+    }
+
+    /* ── Apply / remove fixed positioning ── */
+    function tick() {
+        /*
+         * When inside a non-scrolling iframe the parent page scrolls.
+         * effectiveScroll = how far the parent has scrolled INTO the iframe.
+         * When standalone, just use window.scrollY.
+         */
+        var effectiveScroll = isInsideIframe
+            ? Math.max(0, scrollY - iframeOffsetY)
+            : window.scrollY;
+
+        headerStates.forEach(function(s) {
+            var shouldFix = effectiveScroll >= s.originalTop &&
+                            effectiveScroll <  s.stopY;
+
+            if (shouldFix && !s.isFixed) {
+                s.isFixed              = true;
+                s.ph.style.display     = 'block';
+                var pw                 = s.ph.getBoundingClientRect();
+                s.el.style.cssText    += ';position:fixed;top:0;left:' + pw.left + 'px;width:' + pw.width + 'px;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+
+            } else if (!shouldFix && s.isFixed) {
+                s.isFixed              = false;
+                s.ph.style.display     = 'none';
+                s.el.style.position    = '';
+                s.el.style.top         = '';
+                s.el.style.left        = '';
+                s.el.style.width       = '';
+                s.el.style.zIndex      = '';
+                s.el.style.boxShadow   = '';
+            }
+
+            /* Keep width/left fresh during fixed phase (handles resize mid-scroll) */
+            if (s.isFixed) {
+                var r = s.ph.getBoundingClientRect();
+                s.el.style.left  = r.left + 'px';
+                s.el.style.width = r.width + 'px';
+            }
+        });
+    }
+
+    /* ── Scroll: standalone ── */
+    function onNativeScroll() {
+        scrollY = window.scrollY;
+        tick();
+    }
+
+    /* ── Scroll: inside iframe — parent posts scroll data ── */
+    function onMessage(e) {
+        var d = e.data;
+        if (!d || d.type !== 'alfakher-scroll') return;
+        scrollY       = d.scrollY;
+        iframeOffsetY = d.iframeOffsetFromPageTop;
+        tick();
+    }
+
+    /* ── Resize — recalculate everything ── */
+    function onResize() {
+        headerStates.forEach(function(s) {
+            if (s.isFixed) {
+                s.isFixed            = false;
+                s.ph.style.display   = 'none';
+                s.el.style.position  = '';
+                s.el.style.top       = '';
+                s.el.style.left      = '';
+                s.el.style.width     = '';
+                s.el.style.zIndex    = '';
+                s.el.style.boxShadow = '';
+            }
+            s.el._stickyDone = false; /* allow re-init */
+        });
+        init();
+    }
+
+    /* ── Boot ── */
+    function boot() {
+        init();
+        if (isInsideIframe) {
+            window.addEventListener('message', onMessage);
+            try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch(e) {}
+        } else {
+            window.addEventListener('scroll', onNativeScroll, { passive: true });
+        }
+        window.addEventListener('resize', onResize, { passive: true });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();
+</script>
     <script type="text/javascript">
     function submitWithStatus(statusValue) {
         // "At least one field filled" validation
