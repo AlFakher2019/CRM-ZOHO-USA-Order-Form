@@ -4087,100 +4087,146 @@
     </script>
 
       
+<!-- ============================================================
+     STICKY HEADER FIX v2 — Correct approach
+     Replaces the broken sticky header script in index.html
+     ============================================================ -->
 <script>
 (function () {
     'use strict';
 
-    var HEADER_IDS  = ['header-cookies', 'header-herbal', 'alfakher-header'];
-    var STOP_MAP    = {
-        'header-cookies' : 'header-herbal',
-        'header-herbal'  : 'alfakher-header',
-        'alfakher-header': null
-    };
+    // Map header IDs to which section comes after them (to know when to stop)
+    var SECTIONS = [
+        { id: 'header-cookies', nextId: 'header-herbal'    },
+        { id: 'header-herbal',  nextId: 'alfakher-header'  },
+        { id: 'alfakher-header',nextId: null               },
+    ];
 
-    var scrollY        = 0;
-    var iframeOffsetY  = 0;
-    var isInsideIframe = false;
-    var headerStates   = [];
+    var parentScrollY    = 0;  // scrollY received from parent page
+    var iframeTopOnPage  = 0;  // absolute Y of iframe top in parent document
+    var isIframe         = false;
+    var states           = [];
+    var initialized      = false;
 
-    try { isInsideIframe = window.self !== window.top; } catch(e) { isInsideIframe = true; }
+    try { isIframe = (window.self !== window.top); } catch(e) { isIframe = true; }
 
-    /* ── Build state for every header element ── */
+    // ── Calculate absolute Y positions of elements in the iframe document ──
+    function getAbsoluteTop(el) {
+        var top = 0;
+        while (el) {
+            top += el.offsetTop;
+            el = el.offsetParent;
+        }
+        return top;
+    }
+
+    // ── Build one state object per header ──
+    function buildState(el, nextEl) {
+        // Create a placeholder so layout doesn't jump when we fix the header
+        var ph = document.createElement('div');
+        var h  = el.offsetHeight;
+        ph.style.cssText = 'height:' + h + 'px;display:none;visibility:hidden;margin:0;padding:0;';
+        el.parentNode.insertBefore(ph, el);
+
+        // Reset any previous sticky CSS (clean slate)
+        el.style.position = '';
+        el.style.top = '';
+        el.style.left = '';
+        el.style.width = '';
+        el.style.zIndex = '';
+        el.style.boxShadow = '';
+
+        var sectionTop  = getAbsoluteTop(ph);       // where this header starts
+        var sectionStop = nextEl
+            ? getAbsoluteTop(nextEl) - h            // where stickiness should end
+            : Infinity;
+
+        return {
+            el:          el,
+            ph:          ph,
+            height:      h,
+            sectionTop:  sectionTop,
+            sectionStop: sectionStop,
+            isFixed:     false
+        };
+    }
+
     function init() {
-        headerStates = [];
+        // Release any previous fixed headers
+        states.forEach(function(s) { release(s); });
+        states = [];
 
-        HEADER_IDS.forEach(function(id) {
-            /* querySelectorAll handles duplicate IDs (alfakher-header appears twice) */
-            var els = document.querySelectorAll('#' + id);
+        SECTIONS.forEach(function(cfg) {
+            // querySelectorAll handles duplicate IDs (alfakher-header x2)
+            var els    = document.querySelectorAll('#' + cfg.id);
+            var nextEl = cfg.nextId ? document.querySelector('#' + cfg.nextId) : null;
+
             els.forEach(function(el) {
-                if (el._stickyDone) return;
-                el._stickyDone = true;
-
-                var rect        = el.getBoundingClientRect();
-                var originalTop = rect.top + window.scrollY;
-                var height      = rect.height;
-
-                /* Placeholder keeps layout intact while header is fixed */
-                var ph = document.createElement('div');
-                ph.style.cssText = 'height:' + height + 'px;visibility:hidden;display:none;';
-                el.parentNode.insertBefore(ph, el);
-
-                /* Find where stickiness should end */
-                var stopY = Infinity;
-                var stopId = STOP_MAP[id];
-                if (stopId) {
-                    var stopEl = document.getElementById(stopId);
-                    if (stopEl) {
-                        stopY = stopEl.getBoundingClientRect().top + window.scrollY - height;
-                    }
-                }
-
-                headerStates.push({
-                    el: el, ph: ph,
-                    originalTop: originalTop,
-                    stopY: stopY,
-                    height: height,
-                    isFixed: false
-                });
+                if (el._stickyBuilt) return;
+                el._stickyBuilt = true;
+                states.push(buildState(el, nextEl));
             });
         });
 
+        initialized = true;
         tick();
     }
 
-    /* ── Apply / remove fixed positioning ── */
-    function tick() {
-        /*
-         * When inside a non-scrolling iframe the parent page scrolls.
-         * effectiveScroll = how far the parent has scrolled INTO the iframe.
-         * When standalone, just use window.scrollY.
-         */
-        var effectiveScroll = isInsideIframe
-            ? Math.max(0, scrollY - iframeOffsetY)
-            : window.scrollY;
+    // ── How far the parent has scrolled INTO the iframe content ──
+    function getEffectiveScroll() {
+        if (!isIframe) {
+            return window.scrollY;
+        }
+        // parentScrollY = how far the parent page has scrolled
+        // iframeTopOnPage = where the top of the iframe sits in the parent document
+        // effectiveScroll = how far into the iframe content the user has scrolled
+        return Math.max(0, parentScrollY - iframeTopOnPage);
+    }
 
-        headerStates.forEach(function(s) {
-            var shouldFix = effectiveScroll >= s.originalTop &&
-                            effectiveScroll <  s.stopY;
+    function fix(s) {
+        s.isFixed            = true;
+        s.ph.style.display   = 'block';
+
+        var phRect = s.ph.getBoundingClientRect();
+
+        // Use position:fixed — in an iframe this pins to iframe viewport top
+        // Since the iframe itself doesn't scroll, viewport top = top of visible area
+        // This is exactly what we want
+        s.el.style.position  = 'fixed';
+        s.el.style.top       = '0px';
+        s.el.style.left      = phRect.left + 'px';
+        s.el.style.width     = phRect.width + 'px';
+        s.el.style.zIndex    = '999';
+        s.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
+    }
+
+    function release(s) {
+        if (!s.isFixed) return;
+        s.isFixed            = false;
+        s.ph.style.display   = 'none';
+        s.el.style.position  = '';
+        s.el.style.top       = '';
+        s.el.style.left      = '';
+        s.el.style.width     = '';
+        s.el.style.zIndex    = '';
+        s.el.style.boxShadow = '';
+    }
+
+    function tick() {
+        if (!initialized) return;
+
+        var scroll = getEffectiveScroll();
+
+        states.forEach(function(s) {
+            var shouldFix = scroll >= s.sectionTop && scroll < s.sectionStop;
 
             if (shouldFix && !s.isFixed) {
-                s.isFixed              = true;
-                s.ph.style.display     = 'block';
-                var pw                 = s.ph.getBoundingClientRect();
-                s.el.style.cssText    += ';position:fixed;top:0;left:' + pw.left + 'px;width:' + pw.width + 'px;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
-
+                fix(s);
             } else if (!shouldFix && s.isFixed) {
-                s.isFixed              = false;
-                s.ph.style.display     = 'none';
-                s.el.style.position    = '';
-                s.el.style.top         = '';
-                s.el.style.left        = '';
-                s.el.style.width       = '';
-                s.el.style.zIndex      = '';
-                s.el.style.boxShadow   = '';
+                release(s);
             }
 
-            /* Keep width/left fresh during fixed phase (handles resize mid-scroll) */
+            // Keep left/width synced during resize while fixed
             if (s.isFixed) {
                 var r = s.ph.getBoundingClientRect();
                 s.el.style.left  = r.left + 'px';
@@ -4189,48 +4235,42 @@
         });
     }
 
-    /* ── Scroll: standalone ── */
-    function onNativeScroll() {
-        scrollY = window.scrollY;
-        tick();
-    }
-
-    /* ── Scroll: inside iframe — parent posts scroll data ── */
+    // ── Message from parent page ──
     function onMessage(e) {
         var d = e.data;
         if (!d || d.type !== 'alfakher-scroll') return;
-        scrollY       = d.scrollY;
-        iframeOffsetY = d.iframeOffsetFromPageTop;
+        parentScrollY   = d.scrollY;
+        iframeTopOnPage = d.iframeOffsetFromPageTop;
         tick();
     }
 
-    /* ── Resize — recalculate everything ── */
-    function onResize() {
-        headerStates.forEach(function(s) {
-            if (s.isFixed) {
-                s.isFixed            = false;
-                s.ph.style.display   = 'none';
-                s.el.style.position  = '';
-                s.el.style.top       = '';
-                s.el.style.left      = '';
-                s.el.style.width     = '';
-                s.el.style.zIndex    = '';
-                s.el.style.boxShadow = '';
-            }
-            s.el._stickyDone = false; /* allow re-init */
-        });
-        init();
+    // ── Native scroll (standalone, direct URL) ──
+    function onNativeScroll() {
+        parentScrollY = window.scrollY;
+        tick();
     }
 
-    /* ── Boot ── */
+    function onResize() {
+        // Mark all for re-init
+        states.forEach(function(s) {
+            release(s);
+            s.el._stickyBuilt = false;
+        });
+        setTimeout(init, 50); // short delay lets layout settle
+    }
+
     function boot() {
         init();
-        if (isInsideIframe) {
+
+        if (isIframe) {
             window.addEventListener('message', onMessage);
+            // Tell parent we're ready to receive scroll data
             try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch(e) {}
         } else {
+            // Standalone — use native scroll
             window.addEventListener('scroll', onNativeScroll, { passive: true });
         }
+
         window.addEventListener('resize', onResize, { passive: true });
     }
 
