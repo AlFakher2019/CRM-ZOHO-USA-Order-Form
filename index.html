@@ -4089,14 +4089,28 @@
       
 <script>
 /*
- * STICKY HEADER FIX v3
- * 
- * Key fixes vs v2:
- * 1. Standalone (non-iframe) mode uses CSS position:sticky — zero JS overhead, no layout bugs
- * 2. Iframe mode uses JS+postMessage bridge correctly
- * 3. Duplicate IDs (#alfakher-header x2) handled properly
- * 4. sectionStop calculated correctly using querySelectorAll to find all headers in order
- * 5. No placeholder/layout-collapse issues
+ * STICKY HEADER FIX v4
+ *
+ * ROOT CAUSE (why v1/v2/v3 all failed):
+ *
+ *   The iframe is 6850px tall. position:fixed inside an iframe is relative
+ *   to the IFRAME's viewport, which is the full 6850px box — NOT the visible
+ *   portion of the screen. So `fixed; top:0` pins the header to the top of
+ *   the 6850px box. As the parent scrolls down, that point moves off-screen.
+ *
+ * THE CORRECT APPROACH:
+ *
+ *   Use position:absolute (not fixed). Then set:
+ *     top = effectiveScroll + 'px'
+ *
+ *   where effectiveScroll = parentScrollY - iframeTopOnPage
+ *
+ *   This makes the header's absolute position track exactly where the
+ *   visible viewport top is within the iframe document — creating the
+ *   illusion of a sticky header.
+ *
+ * STANDALONE (non-iframe):
+ *   Use CSS position:sticky — no JS needed.
  */
 (function () {
     'use strict';
@@ -4104,65 +4118,69 @@
     var isIframe = false;
     try { isIframe = (window.self !== window.top); } catch (e) { isIframe = true; }
 
-    /* ── STANDALONE MODE: just use CSS sticky, no JS needed ── */
+    /* ── STANDALONE: CSS sticky is sufficient ── */
     if (!isIframe) {
-        document.addEventListener('DOMContentLoaded', function () {
-            var headers = document.querySelectorAll('.zf-tableHeader');
-            headers.forEach(function (h) {
+        function applySticky() {
+            document.querySelectorAll('.zf-tableHeader').forEach(function (h) {
                 h.style.position = 'sticky';
-                h.style.top = '0';
-                h.style.zIndex = '99';
+                h.style.top      = '0';
+                h.style.zIndex   = '99';
             });
-        });
-        return; // done — no further JS needed for standalone
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applySticky);
+        } else {
+            applySticky();
+        }
+        return;
     }
 
-    /* ── IFRAME MODE: postMessage bridge + position:fixed ── */
+    /* ── IFRAME MODE ── */
 
-    var parentScrollY       = 0;
-    var iframeTopOnPage     = 0;
-    var states              = [];
-    var initialized         = false;
-    var HEADER_SEL          = '.zf-tableHeader';
+    var parentScrollY   = 0;
+    var iframeTopOnPage = 0;
+    var states          = [];
+    var initialized     = false;
 
     function getAbsoluteTop(el) {
         var top = 0;
-        while (el) {
-            top += el.offsetTop;
-            el = el.offsetParent;
-        }
+        while (el) { top += el.offsetTop; el = el.offsetParent; }
         return top;
     }
 
+    function resetStyle(el) {
+        el.style.position  = '';
+        el.style.top       = '';
+        el.style.left      = '';
+        el.style.width     = '';
+        el.style.zIndex    = '';
+        el.style.boxShadow = '';
+    }
+
     function init() {
-        /* Release anything from a previous init */
-        states.forEach(release);
+        states.forEach(function (s) {
+            release(s);
+            if (s.ph && s.ph.parentNode) s.ph.parentNode.removeChild(s.ph);
+        });
         states = [];
 
-        /* Collect ALL .zf-tableHeader elements in DOM order */
-        var all = Array.prototype.slice.call(document.querySelectorAll(HEADER_SEL));
+        var all = Array.prototype.slice.call(
+            document.querySelectorAll('.zf-tableHeader')
+        );
 
         all.forEach(function (el, i) {
-            /* Remove old placeholder if re-initing */
-            if (el._ph) {
-                el._ph.parentNode.removeChild(el._ph);
-                el._ph = null;
-            }
-
-            /* Create placeholder to hold space in the layout */
-            var ph = document.createElement('div');
-            ph.style.cssText = 'visibility:hidden;margin:0;padding:0;';
-            ph.style.height  = el.offsetHeight + 'px';
-            el.parentNode.insertBefore(ph, el);
-            el._ph = ph;
-
-            /* Reset inline styles */
             resetStyle(el);
 
+            /* Placeholder preserves layout space */
+            var ph       = document.createElement('div');
+            ph.style.cssText = 'visibility:hidden;margin:0;padding:0;height:'
+                             + el.offsetHeight + 'px;';
+            el.parentNode.insertBefore(ph, el);
+
             var sectionTop  = getAbsoluteTop(ph);
-            var nextHeader  = all[i + 1];
-            var sectionStop = nextHeader
-                ? getAbsoluteTop(nextHeader) - el.offsetHeight
+            var nextEl      = all[i + 1] || null;
+            var sectionStop = nextEl
+                ? getAbsoluteTop(nextEl) - el.offsetHeight
                 : Infinity;
 
             states.push({
@@ -4179,21 +4197,23 @@
         tick();
     }
 
-    function resetStyle(el) {
-        el.style.position  = '';
-        el.style.top       = '';
-        el.style.left      = '';
-        el.style.width     = '';
-        el.style.zIndex    = '';
-        el.style.boxShadow = '';
+    function effectiveScroll() {
+        return Math.max(0, parentScrollY - iframeTopOnPage);
     }
 
-    function fix(s) {
+    function fix(s, scrollInIframe) {
         s.isFixed = true;
         var r = s.ph.getBoundingClientRect();
-        s.el.style.position  = 'fixed';
-        s.el.style.top       = '0px';
-        s.el.style.left      = r.left + 'px';
+
+        /*
+         * KEY INSIGHT: use position:absolute, not fixed.
+         * top = scrollInIframe places the header exactly where the
+         * visible viewport top is within the iframe's coordinate space.
+         */
+        s.el.style.position  = 'absolute';
+        s.el.style.top       = scrollInIframe + 'px';
+        s.el.style.left      = (s.ph.getBoundingClientRect().left
+                                + window.pageXOffset) + 'px';
         s.el.style.width     = r.width + 'px';
         s.el.style.zIndex    = '999';
         s.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
@@ -4205,26 +4225,25 @@
         resetStyle(s.el);
     }
 
-    function getEffectiveScroll() {
-        return Math.max(0, parentScrollY - iframeTopOnPage);
-    }
-
     function tick() {
         if (!initialized) return;
-        var scroll = getEffectiveScroll();
+        var scroll = effectiveScroll();
 
         states.forEach(function (s) {
-            var shouldFix = (scroll >= s.sectionTop && scroll < s.sectionStop);
+            var inSection = scroll >= s.sectionTop && scroll < s.sectionStop;
 
-            if (shouldFix && !s.isFixed) {
-                fix(s);
-            } else if (!shouldFix && s.isFixed) {
-                release(s);
-            } else if (s.isFixed) {
-                /* Keep position synced during scroll (left can shift on resize) */
+            if (inSection) {
+                /* Always update top even if already fixed, so it tracks scroll */
+                s.isFixed = true;
                 var r = s.ph.getBoundingClientRect();
-                s.el.style.left  = r.left + 'px';
-                s.el.style.width = r.width + 'px';
+                s.el.style.position  = 'absolute';
+                s.el.style.top       = scroll + 'px';
+                s.el.style.left      = (r.left + window.pageXOffset) + 'px';
+                s.el.style.width     = r.width + 'px';
+                s.el.style.zIndex    = '999';
+                s.el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.18)';
+            } else {
+                release(s);
             }
         });
     }
@@ -4240,32 +4259,22 @@
     var resizeTimer;
     function onResize() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function () {
-            /* Re-init so absolute positions are recalculated */
-            states.forEach(function (s) {
-                s.el._ph = null; // let init() recreate it
-            });
-            init();
-        }, 100);
+        resizeTimer = setTimeout(init, 150);
     }
 
     function boot() {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function () {
-                init();
-                window.addEventListener('message', onMessage);
-                window.addEventListener('resize', onResize, { passive: true });
-                try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch (e) {}
-            });
-        } else {
-            init();
-            window.addEventListener('message', onMessage);
-            window.addEventListener('resize', onResize, { passive: true });
-            try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch (e) {}
-        }
+        init();
+        window.addEventListener('message', onMessage);
+        window.addEventListener('resize', onResize, { passive: true });
+        try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch (e) {}
     }
 
-    boot();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+
 })();
 </script>
     <script type="text/javascript">
