@@ -4089,8 +4089,14 @@
       
 <script>
 /*
- * STICKY HEADER DIAGNOSTIC - paste into index.html temporarily
- * Open browser console to see the values
+ * STICKY HEADER FIX v9
+ *
+ * FIXES vs v8:
+ * 1. Delayed boot (500ms) so page is fully rendered before measuring
+ * 2. Re-measure left/width on every tick (not just at init)
+ *    so position is always accurate regardless of when init ran
+ * 3. Re-init on first message received (in case init ran too early)
+ * 4. Clone left position uses el.getBoundingClientRect() every tick
  */
 (function () {
     'use strict';
@@ -4098,23 +4104,30 @@
     var isIframe = false;
     try { isIframe = (window.self !== window.top); } catch (e) { isIframe = true; }
 
+    /* ── STANDALONE: CSS sticky ── */
     if (!isIframe) {
-        console.log('[sticky] STANDALONE mode - using CSS sticky');
-        document.querySelectorAll('.zf-tableHeader').forEach(function (h) {
-            h.style.position = 'sticky';
-            h.style.top = '0';
-            h.style.zIndex = '99';
-        });
+        function applySticky() {
+            document.querySelectorAll('.zf-tableHeader').forEach(function (h) {
+                h.style.position = 'sticky';
+                h.style.top      = '0';
+                h.style.zIndex   = '99';
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applySticky);
+        } else {
+            applySticky();
+        }
         return;
     }
 
-    console.log('[sticky] IFRAME mode detected');
+    /* ── IFRAME MODE ── */
 
-    var parentScrollY   = 0;
-    var iframeTopOnPage = 0;
-    var headers         = [];
-    var initialized     = false;
-    var logThrottle     = 0;
+    var parentScrollY    = 0;
+    var iframeTopOnPage  = 0;
+    var headers          = [];
+    var initialized      = false;
+    var firstMessage     = true;
 
     function getAbsoluteTop(el) {
         var top = 0;
@@ -4122,40 +4135,61 @@
         return top;
     }
 
-    function clearTransform(el) {
-        el.style.transform  = '';
-        el.style.zIndex     = '';
-        el.style.boxShadow  = '';
-        el.style.position   = '';
-        el.style.willChange = '';
+    function destroyClones() {
+        headers.forEach(function (h) {
+            if (h.clone && h.clone.parentNode) {
+                h.clone.parentNode.removeChild(h.clone);
+            }
+            if (h.el) h.el.style.visibility = '';
+        });
+        headers = [];
+        initialized = false;
     }
 
     function init() {
+        destroyClones();
+
         var all = Array.prototype.slice.call(
             document.querySelectorAll('.zf-tableHeader')
         );
 
-        console.log('[sticky] Found ' + all.length + ' headers:', all.map(function(h){ return h.id; }));
+        if (all.length === 0) return;
 
-        all.forEach(function (el) { clearTransform(el); });
+        /* Force reflow so all measurements are fresh */
         void document.body.offsetHeight;
 
-        headers = all.map(function (el, i) {
-            var nt = getAbsoluteTop(el);
-            console.log('[sticky] Header ' + i + ' id="' + el.id + '" naturalTop=' + nt + ' height=' + el.offsetHeight);
-            return {
-                el:         el,
-                naturalTop: nt,
-                height:     el.offsetHeight
-            };
-        });
+        all.forEach(function (el, i) {
+            /* Create clone, append to body so it paints above everything */
+            var clone = el.cloneNode(true);
+            clone.removeAttribute('id'); /* avoid duplicate IDs */
+            clone.style.cssText = [
+                'position:absolute',
+                'top:-9999px',
+                'left:0',
+                'width:' + el.offsetWidth + 'px',
+                'height:' + el.offsetHeight + 'px',
+                'z-index:99999',
+                'display:none',
+                'margin:0',
+                'box-sizing:border-box',
+                'box-shadow:0 2px 8px rgba(0,0,0,0.2)',
+                'background:#E8E8E8',
+                'pointer-events:none'                
+            ].join(';');
+            document.body.appendChild(clone);
 
-        headers.forEach(function (h, i) {
-            var next = headers[i + 1];
-            h.sectionStop = next
-                ? next.naturalTop - h.height
+            var naturalTop  = getAbsoluteTop(el);
+            var next        = all[i + 1] || null;
+            var sectionStop = next
+                ? getAbsoluteTop(next) - el.offsetHeight
                 : document.documentElement.scrollHeight;
-            console.log('[sticky] Header ' + i + ' sectionStop=' + h.sectionStop);
+
+            headers.push({
+                el:          el,
+                clone:       clone,
+                naturalTop:  naturalTop,
+                sectionStop: sectionStop
+            });
         });
 
         initialized = true;
@@ -4163,37 +4197,27 @@
     }
 
     function tick() {
-        if (!initialized) return;
+        if (!initialized || headers.length === 0) return;
 
         var scroll = Math.max(0, parentScrollY - iframeTopOnPage);
-
-        /* Log every ~30 ticks to avoid spam */
-        logThrottle++;
-        if (logThrottle % 30 === 0) {
-            console.log('[sticky] tick | parentScrollY=' + parentScrollY 
-                + ' iframeTop=' + iframeTopOnPage 
-                + ' effectiveScroll=' + scroll);
-            headers.forEach(function(h, i) {
-                var inSection = scroll >= h.naturalTop && scroll < h.sectionStop;
-                console.log('  header ' + i + ': naturalTop=' + h.naturalTop 
-                    + ' sectionStop=' + h.sectionStop 
-                    + ' inSection=' + inSection
-                    + ' currentTransform=' + h.el.style.transform);
-            });
-        }
 
         headers.forEach(function (h) {
             var inSection = scroll >= h.naturalTop && scroll < h.sectionStop;
 
             if (inSection) {
-                var shift = scroll - h.naturalTop;
-                h.el.style.position   = 'relative';
-                h.el.style.transform  = 'translateY(' + shift + 'px)';
-                h.el.style.zIndex     = '999';
-                h.el.style.boxShadow  = '0 2px 8px rgba(0,0,0,0.18)';
-                h.el.style.willChange = 'transform';
+                /* Re-measure width/left on every tick — always accurate */
+                var rect = h.el.getBoundingClientRect();
+                var left = rect.left + window.pageXOffset;
+
+                h.el.style.visibility  = 'hidden';
+                h.clone.style.display  = 'block';
+                h.clone.style.top      = scroll + 'px';
+                h.clone.style.left     = left + 'px';
+                h.clone.style.width    = h.el.offsetWidth + 'px';
             } else {
-                clearTransform(h.el);
+                h.el.style.visibility  = '';
+                h.clone.style.display  = 'none';
+                h.clone.style.top      = '-9999px';
             }
         });
     }
@@ -4201,22 +4225,34 @@
     function onMessage(e) {
         var d = e.data;
         if (!d || d.type !== 'alfakher-scroll') return;
+
         parentScrollY   = d.scrollY;
         iframeTopOnPage = d.iframeOffsetFromPageTop;
+
+        /* Re-init on first real scroll message in case boot ran too early */
+        if (firstMessage) {
+            firstMessage = false;
+            init();
+            return;
+        }
+
         tick();
     }
 
     var resizeTimer;
     function onResize() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(init, 150);
+        resizeTimer = setTimeout(init, 200);
     }
 
     function boot() {
-        init();
-        window.addEventListener('message', onMessage);
-        window.addEventListener('resize', onResize, { passive: true });
-        try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch (e) {}
+        /* Wait for full render before first init */
+        setTimeout(function () {
+            init();
+            window.addEventListener('message', onMessage);
+            window.addEventListener('resize', onResize, { passive: true });
+            try { window.parent.postMessage({ type: 'alfakher-ready' }, '*'); } catch (e) {}
+        }, 500);
     }
 
     if (document.readyState === 'loading') {
@@ -4229,7 +4265,7 @@
 </script>
     <script type="text/javascript">
     function submitWithStatus(statusValue) {
-        // "At least one field filled" validation
+        
         var fields = document.getElementById('form').querySelectorAll('input[type="text"], select, textarea');
         var atLeastOneFilled = false;
         for (var i = 0; i < fields.length; i++) {
