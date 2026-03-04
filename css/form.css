@@ -83,7 +83,7 @@ body {
     color: #1A1A1A;
     margin-bottom: 15px;
     letter-spacing: -0.01em;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Druk Text Wide LCG', sans-serif;
 }
 
 /* Input Fields */
@@ -485,9 +485,9 @@ input[type="hidden"] {
 
 
 .zf-tableHeader > div:nth-child(n + 3) {
-    
     padding-right: 16px;
 }
+
 
 
 @media (max-width: 768px) {
@@ -1628,11 +1628,12 @@ margin-top: 10px;
 }
 
 .zf-labelName {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 25px;
     font-weight: 600;
     color: #1A1A1A;
-    font-family: 'DINPro', 'Poppins', sans-serif;
     margin-bottom: 32px;
     margin-top: 32px;
     letter-spacing: -0.01em;
@@ -1707,12 +1708,11 @@ margin-top: 10px;
 
 .zf-tableHeader > div:first-child {
     justify-content: flex-start;
-    padding-left: 12px;
+    padding-left: 7px;
 }
 
 .zf-tableHeader > div:nth-child(2) {
     justify-content: flex-start;
-    padding-left: 12px;
 }
 
 .zf-tableHeader > div:last-child {
@@ -1826,7 +1826,7 @@ margin-top: 10px;
     padding: 12px 16px !important;
     font-size: 15px !important;
     border-radius: 8px !important;
-    text-align: center;
+    text-align: left;
     border: 1.5px solid #E0E0E0 !important;
     background: #FFFFFF !important;
     box-sizing: border-box !important;
@@ -1867,7 +1867,7 @@ margin-top: 10px;
     color: #FFFFFF;
     background: #AB2328;
     border: none;
-    border-radius: 22px;
+    border-radius: 50px;
     cursor: pointer;
     margin-bottom: 15px;
     transition: all 0.2s ease;
@@ -2098,7 +2098,9 @@ button:focus-visible {
     padding-left: 8px !important; /* Reduce left padding to decrease gap from Type */
     padding-right: 40px !important; /* Match field padding */
 }
-
+.zf-tableHeader > div:nth-child(4){
+    padding-left: 0 !important;
+}
 /* Reduce padding on Type column to decrease gap */
 .zf-tableHeader > div:nth-child(2) {
     padding-right: 8px !important;
@@ -2203,7 +2205,12 @@ button:focus-visible {
     padding: 4px 0;
 }
 
+.total-summary div span {
+    font-family: 'DINPro-Bold';
+}
+
 .total-label {
+    padding-right: 10px;
     font-size: 20px;
     font-weight: 400;
 }
@@ -2212,6 +2219,9 @@ button:focus-visible {
     list-style: none;
     padding: 0 0 48px 0;
     text-align: right;
+}
+.submit-section button, .submit-section p{
+        font-family: 'DINPro-Bold';
 }
 
 .submit-section .zf-fmFooter {
@@ -2376,6 +2386,7 @@ button:focus-visible {
     
     .total-label {
         font-size: 14px;
+        padding-right: 10px;
     }
     
     /* Submit section mobile */
@@ -2608,7 +2619,7 @@ body::-webkit-scrollbar {
     content: '';
     position: absolute;
     bottom: -6px;
-    left: 20px;
+    left: 15px;
     width: 0;
     height: 0;
     border-left: 6px solid transparent;
@@ -2685,7 +2696,7 @@ html {
     }
 } */
 
-@font-face {
+/* @font-face {
     font-family: 'DINPro';
     src: url('../DINPro-Black.ttf') format('truetype');
     font-weight: 800;
@@ -2721,9 +2732,43 @@ html {
     font-weight: 700;
     font-style: normal;
     font-display: swap;
+} */
+
+@font-face {
+    font-family: 'Druk Text Wide LCG';
+    src: url('../fonts/DrukTextWideLCG-Bold.woff2') format('woff2'),
+        url('../fonts/DrukTextWideLCG-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DINPro-Bold';
+    src: url('../fonts/DINPro-Bold.woff2') format('woff2'),
+        url('../fonts/DINPro-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DINPro';
+    src: url('../fonts/DINPro-Regular.woff2') format('woff2'),
+        url('../fonts/DINPro-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.sections div, .sections table tr td, .sections table tr th{
+    font-family: 'DINPro-Bold';
+}
+.sections div::before, .sections input {
+    font-family: 'DINPro' !important;
 }
 /* ADD THESE 4 LINES TO THE BOTTOM OF form.css */
-.zf-tableHeader {
+.sticky-header {
     position: sticky;
     top: 0;
     z-index: 100;
