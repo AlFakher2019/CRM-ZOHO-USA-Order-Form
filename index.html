@@ -3798,8 +3798,14 @@
                         if (!input) return;
                         if (input.offsetParent === null) return;
 
+                        // Ensure we only count up to 3 digits (matching the UI restriction)
+                        const sanitized = input.value.replace(/\D/g, '').slice(0, 3);
+                        if (input.value !== sanitized) {
+                            input.value = sanitized;
+                        }
+
                         if (mc[index + 1] !== undefined) {
-                            mc[index + 1] += getNumber(input.value);
+                            mc[index + 1] += getNumber(sanitized);
                         }
                     });
                 });

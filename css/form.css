@@ -204,9 +204,9 @@ body {
     align-items: center;
     justify-content: flex-start;
     padding: 16px 10px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
-    color: #666666;
+    color:black;
     grid-column: 1;
     grid-row: 1;
     border-right: 1px solid #D0D0D0;
@@ -223,7 +223,7 @@ body {
     justify-content: space-between; /* Name on left, icon on right */
     padding: 20px;
     padding-left: 20px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     color: #1A1A1A;
     grid-column: 2;
@@ -1755,9 +1755,9 @@ margin-top: 10px;
     align-items: center;
     justify-content: flex-start;
     padding: 16px 10px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
-    color: #666666;
+    color: black;
     grid-column: 1;
     grid-row: 1;
     border-right: 1px solid #D0D0D0;
@@ -1775,7 +1775,7 @@ margin-top: 10px;
     justify-content: flex-start;
     padding: 20px;
     padding-left: 20px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     color: #1A1A1A;
     grid-column: 2;
@@ -2094,7 +2094,7 @@ button:focus-visible {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    font-size: 13px !important; /* Slightly smaller to fit better */
+    font-size: 16px !important; /* Slightly smaller to fit better */
     padding-left: 8px !important; /* Reduce left padding to decrease gap from Type */
     padding-right: 40px !important; /* Match field padding */
 }
@@ -2246,9 +2246,10 @@ button:focus-visible {
         display: flex !important;
         padding: 12px 0px !important;
         border-right: none;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 500;
         color: #1A1A1A;
+        font-weight: bold;
         height: auto;
         align-self: flex-start;
     }
@@ -2271,7 +2272,7 @@ button:focus-visible {
         align-items: center !important;
         padding: 12px 5px !important;
         margin-bottom: 0 !important;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 500;
         color: #1A1A1A;
         width: calc(100% - 60px) !important;
@@ -2296,9 +2297,9 @@ button:focus-visible {
     .zfCol::before {
         content: attr(data-label);
         display: block;
-        font-size: 11px;
+        font-size: 14px;
         font-weight: 500;
-        color: #666666;
+        color: black;
         margin-bottom: 6px;
         width: 100%;
         text-align: left;
@@ -2385,6 +2386,7 @@ button:focus-visible {
     }
     
     .total-label {
+        font-family: 'DINPro'!important;
         font-size: 14px;
         padding-right: 10px;
     }
