@@ -86,6 +86,10 @@ body {
     font-family: 'Druk Text Wide LCG', sans-serif;
 }
 
+ .zf-labelName span{
+    font-family: 'Druk Text Wide LCG', sans-serif;
+ }
+
 /* Input Fields */
 .zf-tempContDiv span {
     display: block;
