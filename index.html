@@ -12,9 +12,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id=GTM-5SJ4T2WJ'+dl;
+f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5SJ4T2WJ');
+</script>
+<!-- End Google Tag Manager -->
+
+
 </head>
 
 <body class="zf-backgroundBg">
+    <!-- Google Tag Manager (noscript) -->
+<noscript>
+<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SJ4T2WJ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
     <!-- Change or deletion of the name attributes in the input tag will lead to empty values on record submission-->
     <div class="zf-templateWidth">
         <form
@@ -4129,4 +4147,37 @@
         }
     }
 </script>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+
+// Push form view event on page load
+window.dataLayer.push({
+  'event': 'zf_formview',
+  'zf_category': 'Zoho Forms',
+  'zf_action': 'Form View',
+  'zf_formname': 'Order Proposal Form AF B2B'
+});
+
+console.log("Zoho form view event pushed!");
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var form = document.querySelector("form"); // replace with your form ID if needed
+  if(form) {
+    form.addEventListener("submit", function() {
+      window.dataLayer.push({
+        'event': 'zf_submitform',
+        'zf_category': 'Zoho Forms',
+        'zf_action': 'Submit Form',
+        'zf_formname': 'Order Proposal Form AF B2B'
+      });
+      console.log("Zoho form submit event pushed!");
+    });
+  }
+});
+</script>
+
+
 </body>
