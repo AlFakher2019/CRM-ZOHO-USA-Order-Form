@@ -4194,6 +4194,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var form = document.querySelector("form"); // replace with your form ID if needed
   if(form) {
     form.addEventListener("submit", function() {
+        console.log("Hello test")
       window.dataLayer.push({
         'event': 'zf_formsubmit',
         'zf_category': 'Zoho Forms',
