@@ -4189,7 +4189,7 @@ window.dataLayer.push({
 console.log("Zoho form view event pushed!");
 </script>
 
-<script>
+<!-- <script>
 document.addEventListener("DOMContentLoaded", function() {
   var form = document.querySelector("form"); // replace with your form ID if needed
   if(form) {
@@ -4205,7 +4205,37 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
+</script> -->
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+  var form = document.getElementById("form"); // using the actual id="form"
+
+  if (form) {
+    // Save Zoho's original handler
+    var originalOnSubmit = form.onsubmit;
+
+    form.onsubmit = function (e) {
+      // Push to dataLayer FIRST
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'zf_formsubmit',
+        'zf_category': 'Zoho Forms',
+        'zf_action': 'Submit Form',
+        'zf_formname': 'Order Proposal Form AF B2B'
+      });
+      console.log("Zoho form submit event pushed!");
+
+      // Then run Zoho's original handler
+      if (originalOnSubmit) {
+        return originalOnSubmit.call(this, e);
+      }
+    };
+  }
+});
 </script>
+
 <div id="loader" style="display: none;">Loading...</div>
 
 </body>
