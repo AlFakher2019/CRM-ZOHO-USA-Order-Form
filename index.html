@@ -4211,13 +4211,16 @@ document.addEventListener("DOMContentLoaded", function() {
 <script>
     document.addEventListener("DOMContentLoaded", function () {
   var form = document.getElementById("form"); // using the actual id="form"
+  console.log("Zoho form submit event pushed 1!");
 
   if (form) {
     // Save Zoho's original handler
     var originalOnSubmit = form.onsubmit;
+    console.log("Zoho form submit event pushed2!");
 
     form.onsubmit = function (e) {
       // Push to dataLayer FIRST
+      console.log("Zoho form submit event pushed! 3");
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         'event': 'zf_formsubmit',
@@ -4225,7 +4228,7 @@ document.addEventListener("DOMContentLoaded", function() {
         'zf_action': 'Submit Form',
         'zf_formname': 'Order Proposal Form AF B2B'
       });
-      console.log("Zoho form submit event pushed!");
+      console.log("Zoho form submit event pushed!4");
 
       // Then run Zoho's original handler
       if (originalOnSubmit) {
