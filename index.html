@@ -4195,10 +4195,10 @@ document.addEventListener("DOMContentLoaded", function() {
   if(form) {
     form.addEventListener("submit", function() {
       window.dataLayer.push({
-        'event': 'form_submit',
+        'event': 'zf_formsubmit',
         'zf_category': 'Zoho Forms',
         'zf_action': 'Submit Form',
-        'zf_formname': 'Order Proposal Form AF B2B Test'
+        'zf_formname': 'Order Proposal Form AF B2B'
       });
       console.log("Zoho form submit event pushed!");
     });
