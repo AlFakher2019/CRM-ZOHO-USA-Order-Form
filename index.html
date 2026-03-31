@@ -4148,6 +4148,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
     }
 </script>
 
+ <script>
+  window.addEventListener("message", function (event) {
+    const emailInput = document.getElementById("Email");
+    const loader = document.getElementById("loader");
+
+    // Get email from message
+    let email = "";
+    if (typeof event.data === "string") {
+      email = event.data;
+    } else if (typeof event.data === "object" && event.data.email) {
+      email = event.data.email;
+    }
+
+    if (emailInput && email) {
+      emailInput.value = email;
+
+      // Re-check email field until it's filled, then hide loader
+      const checkField = setInterval(function () {
+        if (emailInput.value !== "") {
+          if (loader) loader.style.display = "none";
+          clearInterval(checkField);
+        }
+      }, 100);
+    }
+  });
+</script>
+
 <script>
 window.dataLayer = window.dataLayer || [];
 
@@ -4178,6 +4205,6 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 </script>
-
+<div id="loader" style="display: none;">Loading...</div>
 
 </body>
