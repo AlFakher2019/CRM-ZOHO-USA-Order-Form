@@ -4232,10 +4232,8 @@ document.addEventListener("DOMContentLoaded", function() {
       });
       console.log("Zoho form submit event pushed!4");
 
-      // Then run Zoho's original handler
-      if (originalOnSubmit) {
-        return originalOnSubmit.call(this, e);
-      }
+      // Then submit the form
+      form.submit();
     };
   }
 });
