@@ -17,9 +17,9 @@
 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id=GTM-5SJ4T2WJ'+dl;
+'https://www.googletagmanager.com/gtm.js?id=GTM-NKTRRNKR'+dl;
 f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5SJ4T2WJ');
+})(window,document,'script','dataLayer','GTM-NKTRRNKR');
 </script>
 <!-- End Google Tag Manager -->
 
@@ -29,7 +29,7 @@ f.parentNode.insertBefore(j,f);
 <body class="zf-backgroundBg">
     <!-- Google Tag Manager (noscript) -->
 <noscript>
-<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SJ4T2WJ"
+<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKTRRNKR"
 height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -91,7 +91,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
                             </label>
                             <div class="zf-tempContDiv">
                                 <span>
-                                    <input type="text" name="Email" checktype="c5" value="" maxlength="255"  id="Email" fieldType=9
+                                    <input type="text" name="Email" checktype="c5" value="" maxlength="255" id="Email" fieldType=9
                                         placeholder="" /> </span>
                                 <p id="Email_error" class="zf-errorMessage" style="display: none;">Invalid value</p>
                             </div>
@@ -4136,14 +4136,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
             statusDropdown.value = statusValue;
         }
 
+        var form = document.getElementById('form');
+
         // Run Zoho validation and submit
         if (typeof zf_ValidateAndSubmit === 'function') {
             var isValid = zf_ValidateAndSubmit();
             if (isValid) {
-                document.getElementById('form').submit();
+                form.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
             }
         } else {
-            document.getElementById('form').submit();
+            form.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
         }
     }
 </script>
@@ -4189,13 +4191,14 @@ window.dataLayer.push({
 console.log("Zoho form view event pushed!");
 </script>
 
-<script>
+<!-- <script>
 document.addEventListener("DOMContentLoaded", function() {
   var form = document.querySelector("form"); // replace with your form ID if needed
   if(form) {
     form.addEventListener("submit", function() {
+        console.log("Hello test")
       window.dataLayer.push({
-        'event': 'zf_submitform',
+        'event': 'zf_formsubmit',
         'zf_category': 'Zoho Forms',
         'zf_action': 'Submit Form',
         'zf_formname': 'Order Proposal Form AF B2B'
@@ -4204,7 +4207,38 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
+</script> -->
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+  var form = document.getElementById("form"); // using the actual id="form"
+  console.log("Zoho form submit event pushed 1!");
+
+  if (form) {
+    // Save Zoho's original handler
+    var originalOnSubmit = form.onsubmit;
+    console.log("Zoho form submit event pushed2!");
+
+    form.onsubmit = function (e) {
+      // Push to dataLayer FIRST
+      console.log("Zoho form submit event pushed! 3");
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'zf_formsubmit',
+        'zf_category': 'Zoho Forms',
+        'zf_action': 'Submit Form',
+        'zf_formname': 'Order Proposal Form AF B2B'
+      });
+      console.log("Zoho form submit event pushed!4");
+
+      // Then submit the form
+      form.submit();
+    };
+  }
+});
 </script>
+
 <div id="loader" style="display: none;">Loading...</div>
 
 </body>
