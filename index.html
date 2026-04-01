@@ -4136,14 +4136,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
             statusDropdown.value = statusValue;
         }
 
+        var form = document.getElementById('form');
+
         // Run Zoho validation and submit
         if (typeof zf_ValidateAndSubmit === 'function') {
             var isValid = zf_ValidateAndSubmit();
             if (isValid) {
-                document.getElementById('form').submit();
+                form.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
             }
         } else {
-            document.getElementById('form').submit();
+            form.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
         }
     }
 </script>
