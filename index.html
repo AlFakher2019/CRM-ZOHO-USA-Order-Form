@@ -4183,14 +4183,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
   // Show loader immediately on page load
   document.addEventListener("DOMContentLoaded", function () {
     const loader = document.getElementById("loader");
-    console.log("Page loaded, showing loader"); // Debug log
-    if (loader) loader.style.display = "block";
+    const form = document.getElementById("form");
+    if (loader) loader.setAttribute("style", "display: block !important;");
+    if (form) form.setAttribute("style", "display: none !important;"); // Hide form
   });
 
   window.addEventListener("message", function (event) {
     const emailInput = document.getElementById("Email");
     const loader = document.getElementById("loader");
-    console.log("Received message:", event.data); // Debug log
+    const form = document.getElementById("form");
 
     let email = "";
     if (typeof event.data === "string") {
@@ -4203,7 +4204,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
       emailInput.value = email;
       const checkField = setInterval(function () {
         if (emailInput.value !== "") {
-          if (loader) loader.style.display = "none";
+          if (loader) loader.setAttribute("style", "display: none !important;"); // Hide loader
+          if (form) form.setAttribute("style", "display: block !important;"); // Show form
           clearInterval(checkField);
         }
       }, 100);
