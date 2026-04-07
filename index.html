@@ -4151,7 +4151,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
     }
 </script>
 
- <script>
+ <!-- <script>
   window.addEventListener("message", function (event) {
     const emailInput = document.getElementById("Email");
     const loader = document.getElementById("loader");
@@ -4168,6 +4168,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
       emailInput.value = email;
 
       // Re-check email field until it's filled, then hide loader
+      const checkField = setInterval(function () {
+        if (emailInput.value !== "") {
+          if (loader) loader.style.display = "none";
+          clearInterval(checkField);
+        }
+      }, 100);
+    }
+  });
+</script> -->
+
+
+<script>
+  // Show loader immediately on page load
+  document.addEventListener("DOMContentLoaded", function () {
+    const loader = document.getElementById("loader");
+    if (loader) loader.style.display = "block";
+  });
+
+  window.addEventListener("message", function (event) {
+    const emailInput = document.getElementById("Email");
+    const loader = document.getElementById("loader");
+
+    let email = "";
+    if (typeof event.data === "string") {
+      email = event.data;
+    } else if (typeof event.data === "object" && event.data.email) {
+      email = event.data.email;
+    }
+
+    if (emailInput && email) {
+      emailInput.value = email;
       const checkField = setInterval(function () {
         if (emailInput.value !== "") {
           if (loader) loader.style.display = "none";
@@ -4240,6 +4271,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-<div id="loader" style="display: none;">Loading...</div>
+<div id="loader" style="display: block;"></div>
 
 </body>
