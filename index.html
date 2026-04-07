@@ -4180,12 +4180,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 
 
 <script>
-  // Show loader immediately on page load
   document.addEventListener("DOMContentLoaded", function () {
     const loader = document.getElementById("loader");
     const form = document.getElementById("form");
     if (loader) loader.setAttribute("style", "display: block !important;");
-    if (form) form.setAttribute("style", "display: none !important;"); // Hide form
+    if (form) form.setAttribute("style", "display: none !important; height: 0 !important; overflow: hidden !important;");
   });
 
   window.addEventListener("message", function (event) {
@@ -4204,8 +4203,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
       emailInput.value = email;
       const checkField = setInterval(function () {
         if (emailInput.value !== "") {
-          if (loader) loader.setAttribute("style", "display: none !important;"); // Hide loader
-          if (form) form.setAttribute("style", "display: block !important;"); // Show form
+          if (loader) loader.setAttribute("style", "display: none !important;");
+          if (form) form.setAttribute("style", "display: block !important; height: auto !important;");
           clearInterval(checkField);
         }
       }, 100);
