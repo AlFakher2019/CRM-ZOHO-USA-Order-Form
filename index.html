@@ -4183,12 +4183,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
   // Show loader immediately on page load
   document.addEventListener("DOMContentLoaded", function () {
     const loader = document.getElementById("loader");
+    console.log("Page loaded, showing loader"); // Debug log
     if (loader) loader.style.display = "block";
   });
 
   window.addEventListener("message", function (event) {
     const emailInput = document.getElementById("Email");
     const loader = document.getElementById("loader");
+    console.log("Received message:", event.data); // Debug log
 
     let email = "";
     if (typeof event.data === "string") {
