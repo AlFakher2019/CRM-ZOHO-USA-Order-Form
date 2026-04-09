@@ -4185,6 +4185,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
     const form = document.getElementById("form");
     if (loader) loader.setAttribute("style", "display: block !important;");
     if (form) form.setAttribute("style", "display: none !important; height: 0 !important; overflow: hidden !important;");
+    // Constrain page height so loader stays visible in iframe
+    document.documentElement.style.height = "100vh";
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.height = "100vh";
+    document.body.style.overflow = "hidden";
   });
 
   window.addEventListener("message", function (event) {
@@ -4205,6 +4210,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
         if (emailInput.value !== "") {
           if (loader) loader.setAttribute("style", "display: none !important;");
           if (form) form.setAttribute("style", "display: block !important; height: auto !important;");
+          // Restore full page height for the form
+          document.documentElement.style.height = "";
+          document.documentElement.style.overflow = "";
+          document.body.style.height = "";
+          document.body.style.overflow = "";
           clearInterval(checkField);
         }
       }, 100);
