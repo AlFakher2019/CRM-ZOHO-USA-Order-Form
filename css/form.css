@@ -2801,10 +2801,10 @@ html {
   width: 36px;
   height: 36px;
   animation: spin89345 1s linear infinite;
-  position: fixed;
-  top: 50%;
+  position: absolute;
+  top: 200px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 }
 
 @keyframes spin89345 {
