@@ -2386,7 +2386,7 @@ button:focus-visible {
     }
     
     .total-label {
-        font-family: 'DINPro'!important;
+        font-family: 'DINPro'!important ;
         font-size: 14px;
         padding-right: 10px;
     }
@@ -2793,7 +2793,7 @@ html {
     }
 }
 
-/* From Uiverse.io by Fernando-sv */ 
+/* From Uiverse.io by Fernando-sv */
 #loader {
   border: 4px solid rgba(0, 0, 0, .1);
   border-left-color: transparent;
@@ -2814,4 +2814,25 @@ html {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* ===== Al Fakher Charcoal & Disposable Hoses Sections ===== */
+
+/* Charcoal header: same column widths as standard, but allow text to wrap */
+.zf-charcoalHeader > div:nth-child(n + 3) {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    text-align: center !important;
+    font-size: 13px !important;
+    padding: 10px 8px !important;
+    line-height: 1.4 !important;
+}
+
+/* Mobile: hide new section headers */
+@media (max-width: 768px) {
+    .zf-charcoalHeader,
+    .zf-oneColHeader {
+        display: none;
+    }
 }
