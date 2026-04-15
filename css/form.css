@@ -91,6 +91,22 @@ body {
     vertical-align: middle;
  }
 
+.new-badge {
+    background-color: #AB2328;
+    color: #ffffff;
+    font-family: 'Druk Text Wide LCG', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 2px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    margin-right: 8px;
+}
+
 /* Input Fields */
 .zf-tempContDiv span {
     display: block;
