@@ -4265,10 +4265,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
   document.addEventListener("DOMContentLoaded", function () {
     const loader = document.getElementById("loader");
     const form = document.getElementById("form");
-    if (loader) loader.setAttribute("style", "display: block !important;");
-    if (form) form.setAttribute("style", "display: none !important; height: 0 !important; overflow: hidden !important;");
-    // Tell parent to shrink iframe while loading
-    window.parent.postMessage({ iframeHeight: "400px" }, "*");
+    const isInIframe = window.self !== window.top;
+
+    if (isInIframe) {
+      // Embedded in CRM iframe — show loader, hide form, wait for email via postMessage
+      if (loader) loader.setAttribute("style", "display: block !important;");
+      if (form) form.setAttribute("style", "display: none !important; height: 0 !important; overflow: hidden !important;");
+      window.parent.postMessage({ iframeHeight: "400px" }, "*");
+    } else {
+      // Accessed directly (e.g. GitHub Pages) — show form immediately
+      if (loader) loader.setAttribute("style", "display: none !important;");
+      if (form) form.setAttribute("style", "display: block !important; height: auto !important;");
+    }
   });
 
   window.addEventListener("message", function (event) {
@@ -4289,7 +4297,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
         if (emailInput.value !== "") {
           if (loader) loader.setAttribute("style", "display: none !important;");
           if (form) form.setAttribute("style", "display: block !important; height: auto !important;");
-          // Tell parent to expand iframe to full height
           window.parent.postMessage({ iframeHeight: "7500px" }, "*");
           clearInterval(checkField);
         }
