@@ -4284,6 +4284,99 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
   });
 </script>
 
+<!-- Iframe sticky-header bridge: CSS `position: sticky` cannot work when the
+     iframe is sized to content (parent scrolls, iframe does not). This script
+     listens for scroll updates posted by the parent window and translates each
+     `.sticky-header` so it tracks the parent's viewport. Requires the
+     companion parent-side snippet in js/parent-sticky-bridge.js. -->
+<script>
+(function () {
+  if (window.self === window.top) return; // only when embedded
+
+  var stickyHeaders = [];
+  var latestVisibleTop = 0;
+  var rafId = null;
+
+  function neutralize() {
+    document.querySelectorAll('.sticky-header').forEach(function (el) {
+      el.style.position = 'relative';
+      el.style.top = 'auto';
+      el.style.zIndex = '100';
+      el.style.willChange = 'transform';
+    });
+  }
+
+  function measure() {
+    var els = Array.from(document.querySelectorAll('.sticky-header'));
+    els.forEach(function (el) { el.style.transform = ''; });
+    stickyHeaders = els.map(function (el) {
+      var rect = el.getBoundingClientRect();
+      return { el: el, naturalTop: rect.top, height: el.offsetHeight };
+    });
+  }
+
+  function apply() {
+    rafId = null;
+    for (var i = 0; i < stickyHeaders.length; i++) {
+      var h = stickyHeaders[i];
+      var next = stickyHeaders[i + 1];
+      var maxTop = next ? next.naturalTop - h.height : Infinity;
+      var wantedTop = Math.max(h.naturalTop, Math.min(latestVisibleTop, maxTop));
+      var dy = wantedTop - h.naturalTop;
+      h.el.style.transform = dy > 0 ? 'translate3d(0,' + dy + 'px,0)' : '';
+    }
+  }
+
+  function schedule() {
+    if (rafId == null) rafId = requestAnimationFrame(apply);
+  }
+
+  window.addEventListener('message', function (event) {
+    var d = event.data;
+    if (d && d.type === 'parentScroll' && typeof d.visibleTop === 'number') {
+      latestVisibleTop = d.visibleTop;
+      schedule();
+    }
+  });
+
+  function init() {
+    neutralize();
+    measure();
+    apply();
+    try { window.parent.postMessage({ type: 'stickyReady' }, '*'); } catch (e) {}
+  }
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { measure(); apply(); }, 150);
+  });
+
+  // The form is hidden until the parent posts the email; re-measure once it's
+  // actually laid out. Observe the #form element's style changes.
+  function watchFormVisibility() {
+    var form = document.getElementById('form');
+    if (!form) return;
+    var obs = new MutationObserver(function () {
+      if (form.style.display !== 'none') {
+        setTimeout(function () { measure(); apply(); }, 80);
+      }
+    });
+    obs.observe(form, { attributes: true, attributeFilter: ['style'] });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      watchFormVisibility();
+      setTimeout(init, 100);
+    });
+  } else {
+    watchFormVisibility();
+    setTimeout(init, 100);
+  }
+})();
+</script>
+
 <script>
 window.dataLayer = window.dataLayer || [];
 

@@ -1724,6 +1724,8 @@ margin-top: 10px;
 .zf-tableHeader > div:first-child {
     justify-content: flex-start;
     padding-left: 7px;
+    border-right: 1px solid #D0D0D0;
+    align-self: stretch;
 }
 
 .zf-tableHeader > div:nth-child(2) {
@@ -1956,13 +1958,13 @@ margin-top: 10px;
         content: counter(table-row) "." !important;
     }
     .zf-backgroundBg {
-        padding: 20px 16px;
+       
     }
 }
 
 @media (max-width: 480px) {
     .zf-backgroundBg {
-        padding: 20px 16px;
+       
     }
 
     .zf-templateWrapper {
@@ -2255,6 +2257,15 @@ button:focus-visible {
     .zf-tableHeader{
         display: none;
     }
+
+    /* Charcoal & Hoses sections each contain only one .zfgrid_Wrapper,
+       and its preceding .zf-tableHeader is hidden on mobile, so the
+       `:first-of-type` top-border rule doesn't apply. Add it explicitly. */
+    .charcoal-section .zfgrid_Wrapper,
+    .hoses-section .zfgrid_Wrapper {
+        border-top: 1px solid #E5E5E5;
+    }
+
     .zfthreeColumn::after{
         display: none;
     }
