@@ -4296,6 +4296,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
   var stickyHeaders = [];
   var latestVisibleTop = 0;
   var rafId = null;
+  var measurementsValid = false;
 
   function neutralize() {
     document.querySelectorAll('.sticky-header').forEach(function (el) {
@@ -4308,15 +4309,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 
   function measure() {
     var els = Array.from(document.querySelectorAll('.sticky-header'));
+    // Reset transforms before measuring so rect reflects natural position.
     els.forEach(function (el) { el.style.transform = ''; });
     stickyHeaders = els.map(function (el) {
       var rect = el.getBoundingClientRect();
       return { el: el, naturalTop: rect.top, height: el.offsetHeight };
     });
+    // Measurements are valid only if we actually have non-zero positions.
+    // While the form is display:none everything measures as 0.
+    measurementsValid = stickyHeaders.length > 0 &&
+      stickyHeaders.some(function (h) { return h.naturalTop > 0 && h.height > 0; });
   }
 
   function apply() {
     rafId = null;
+    // Lazy re-measure if we haven't captured real positions yet.
+    if (!measurementsValid) measure();
+    if (!measurementsValid) return;
     for (var i = 0; i < stickyHeaders.length; i++) {
       var h = stickyHeaders[i];
       var next = stickyHeaders[i + 1];
@@ -4329,6 +4338,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 
   function schedule() {
     if (rafId == null) rafId = requestAnimationFrame(apply);
+  }
+
+  function invalidateAndApply() {
+    measurementsValid = false;
+    schedule();
   }
 
   window.addEventListener('message', function (event) {
@@ -4349,29 +4363,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
   var resizeTimer = null;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () { measure(); apply(); }, 150);
+    resizeTimer = setTimeout(invalidateAndApply, 150);
   });
 
   // The form is hidden until the parent posts the email; re-measure once it's
-  // actually laid out. Observe the #form element's style changes.
-  function watchFormVisibility() {
+  // actually laid out. Observe the #form element's style changes AND its size.
+  function watchForm() {
     var form = document.getElementById('form');
     if (!form) return;
-    var obs = new MutationObserver(function () {
+    // Style attribute flip (display: none -> block)
+    var mo = new MutationObserver(function () {
       if (form.style.display !== 'none') {
-        setTimeout(function () { measure(); apply(); }, 80);
+        setTimeout(invalidateAndApply, 80);
       }
     });
-    obs.observe(form, { attributes: true, attributeFilter: ['style'] });
+    mo.observe(form, { attributes: true, attributeFilter: ['style'] });
+    // Size changes — catches the actual render when form expands to full height
+    if (typeof ResizeObserver !== 'undefined') {
+      var ro = new ResizeObserver(function () { invalidateAndApply(); });
+      ro.observe(form);
+    }
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
-      watchFormVisibility();
+      watchForm();
       setTimeout(init, 100);
     });
   } else {
-    watchFormVisibility();
+    watchForm();
     setTimeout(init, 100);
   }
 })();
