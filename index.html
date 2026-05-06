@@ -3756,30 +3756,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
                         <div class="summary-section" aria-labelledby="orderSummaryHeading">
                             <h2 id="orderSummaryHeading" class="a11y-visually-hidden">Order summary</h2>
 
+                            <div class="summary-headers" role="presentation" aria-hidden="true">
+                                <div class="summary-header-label"></div>
+                                <div class="summary-header-col">50g / 0.1lb</div>
+                                <div class="summary-header-col">250g / 0.5lb</div>
+                                <div class="summary-header-col">1kg / 2lb</div>
+                            </div>
+
                             <table class="summary-table">
-                                <caption class="a11y-visually-hidden">Subtotals by package size</caption>
-                                <thead>
-                                    <tr>
-                                        <th scope="col"><span class="a11y-visually-hidden">Subtotal type</span></th>
-                                        <th scope="col"><span class="a11y-visually-hidden">Subtotal 50 grams</span><span aria-hidden="true">50g / 0.1lb</span></th>
-                                        <th scope="col" style="width:4% !important;"><span class="a11y-visually-hidden">Subtotal 250 grams</span><span aria-hidden="true">250g / 0.5lb</span></th>
-                                        <th scope="col"><span class="a11y-visually-hidden">Subtotal 1 kilogram</span><span aria-hidden="true">1kg / 2lb</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row" class="label-col">Master Cases (MC)</th>
-                                        <td class="value-col" id="totalMC_50" aria-label="50 grams Master Cases 0 items">0</td>
-                                        <td class="value-col" id="totalMC_250" style="width:4% !important;" aria-label="250 grams Master Cases 0 items">0</td>
-                                        <td class="value-col" id="totalMC_1kg" aria-label="1 kilogram Master Cases 0 items">0</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" class="label-col">Pallets</th>
-                                        <td class="value-col" id="pallet_50" aria-label="50 grams Pallets 0 items">0</td>
-                                        <td class="value-col" id="pallet_250" style="width:4% !important;" aria-label="250 grams Pallets 0 items">0</td>
-                                        <td class="value-col" id="pallet_1kg" aria-label="1 kilogram Pallets 0 items">0</td>
-                                    </tr>
-                                </tbody>
+                                <caption class="a11y-visually-hidden">Order subtotals by package size</caption>
+                                <tr>
+                                    <td class="label-col">Master Cases (MC)</td>
+                                    <td class="value-col" id="totalMC_50" aria-label="50 grams Master Cases 0 items">0</td>
+                                    <td class="value-col" id="totalMC_250" style="width:4% !important;" aria-label="250 grams Master Cases 0 items">0</td>
+                                    <td class="value-col" id="totalMC_1kg" aria-label="1 kilogram Master Cases 0 items">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Pallets</td>
+                                    <td class="value-col" id="pallet_50" aria-label="50 grams Pallets 0 items">0</td>
+                                    <td class="value-col" id="pallet_250" style="width:4% !important;" aria-label="250 grams Pallets 0 items">0</td>
+                                    <td class="value-col" id="pallet_1kg" aria-label="1 kilogram Pallets 0 items">0</td>
+                                </tr>
                             </table>
 
                             <div class="total-summary" role="group" aria-label="Order totals">

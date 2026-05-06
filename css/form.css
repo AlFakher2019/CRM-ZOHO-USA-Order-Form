@@ -2365,36 +2365,42 @@ button:focus-visible {
     
     /* Summary table mobile */
     .summary-section {
-      
+
         margin-top: 16px;
     }
-    
+
+    /* Hide the desktop column-headers strip on mobile — the original
+       mobile design didn't have this row, so we don't introduce it here. */
+    .summary-headers {
+        display: none !important;
+    }
+
     .summary-table {
         border: 1px solid #E0E0E0;
     }
-    
+
     .summary-table tr {
         display: block;
         border-bottom: 1px solid #E0E0E0;
         padding: 12px 0;
     }
-    
+
     .summary-table tr:last-child {
         border-bottom: none;
     }
-    
+
     .summary-table td {
         display: block;
         padding: 8px 12px;
         text-align: left;
         width: 100%;
     }
-    
+
     .summary-table .label-col {
         background-color: transparent;
         padding: 8px 12px;
     }
-    
+
     .summary-table .value-col {
         background-color: transparent;
         text-align: right;
@@ -2457,14 +2463,20 @@ body::-webkit-scrollbar {
     
     .summary-table {
         border: 1px solid #E0E0E0;
+        border-left: none;       /* drop side borders so columns align with */
+        border-right: none;      /* the input columns above (no 1px shift)  */
+        box-sizing: border-box;
     }
-    
-    /* Make each row (Master Cases / Pallets) horizontal */
+
+    /* Make each row (Master Cases / Pallets) horizontal — and match the
+       brand-grid horizontal padding (.zfthreeColumn has padding: 5px) so
+       the 3 value columns sit directly under the 3 input columns above. */
     .summary-table tr {
         display: flex !important;
         flex-wrap: wrap !important;
         border-bottom: 1px solid #E0E0E0;
-        padding: 0 !important;
+        padding: 0 5px !important;
+        box-sizing: border-box;
     }
     
     .summary-table tr:last-child {
@@ -2605,13 +2617,25 @@ body::-webkit-scrollbar {
 
 .summary-header-col {
     width: 7%; /* EXACT same as .value-col */
-    font-size: 12px;
-    font-weight: 600;
-    background-color: #FFFFFF;
+    font-family: 'DINPro-Bold', 'DINPro', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1A1A1A;            /* matches .zf-tableHeader, ~17:1 vs white */
+    letter-spacing: 0.2px;
+    line-height: 1.4;
+    padding-bottom: 10px;       /* breathing room before the table */
+    background-color: transparent;
 }
 
 .summary-header-col:nth-child(3) {
     width: 4% !important; /* EXACT same as your inline style on totalMC_250 */
+}
+
+/* Mobile: stack better and stay readable in the narrow viewport */
+@media (max-width: 480px) {
+    .summary-header-col {
+        font-size: 13px;
+    }
 }
 /* Tooltip Styles - Positioned ABOVE the icon */
 .flavor-tooltip {
@@ -2810,7 +2834,7 @@ html {
     }
     .summary-table .value-col{
         border-right: 0;
-        text-align: left !important;
+        text-align: center !important;
         font-family: 'DINPro';
         font-size: 16px;
         font-weight: 400;
@@ -2928,22 +2952,16 @@ button:focus-visible,
     min-width: 120px;
 }
 
-/* Info icon — promote to a real button-sized hit target */
+/* Info icon — keep its 20x20 visual size to preserve existing layout.
+   A11y is delivered via keyboard support (Enter/Space/Esc) and a visible
+   focus ring; pinch-zoom is enabled so touch users can magnify. */
 .flavor-info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 12px;
-    margin: -12px;       /* keep visual layout unchanged */
+    cursor: pointer;
     border-radius: 4px;
-    box-sizing: content-box;
 }
 .flavor-info-icon:focus-visible {
     outline: 3px solid #1A73E8;
     outline-offset: 2px;
-    background: rgba(26, 115, 232, 0.08);
 }
 
 /* Tooltip (when promoted to role=tooltip) */
