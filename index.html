@@ -1,10 +1,10 @@
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Order Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order form</title>
     <link href="css/form.css" rel="stylesheet" type="text/css">
     <script src="js/validation.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,12 +33,20 @@ f.parentNode.insertBefore(j,f);
 height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
+
+    <a class="a11y-skip-link" href="#form">Skip to order form</a>
+    <h1 class="a11y-visually-hidden" id="page-title">Order form</h1>
+
+    <div id="a11y-quantity-live" class="a11y-visually-hidden" aria-live="polite" aria-atomic="true"></div>
+    <div id="a11y-error-live" class="a11y-visually-hidden" aria-live="assertive" aria-atomic="true"></div>
+
     <!-- Change or deletion of the name attributes in the input tag will lead to empty values on record submission-->
     <div class="zf-templateWidth">
         <form
             action='https://forms.zohopublic.com/airglobal/form/NewVersionOrderForm/formperma/Kd0hlzOjQKPi9oDFZ5q2pJVdVqqjkeMaCGFekGN2n60/htmlRecords/submit'
             name='form' method='POST' onSubmit='javascript:document.charset="UTF-8"; return zf_ValidateAndSubmit();'
-            accept-charset='UTF-8' enctype='multipart/form-data' id='form'>
+            accept-charset='UTF-8' enctype='multipart/form-data' id='form'
+            role='main' aria-labelledby='page-title' tabindex='-1'>
             <input type="hidden" name="zf_referrer_name"
                 value=""><!-- To Track referrals , place the referrer name within the " " in the above hidden input field -->
             <input type="hidden" name="zf_redirect_url"
@@ -49,7 +57,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
 
                 <div class="zf-subContWrap zf-topAlign">
 
-                    <ul class="sections">
+                    <ul class="sections" role="presentation">
 
                         <div class="zf-tempFrmWrapper zf- zf-large " style="display: none;"><label class="zf-labelName">
                                 Flavor
@@ -3745,35 +3753,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
                         <input type="hidden" name="SingleLine166" id="hidden_grand_pallets" value="">
 
 
-                        <div class="summary-section">
-                            <!-- Add headers above the summary table -->
-                            <!-- <div class="summary-headers">
-                                <div class="summary-header-label"></div>
-                                <div class="summary-header-col">50g / 0.1lb</div>
-                                <div class="summary-header-col">250g / 0.2lb</div>
-                                <div class="summary-header-col">1kg / 2 lb</div>
-                            </div> -->
+                        <div class="summary-section" aria-labelledby="orderSummaryHeading">
+                            <h2 id="orderSummaryHeading" class="a11y-visually-hidden">Order summary</h2>
 
                             <table class="summary-table">
-                                <tr>
-                                    <td class="label-col">Master Cases (MC)</td>
-                                    <td class="value-col" id="totalMC_50">0</td>
-                                    <td class="value-col" id="totalMC_250" style="width:4% !important;">0</td>
-                                    <td class="value-col" id="totalMC_1kg">0</td>
-                                </tr>
-                                <tr>
-                                    <td class="label-col">Pallets</td>
-                                    <td class="value-col" id="pallet_50">0</td>
-                                    <td class="value-col" id="pallet_250" style="width:4% !important;">0</td>
-                                    <td class="value-col" id="pallet_1kg">0</td>
-                                </tr>
+                                <caption class="a11y-visually-hidden">Subtotals by package size</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><span class="a11y-visually-hidden">Subtotal type</span></th>
+                                        <th scope="col"><span class="a11y-visually-hidden">Subtotal 50 grams</span><span aria-hidden="true">50g / 0.1lb</span></th>
+                                        <th scope="col" style="width:4% !important;"><span class="a11y-visually-hidden">Subtotal 250 grams</span><span aria-hidden="true">250g / 0.5lb</span></th>
+                                        <th scope="col"><span class="a11y-visually-hidden">Subtotal 1 kilogram</span><span aria-hidden="true">1kg / 2lb</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" class="label-col">Master Cases (MC)</th>
+                                        <td class="value-col" id="totalMC_50" aria-label="50 grams Master Cases 0 items">0</td>
+                                        <td class="value-col" id="totalMC_250" style="width:4% !important;" aria-label="250 grams Master Cases 0 items">0</td>
+                                        <td class="value-col" id="totalMC_1kg" aria-label="1 kilogram Master Cases 0 items">0</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="label-col">Pallets</th>
+                                        <td class="value-col" id="pallet_50" aria-label="50 grams Pallets 0 items">0</td>
+                                        <td class="value-col" id="pallet_250" style="width:4% !important;" aria-label="250 grams Pallets 0 items">0</td>
+                                        <td class="value-col" id="pallet_1kg" aria-label="1 kilogram Pallets 0 items">0</td>
+                                    </tr>
+                                </tbody>
                             </table>
 
-                            <div class="total-summary">
+                            <div class="total-summary" role="group" aria-label="Order totals">
                                 <div><span class="total-label">Total Master Cases:</span><span
-                                        id="grandTotalMC">0</span></div>
+                                        id="grandTotalMC" aria-label="Total Master Cases 0">0</span></div>
                                 <div><span class="total-label">Total Pallets:</span><span
-                                        id="grandTotalPallets">0.00</span></div>
+                                        id="grandTotalPallets" aria-label="Total Pallets 0">0.00</span></div>
                             </div>
                         </div>
                     </ul>
@@ -3781,8 +3794,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
                 <ul class="submit-section">
     <li class="zf-fmFooter" style="display:flex; justify-content:flex-end; gap:10px; align-items:center; flex-wrap:wrap;">
         <!-- <button type="button" class="zf-submitColor" onclick="submitWithStatus('Draft')">SAVE FOR LATER</button> -->
-        <button type="button" class="zf-submitColor" onclick="submitWithStatus('New')">SUBMIT ORDER</button>
-        <p id="customFormError" style="display:none;color:#d32f2f;font-size:14px;margin-top:10px;width:100%;text-align:right;">
+        <button type="button" id="submitOrderBtn" class="zf-submitColor"
+            onclick="submitWithStatus('New')"
+            aria-label="Submit order"
+            aria-describedby="customFormError">SUBMIT ORDER</button>
+        <p id="customFormError" role="alert" aria-live="assertive"
+            style="display:none;color:#b71c1c;font-size:14px;margin-top:10px;width:100%;text-align:right;">
             Please fill at least one field
         </p>
     </li>
@@ -3894,15 +3911,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
                 const grandTotalMC = mc[1] + mc[2] + mc[3];
                 const grandTotalPallets = pallets[1] + pallets[2] + pallets[3];
 
-                // visible display
-                document.getElementById("totalMC_50").textContent = mc[1];
-                document.getElementById("totalMC_250").textContent = mc[2];
-                document.getElementById("totalMC_1kg").textContent = mc[3];
-                document.getElementById("pallet_50").textContent = pallets[1].toFixed(2);
-                document.getElementById("pallet_250").textContent = pallets[2].toFixed(2);
-                document.getElementById("pallet_1kg").textContent = pallets[3].toFixed(2);
-                document.getElementById("grandTotalMC").textContent = grandTotalMC;
-                document.getElementById("grandTotalPallets").textContent = grandTotalPallets.toFixed(2);
+                // visible display + accessible labels
+                function setCell(id, val, prefix) {
+                    var el = document.getElementById(id);
+                    if (!el) return;
+                    el.textContent = val;
+                    el.setAttribute('aria-label', prefix + ' ' + val + ' items');
+                }
+                setCell("totalMC_50", mc[1], "50 grams Master Cases");
+                setCell("totalMC_250", mc[2], "250 grams Master Cases");
+                setCell("totalMC_1kg", mc[3], "1 kilogram Master Cases");
+                setCell("pallet_50", pallets[1].toFixed(2), "50 grams Pallets");
+                setCell("pallet_250", pallets[2].toFixed(2), "250 grams Pallets");
+                setCell("pallet_1kg", pallets[3].toFixed(2), "1 kilogram Pallets");
+
+                var gMC = document.getElementById("grandTotalMC");
+                var gPal = document.getElementById("grandTotalPallets");
+                gMC.textContent = grandTotalMC;
+                gMC.setAttribute('aria-label', 'Total Master Cases ' + grandTotalMC);
+                gPal.textContent = grandTotalPallets.toFixed(2);
+                gPal.setAttribute('aria-label', 'Total Pallets ' + grandTotalPallets.toFixed(2));
 
                 //HIDDEN FIELDS FOR ZOHO SUBMISSION
 
@@ -4459,6 +4487,243 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-<div id="loader" style="display: block;"></div>
+<div id="loader" role="status" aria-live="polite" aria-label="Loading order form" style="display: block;"></div>
+
+<!-- ============================================================
+     Accessibility enhancement layer (Order form a11y compliance)
+     - Programmatic labelling of inputs: <unit> <flavor> <brand>
+     - Brand section headings (role=heading, aria-level=2)
+     - Keyboard support + ARIA for flavor info icons
+     - Polite live announcements for quantity/total changes
+     - Assertive announcements + focus management for errors
+     ============================================================ -->
+<script>
+(function () {
+    var QTY_LIVE = function () { return document.getElementById('a11y-quantity-live'); };
+    var ERR_LIVE = function () { return document.getElementById('a11y-error-live'); };
+
+    function announce(region, msg) {
+        var el = region();
+        if (!el) return;
+        // Reset to force re-announcement of identical strings
+        el.textContent = '';
+        // micro delay so AT picks up the change
+        setTimeout(function () { el.textContent = msg; }, 30);
+    }
+
+    function cleanText(t) {
+        return (t || '').replace(/\s+/g, ' ').replace(/New!/i, '').trim();
+    }
+
+    // ---- 1. Brand section headings ----
+    // Promote each visible .zf-labelName at the section level to a heading
+    function promoteBrandHeadings() {
+        var labels = document.querySelectorAll('.zf-labelName');
+        labels.forEach(function (lbl) {
+            // Skip those nested inside a hidden container, or that wrap form fields
+            if (lbl.querySelector('input, select, textarea')) return;
+            // Skip hidden labels (e.g. Zoho's stub Email/Status/Flavor labels)
+            var wrapper = lbl.closest('[style*="display: none"], [style*="display:none"]');
+            if (wrapper) return;
+            var text = cleanText(lbl.textContent);
+            if (!text) return;
+            lbl.setAttribute('role', 'heading');
+            lbl.setAttribute('aria-level', '2');
+            // store cleaned brand label for later lookup
+            lbl.dataset.brandLabel = text;
+        });
+    }
+
+    // ---- 2. Build input labels: <unit> <flavor> <brand> ----
+    function brandFor(el) {
+        // Walk previous siblings/ancestors looking for a labelled brand heading
+        var labels = Array.from(document.querySelectorAll('.zf-labelName[data-brand-label]'));
+        var chosen = null;
+        for (var i = 0; i < labels.length; i++) {
+            var pos = labels[i].compareDocumentPosition(el);
+            if (pos & Node.DOCUMENT_POSITION_FOLLOWING) {
+                chosen = labels[i];
+            } else {
+                break;
+            }
+        }
+        return chosen ? chosen.dataset.brandLabel : '';
+    }
+
+    function applyInputLabels() {
+        var inputs = document.querySelectorAll('.zfgrid_Wrapper .zfCol input[type="text"]');
+        inputs.forEach(function (input) {
+            if (input.getAttribute('aria-label')) return; // don't clobber existing
+            var col = input.closest('.zfCol');
+            var row = input.closest('.zfthreeColumn');
+            var unit = col ? (col.getAttribute('data-label') || '') : '';
+            var flavor = '';
+            if (row) {
+                flavor = row.getAttribute('data-name') || '';
+                if (!flavor) {
+                    var nameCol = row.querySelector('.zfNameCol');
+                    if (nameCol) flavor = cleanText(nameCol.firstChild ? nameCol.firstChild.textContent : '');
+                }
+            }
+            var brand = brandFor(input);
+            var parts = [unit, flavor, brand].filter(Boolean);
+            if (parts.length) {
+                input.setAttribute('aria-label', parts.join(' '));
+            }
+            // numeric fields: surface input mode + role
+            input.setAttribute('autocomplete', 'off');
+            // Associate any existing error message via aria-describedby
+            var errEl = input.parentElement && input.parentElement.parentElement
+                ? input.parentElement.parentElement.querySelector('.zf-errorMessage')
+                : null;
+            if (errEl && errEl.id) {
+                input.setAttribute('aria-describedby', errEl.id);
+            }
+        });
+    }
+
+    // ---- 3. Flavor info icons: keyboard + ARIA ----
+    function enhanceInfoIcons() {
+        var icons = document.querySelectorAll('.flavor-info-icon');
+        icons.forEach(function (icon) {
+            var nameCol = icon.closest('.zfNameCol');
+            var flavor = nameCol ? cleanText(nameCol.firstChild ? nameCol.firstChild.textContent : '') : 'flavor';
+            icon.setAttribute('role', 'button');
+            icon.setAttribute('tabindex', '0');
+            icon.setAttribute('aria-label', 'Info ' + flavor);
+            icon.setAttribute('aria-haspopup', 'true');
+            icon.setAttribute('aria-expanded', 'false');
+
+            // Keyboard parity with mouse interaction
+            icon.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    icon.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                    icon.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                    icon.setAttribute('aria-expanded', 'true');
+                } else if (e.key === 'Escape') {
+                    icon.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+                    icon.setAttribute('aria-expanded', 'false');
+                    icon.blur();
+                }
+            });
+            // Focus ring should also reveal tooltip (keyboard users)
+            icon.addEventListener('focus', function () {
+                icon.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                icon.setAttribute('aria-expanded', 'true');
+            });
+            icon.addEventListener('blur', function () {
+                icon.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+                icon.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Ensure existing tooltip element is exposed semantically
+        var existing = document.querySelector('.flavor-tooltip');
+        if (existing) existing.setAttribute('role', 'tooltip');
+        // Watch for the tooltip getting created dynamically
+        var mo = new MutationObserver(function () {
+            var t = document.querySelector('.flavor-tooltip');
+            if (t && !t.hasAttribute('role')) t.setAttribute('role', 'tooltip');
+        });
+        mo.observe(document.body, { childList: true });
+    }
+
+    // ---- 4. Polite quantity announcements ----
+    function wireQuantityAnnouncements() {
+        var debounceTimers = new WeakMap();
+        document.addEventListener('input', function (e) {
+            var t = e.target;
+            if (!(t instanceof HTMLInputElement)) return;
+            if (!t.closest('.zfgrid_Wrapper')) return;
+
+            var prev = debounceTimers.get(t);
+            if (prev) clearTimeout(prev);
+            debounceTimers.set(t, setTimeout(function () {
+                var val = (t.value || '').trim();
+                var label = t.getAttribute('aria-label') || 'Quantity';
+                var n = parseFloat(val);
+                if (val === '' || isNaN(n) || n === 0) {
+                    announce(QTY_LIVE, label + ' removed');
+                } else {
+                    announce(QTY_LIVE, label + ' updated to ' + n);
+                }
+            }, 600));
+        });
+    }
+
+    // ---- 5. Error focus management on submit ----
+    function wireErrorFocus() {
+        function findFirstVisibleError() {
+            var errors = document.querySelectorAll('.zf-errorMessage');
+            for (var i = 0; i < errors.length; i++) {
+                var el = errors[i];
+                if (el.offsetParent !== null && getComputedStyle(el).display !== 'none') {
+                    // Find associated input
+                    var container = el.closest('.zf-tempContDiv') || el.parentElement;
+                    var input = container ? container.querySelector('input, select, textarea') : null;
+                    return { error: el, input: input };
+                }
+            }
+            return null;
+        }
+
+        function focusFirstError() {
+            // Custom form-level error first
+            var formErr = document.getElementById('customFormError');
+            if (formErr && formErr.style.display !== 'none' && formErr.offsetParent !== null) {
+                announce(ERR_LIVE, formErr.textContent.trim());
+                var btn = document.getElementById('submitOrderBtn');
+                if (btn) btn.focus();
+                return;
+            }
+            var first = findFirstVisibleError();
+            if (first) {
+                announce(ERR_LIVE, 'Form has errors. ' + (first.input && first.input.getAttribute('aria-label')
+                    ? first.input.getAttribute('aria-label') + ': '
+                    : '') + first.error.textContent.trim());
+                if (first.input) {
+                    try { first.input.focus({ preventScroll: false }); } catch (_) { first.input.focus(); }
+                }
+            }
+        }
+
+        // Hook submit triggers (the page calls submitWithStatus → zf_ValidateAndSubmit)
+        var btn = document.getElementById('submitOrderBtn');
+        if (btn) {
+            btn.addEventListener('click', function () {
+                // Validation runs synchronously inside submitWithStatus; check errors after
+                setTimeout(focusFirstError, 50);
+            });
+        }
+        // Also observe error display attribute changes for inline validation flows
+        var errors = document.querySelectorAll('.zf-errorMessage');
+        errors.forEach(function (el) {
+            new MutationObserver(function () {
+                if (el.offsetParent !== null && getComputedStyle(el).display !== 'none') {
+                    // Don't auto-focus on every reveal — leave that to submit. Just announce.
+                    if (el.dataset.a11yAnnounced === '1') return;
+                    el.dataset.a11yAnnounced = '1';
+                    setTimeout(function () { el.dataset.a11yAnnounced = ''; }, 2000);
+                }
+            }).observe(el, { attributes: true, attributeFilter: ['style'] });
+        });
+    }
+
+    function init() {
+        promoteBrandHeadings();
+        applyInputLabels();
+        enhanceInfoIcons();
+        wireQuantityAnnouncements();
+        wireErrorFocus();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
 
 </body>

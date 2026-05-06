@@ -2863,3 +2863,117 @@ html {
         display: none;
     }
 }
+
+/* ================================================================
+   Accessibility utilities & overrides (B2B order form compliance)
+   ================================================================ */
+
+/* Visually hidden but available to assistive technologies */
+.a11y-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Skip-to-main link: hidden until focused */
+.a11y-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 8px;
+    z-index: 10001;
+    background: #000;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    min-height: 44px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+}
+.a11y-skip-link:focus,
+.a11y-skip-link:focus-visible {
+    left: 8px;
+    outline: 3px solid #FFD600;
+    outline-offset: 2px;
+}
+
+/* Stronger, AA-compliant focus indicator across all interactive elements.
+   Earlier rule (`*:focus-visible { outline: 2px solid #000; }`) stays in
+   place; this raises contrast and adds an inner halo so the ring is
+   visible on both light and dark backgrounds. */
+:focus-visible {
+    outline: 3px solid #1A73E8 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 1px #FFFFFF !important;
+}
+button:focus-visible,
+.zf-submitColor:focus-visible {
+    outline-color: #FFD600 !important;
+    box-shadow: 0 0 0 1px #000000 !important;
+}
+
+/* WCAG 2.5.5 / 2.5.8 — minimum 44x44 target for primary actions */
+.zf-submitColor {
+    min-height: 44px;
+    min-width: 120px;
+}
+
+/* Info icon — promote to a real button-sized hit target */
+.flavor-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 12px;
+    margin: -12px;       /* keep visual layout unchanged */
+    border-radius: 4px;
+    box-sizing: content-box;
+}
+.flavor-info-icon:focus-visible {
+    outline: 3px solid #1A73E8;
+    outline-offset: 2px;
+    background: rgba(26, 115, 232, 0.08);
+}
+
+/* Tooltip (when promoted to role=tooltip) */
+.flavor-tooltip[role="tooltip"] {
+    /* contrast: white-on-black = 21:1 — already AAA */
+    font-size: 14px; /* meet readable body text size */
+}
+
+/* Error message contrast: bump to ≥ 4.5:1 against white */
+.zf-errorMessage {
+    color: #b71c1c !important;     /* 6.85:1 vs #FFFFFF */
+}
+
+/* Form-level error visible cue beyond colour: prepend an icon */
+#customFormError::before {
+    content: "\26A0  ";  /* ⚠ */
+    font-weight: 700;
+}
+
+/* Make form root focusable target for skip link without visible ring */
+#form[tabindex="-1"]:focus {
+    outline: none;
+}
+
+/* Reduce-motion respect for tooltip transitions */
+@media (prefers-reduced-motion: reduce) {
+    .flavor-tooltip {
+        transition: none !important;
+    }
+    #loader {
+        animation: none !important;
+    }
+}
